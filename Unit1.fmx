@@ -1,0 +1,146 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 607
+  ClientWidth = 861
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    HideSelectionOnExit = False
+    ReadOnly = True
+    StyledSettings = [Style, FontColor]
+    TextSettings.Font.Family = 'Consolas'
+    TextSettings.Font.Size = 14.000000000000000000
+    Align = Client
+    Margins.Right = 10.000000000000000000
+    Size.Width = 754.000000000000000000
+    Size.Height = 540.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Viewport.Width = 750.000000000000000000
+    Viewport.Height = 536.000000000000000000
+  end
+  object Layout1: TRectangle
+    Align = Top
+    Fill.Kind = None
+    Size.Width = 861.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    Stroke.Thickness = 0.000000000000000000
+    object Button1: TButton
+      Position.X = 10.000000000000000000
+      Position.Y = 11.000000000000000000
+      Size.Width = 75.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Parse'
+      OnClick = Button1Click
+    end
+    object Edit1: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 1
+      Position.X = 97.000000000000000000
+      Position.Y = 11.000000000000000000
+      Size.Width = 754.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      object SearchEditButton1: TSearchEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = SearchEditButton1Click
+      end
+    end
+  end
+  object Rectangle1: TRectangle
+    Align = Bottom
+    Fill.Kind = None
+    Position.Y = 584.000000000000000000
+    Size.Width = 861.000000000000000000
+    Size.Height = 23.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    Stroke.Thickness = 0.000000000000000000
+    object Label1: TLabel
+      Align = Left
+      Margins.Left = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 198.000000000000000000
+      Size.Height = 23.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Parsing time:'
+      TabOrder = 0
+    end
+  end
+  object ListBox1: TListBox
+    Align = Left
+    Margins.Left = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 44.000000000000000000
+    Size.Width = 87.000000000000000000
+    Size.Height = 540.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'transparentlistboxstyle'
+    TabOrder = 3
+    DisableFocusEffect = True
+    DefaultItemStyles.ItemStyle = ''
+    DefaultItemStyles.GroupHeaderStyle = ''
+    DefaultItemStyles.GroupFooterStyle = ''
+    Viewport.Width = 87.000000000000000000
+    Viewport.Height = 540.000000000000000000
+    object ListBoxItem0: TListBoxItem
+      TabOrder = 6
+      Text = 'Source'
+      OnClick = ListBoxItem0Click
+    end
+    object ListBoxItem1: TListBoxItem
+      Position.Y = 19.000000000000000000
+      TabOrder = 0
+      Text = 'Structure'
+      OnClick = ListBoxItem1Click
+    end
+    object ListBoxItem2: TListBoxItem
+      Position.Y = 38.000000000000000000
+      TabOrder = 1
+      Text = 'Text'
+      OnClick = ListBoxItem2Click
+    end
+    object ListBoxItem3: TListBoxItem
+      Position.Y = 57.000000000000000000
+      TabOrder = 2
+      Text = 'Links'
+      OnClick = ListBoxItem3Click
+    end
+    object ListBoxItem4: TListBoxItem
+      Position.Y = 76.000000000000000000
+      TabOrder = 3
+      Text = 'Images'
+      OnClick = ListBoxItem4Click
+    end
+    object ListBoxItem5: TListBoxItem
+      Position.Y = 95.000000000000000000
+      TabOrder = 4
+      Text = 'Scripts'
+      OnClick = ListBoxItem5Click
+    end
+    object ListBoxItem6: TListBoxItem
+      Position.Y = 114.000000000000000000
+      TabOrder = 5
+      Text = 'Styles'
+      OnClick = ListBoxItem6Click
+    end
+  end
+end
