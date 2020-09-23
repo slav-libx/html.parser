@@ -36,6 +36,8 @@ type
     procedure ListBoxItem5Click(Sender: TObject);
     procedure ListBoxItem6Click(Sender: TObject);
     procedure ListBoxItem0Click(Sender: TObject);
+    procedure Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
   private
     Source: string;
     DOM: TJSONObject;
@@ -51,6 +53,16 @@ implementation
 
 {$R *.fmx}
 
+type
+  TControlAccess = class(TControl);
+
+procedure Click(Control: TControl);
+begin
+  TControlAccess(Control).Click;
+end;
+
+{ TForm1 }
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   SetEnabledContent(False);
@@ -62,17 +74,28 @@ begin
   Memo1.Enabled:=Value;
 end;
 
+procedure TForm1.Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+begin
+  if Key=vkReturn then
+  begin
+    Key:=0;
+    Click(SearchEditButton1);
+  end;
+end;
+
 procedure TForm1.Button1Click(Sender: TObject);
 var C: Cardinal;
 begin
 
 //  Source:='programming-csharp.ru.html';
-//  Source:='googd.html';
+  Source:='googd.html';
   //Source:='yout.html';
 //  Source:='page_google.html';
  // Source:='page_habrahabr-70330.html';
-  Source:='page_habrahabr-index.html';
+//  Source:='page_habrahabr-index.html';
 //  Source:='page_wikipedia.html';
+//  Source:='banketservice.ru.html';
 
   SetEnabledContent(False);
 
@@ -85,12 +108,13 @@ begin
   DOM:=HTMLParse(Source);
   C:=TThread.GetTickCount-C;
 
-  SetEnabledContent(True);
-
   Label1.Text:='Parsing time: '+C.ToString+' ms';
 
+  SetEnabledContent(True);
+
   ListBoxItem1.SetIsSelectedInternal(True,False);
-  ListBoxItem1Click(nil);
+
+  Click(ListBoxItem1);
 
 end;
 
@@ -241,9 +265,20 @@ begin
 end;
 
 procedure TForm1.SearchEditButton1Click(Sender: TObject);
+var P: Integer;
 begin
-  Memo1.SelStart:=Memo1.Lines.Text.IndexOf(Edit1.Text,Memo1.SelStart+Memo1.SelLength);
-  Memo1.SelLength:=Edit1.Text.Length;
+
+  P:=Memo1.Lines.Text.IndexOf(Edit1.Text,Memo1.SelStart+Memo1.SelLength);
+
+  if P>=0 then
+  begin
+    Memo1.SelStart:=P;
+    Memo1.SelLength:=Edit1.Text.Length;
+  end else begin
+    Memo1.SelLength:=0;
+    Beep;
+  end;
+
 end;
 
 end.

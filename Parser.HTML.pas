@@ -25,11 +25,13 @@ begin
   StartIndex:=P;
 
   if Content.Substring(StartIndex,4)='<!--' then
-    CloseText:='-->'
-  else
+  begin
+    CloseText:='-->';
+    P:=Content.IndexOf(CloseText,StartIndex);
+  end else begin
     CloseText:='>';
-
-  P:=Content.IndexOf(CloseText,StartIndex);
+    P:=Content.IndexOfAnyUnquoted(['>'],'<','>',P);
+  end;
 
   if P<0 then
     P:=Content.Length
@@ -55,7 +57,7 @@ end;
 
 function SplitAttributes(const Attributes: string): TArray<string>;
 begin
-  Result:=Attributes.Trim([' ']).Split([' ',#10,#13,')','(','[',']'],'"','"');
+  Result:=Attributes.Trim([' ']).Split([' ',#10,#13,#8,')','(','[',']'],'"','"',TStringSplitOptions.ExcludeEmpty);
 
 
 
@@ -146,7 +148,7 @@ begin
     else
       Tag.AddPair('__value',Text);
   end else
-  if not ',!doctype,link,meta,img,br,option,!--,!,'.Contains(','+N+',') and not S.EndsWith('/>') then
+  if not ',!doctype,link,meta,img,br,option,input,!--,!,'.Contains(','+N+',') and not S.EndsWith('/>') then
     Result:=HTMLGet(Tag,Content,Result);
 
   Result:=HTMLGet(Parent,Content,Result);
