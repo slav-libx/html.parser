@@ -1,0 +1,1260 @@
+<dd><dl class="attr">
+<dt><a name="embedded"></a><code translate="no" dir="ltr">android:allowEmbedded</code></dt>
+<dd>
+    Indicate that the activity can be launched as the embedded child of another
+    activity. Particularly in the case where the child lives in a container
+    such as a Display owned by another activity. For example, activities
+    that are used for Wear custom notifications must declare this so
+    Wear can display the activity in it's context stream, which resides
+    in another process.
+
+    <p>The default value of this attribute is <code translate="no" dir="ltr">false</code>.
+</dd>
+<dt><a name="reparent"></a><code translate="no" dir="ltr">android:allowTaskReparenting</code></dt>
+<dd>Whether or not the activity can move from the task that started it to
+the task it has an affinity for when that task is next brought to the
+front &mdash; "<code translate="no" dir="ltr">true</code>" if it can move, and "<code translate="no" dir="ltr">false</code>" if it
+must remain with the task where it started.
+
+<p>
+If this attribute is not set, the value set by the corresponding
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#reparent">allowTaskReparenting</a></code>
+attribute of the <code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code> element
+applies to the activity.  The default value is "<code translate="no" dir="ltr">false</code>".
+</p>
+
+<p>
+Normally when an activity is started, it's associated with the task of
+the activity that started it and it stays there for its entire lifetime.
+You can use this attribute to force it to be re-parented to the task it
+has an affinity for when its current task is no longer displayed.
+Typically, it's used to cause the activities of an application to move
+to the main task associated with that application.
+</p>
+
+<p>
+For example, if an e-mail message contains a link to a web page, clicking
+the link brings up an activity that can display the page.  That activity
+is defined by the browser application, but is launched as part of the e-mail
+task.  If it's reparented to the browser task, it will be shown when the
+browser next comes to the front, and will be absent when the e-mail task
+again comes forward.
+</p>
+
+<p>
+The affinity of an activity is defined by the
+<code translate="no" dir="ltr"><a href="#aff">taskAffinity</a></code> attribute.  The affinity
+of a task is determined by reading the affinity of its root activity.
+Therefore, by definition, a root activity is always in a task with the
+same affinity.  Since activities with "<code translate="no" dir="ltr">singleTask</code>" or
+"<code translate="no" dir="ltr">singleInstance</code>" launch modes can only be at the root of a task,
+re-parenting is limited to the "<code translate="no" dir="ltr">standard</code>" and "<code translate="no" dir="ltr">singleTop</code>"
+modes.  (See also the <code translate="no" dir="ltr"><a href="#lmode">launchMode</a></code>
+attribute.)
+</p></dd>
+
+<dt><a name="always"></a><code translate="no" dir="ltr">android:alwaysRetainTaskState</code></dt>
+<dd>Whether or not the state of the task that the activity is in will always
+be maintained by the system &mdash; "<code translate="no" dir="ltr">true</code>" if it will be, and
+"<code translate="no" dir="ltr">false</code>" if the system is allowed to reset the task to its initial
+state in certain situations.  The default value is "<code translate="no" dir="ltr">false</code>".  This
+attribute is meaningful only for the root activity of a task; it's ignored
+for all other activities.
+
+<p>
+Normally, the system clears a task (removes all activities from the stack
+above the root activity) in certain situations when the user re-selects that
+task from the home screen.  Typically, this is done if the user hasn't visited
+the task for a certain amount of time, such as 30 minutes.
+</p>
+
+<p>
+However, when this attribute is "<code translate="no" dir="ltr">true</code>", users will always return
+to the task in its last state, regardless of how they get there.  This is
+useful, for example, in an application like the web browser where there is
+a lot of state (such as multiple open tabs) that users would not like to lose.
+</p></dd>
+
+<dt><a name="autoremrecents"></a><code translate="no" dir="ltr">android:autoRemoveFromRecents</code></dt>
+<dd>Whether or not tasks launched by activities with this attribute remains in the
+<a href="/guide/components/recents">overview screen</a> until the last activity in the
+task is completed. If <code translate="no" dir="ltr">true</code>, the task is
+automatically removed from the overview screen. This overrides the caller's use of
+<code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_RETAIN_IN_RECENTS">FLAG_ACTIVITY_RETAIN_IN_RECENTS</a></code>. It must be a boolean value, either
+"<code translate="no" dir="ltr">true</code>" or "<code translate="no" dir="ltr">false</code>".</dd>
+
+
+<dt><a name="banner"></a><code translate="no" dir="ltr">android:banner</code></dt>
+<dd>A <a href="/guide/topics/resources/drawable-resource">drawable resource</a>
+providing an extended graphical banner for its associated item. Use with the
+<code translate="no" dir="ltr">&lt;activity&gt;</code> tag to supply a default banner for a specific activity, or with the
+<a href="/guide/topics/manifest/application-element"><code translate="no" dir="ltr">&lt;application&gt;</code></a>
+tag to supply a banner for all application activities.
+
+<p>The system uses the banner to represent an app in
+the Android TV home screen. Since the banner is displayed only in the home screen, it
+should only be specified by applications with an activity that handles the
+<code translate="no" dir="ltr"><a href="/reference/android/content/Intent#CATEGORY_LEANBACK_LAUNCHER">CATEGORY_LEANBACK_LAUNCHER</a></code> intent.</p>
+
+<p>This attribute must be set as a reference to a drawable resource containing
+the image (for example <code translate="no" dir="ltr">"@drawable/banner"</code>). There is no default banner.
+</p>
+
+<p>
+See <a href="/training/tv/start/start#banner">
+Provide a home screen banner</a> in Get Started with TV Apps for more information.
+</p></dd>
+
+
+<dt><a name="clear"></a><code translate="no" dir="ltr">android:clearTaskOnLaunch</code></dt>
+<dd>Whether or not all activities will be removed from the task, except for
+the root activity, whenever it is re-launched from the home screen &mdash;
+"<code translate="no" dir="ltr">true</code>" if the task is always stripped down to its root activity, and
+"<code translate="no" dir="ltr">false</code>" if not.  The default value is "<code translate="no" dir="ltr">false</code>".  This attribute
+is meaningful only for activities that start a new task (the root activity);
+it's ignored for all other activities in the task.
+
+<p>
+When the value is "<code translate="no" dir="ltr">true</code>", every time users start the task again, they
+are brought to its root activity regardless of what they were last doing in
+the task and regardless of whether they used the <em>Back</em> or <em>Home</em> button to
+leave it. When the value is "<code translate="no" dir="ltr">false</code>", the task may be cleared of activities in
+some situations (see the
+<code translate="no" dir="ltr"><a href="#always">alwaysRetainTaskState</a></code> attribute), but not always.
+</p>
+
+<p>
+Suppose, for example, that someone launches activity P from the home screen,
+and from there goes to activity Q.  The user next presses <em>Home</em>, and then returns
+to activity P.  Normally, the user would see activity Q, since that is what they
+were last doing in P's task.  However, if P set this flag to "<code translate="no" dir="ltr">true</code>", all
+of the activities on top of it (Q in this case) were removed when the user pressed
+<em>Home</em> and the task went to the background.  So the user sees only P when returning
+to the task.
+</p>
+
+<p>
+If this attribute and <code translate="no" dir="ltr"><a href="#reparent">allowTaskReparenting</a></code>
+are both "<code translate="no" dir="ltr">true</code>", any activities that can be re-parented are moved to
+the task they share an affinity with; the remaining activities are then dropped,
+as described above.
+</p></dd>
+
+<dt><a name="colormode"></a><code translate="no" dir="ltr">android:colorMode</code></dt>
+<dd><p>Requests the activity to be displayed in wide color gamut mode on compatible devices.
+In wide color gamut mode, a window can render outside of the
+<code translate="no" dir="ltr"><a href="/reference/android/graphics/ColorSpace.Named#SRGB">SRGB</a></code> gamut to display more vibrant
+colors. If the device doesn't support wide color gamut rendering, this attribute has no effect.
+For more information about rendering in wide color mode, see
+<a href="/training/wide-color-gamut">Enhancing Graphics with Wide Color Content</a>.</p>
+</dd>
+
+<dt><a name="config"></a><code translate="no" dir="ltr">android:configChanges</code></dt>
+<dd>Lists configuration changes that the activity will handle itself.  When a configuration
+change occurs at runtime, the activity is shut down and restarted by default, but declaring a
+configuration with this attribute will prevent the activity from being restarted. Instead, the
+activity remains running and its <code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onConfigurationChanged(android.content.res.Configuration)">onConfigurationChanged()</a></code></code> method is called.
+
+<p class="note"><strong>Note:</strong> Using this attribute should be
+avoided and used only as a last resort. Please read <a
+href="/guide/topics/resources/runtime-changes">Handling Runtime Changes</a> for more
+information about how to properly handle a restart due to a configuration change.</p>
+
+<p>
+Any or all of the following strings are valid values for this attribute. Multiple values are
+separated by '<code translate="no" dir="ltr">|</code>' &mdash; for example, "<code translate="no" dir="ltr">locale|navigation|orientation</code>".
+</p>
+
+<table>
+<tr>
+   <th>Value</th>
+   <th>Description</th>
+</tr><tr>
+  <td>"<code translate="no" dir="ltr">density</code>"</td>
+   <td>The display density has changed &mdash; the user might have specified a
+   different display scale, or a different display might now be active.
+   <p><em>Added in API level 24</em>.</p></td>
+</tr><tr>
+  <td>"<code translate="no" dir="ltr">fontScale</code>"</td>
+   <td>The font scaling factor has changed &mdash; the user has selected
+       a new global font size.</td>
+  </tr><tr>
+   <td>"<code translate="no" dir="ltr">keyboard</code>"</td>
+   <td>The keyboard type has changed &mdash; for example, the user has
+       plugged in an external keyboard.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">keyboardHidden</code>"</td>
+   <td>The keyboard accessibility has changed &mdash; for example, the
+       user has revealed the hardware keyboard.</td>
+</tr><tr>
+  <td>"<code translate="no" dir="ltr">layoutDirection</code>"</td>
+   <td>The layout direction has changed &mdash; for example, changing from
+   left-to-right (LTR) to right-to-left (RTL).
+   <p><em>Added in API level 17</em>.</p></td>
+  </tr><tr>
+   <td>"<code translate="no" dir="ltr">locale</code>"</td>
+   <td>The locale has changed &mdash; the user has selected a new
+       language that text should be displayed in.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">mcc</code>"</td>
+   <td>The IMSI mobile country code (MCC) has changed &mdash;
+       a SIM has been detected and updated the MCC.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">mnc</code>"</td>
+   <td>The IMSI mobile network code (MNC) has changed &mdash;
+       a SIM has been detected and updated the MNC.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">navigation</code>"</td>
+   <td>The navigation type (trackball/dpad) has changed.  (This should never normally happen.)</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">orientation</code>"</td>
+   <td>The screen orientation has changed &mdash; the user has rotated the device.
+   <p class="note"><strong>Note:</strong> If your application targets
+   Android 3.2 (API level 13) or higher, then you should also declare the
+   <code translate="no" dir="ltr">"screenSize"</code> and <code translate="no" dir="ltr">"screenLayout"</code> configurations, because they might also change when a
+   device switches between portrait and landscape orientations.</p></td>
+ </tr><tr>
+   <td>"<code translate="no" dir="ltr">screenLayout</code>"</td>
+   <td>The screen layout has changed &mdash; a different display might now be
+   active.</td>
+ </tr><tr>
+   <td>"<code translate="no" dir="ltr">screenSize</code>"</td>
+   <td>The current available screen size has changed.
+   <p>This represents a change in the currently available size, relative to the
+   current aspect ratio, so will change when the user switches between landscape
+   and portrait.</p>
+  <p><em>Added in API level 13</em>.</p></td>
+ </tr><tr>
+   <td>"<code translate="no" dir="ltr">smallestScreenSize</code>"</td>
+   <td>The physical screen size has changed.
+   <p>This represents a change in size regardless of orientation, so will only
+   change when the actual physical screen size has changed such as switching to
+   an external display. A change to this configuration corresponds to a change
+   in the
+   <a href="/guide/topics/resources/providing-resources#SmallestScreenWidthQualifier">smallestWidth
+   configuration</a>.</p>
+   <p><em>Added in API level 13</em>.</p></td>
+ </tr><tr>
+   <td>"<code translate="no" dir="ltr">touchscreen</code>"</td>
+   <td>The touchscreen has changed.  (This should never normally happen.)</td>
+</tr><tr>
+  <td>"<code translate="no" dir="ltr">uiMode</code>"</td>
+   <td>The user interface mode has changed &mdash; the user has placed the
+   device into a desk or car dock, or the night mode has changed. For more
+   information about the different UI modes, see
+   <code translate="no" dir="ltr"><a href="/reference/android/app/UiModeManager">UiModeManager</a></code>.
+   <p><em>Added in API level 8</em>.</p></td>
+  </tr>
+</table>
+
+<p>
+All of these configuration changes can impact the resource values seen by the
+application.  Therefore, when <code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onConfigurationChanged(android.content.res.Configuration)">onConfigurationChanged()</a></code></code> is called, it will generally be necessary to again
+retrieve all resources (including view layouts, drawables, and so on) to correctly
+handle the change.
+</p>
+<p class="note">
+<strong>Note:</strong> To handle all <a href="/guide/topics/ui/multi-window">Multi-Window</a> related configuration changes use both <code translate="no" dir="ltr">"screenLayout"</code> and <code translate="no" dir="ltr">"smallestScreenSize"</code>. Multi-Window is supported in Android 7.0 (API level 24) or higher.
+</p>
+</dd>
+
+<dt><a name="directBootAware"></a><code translate="no" dir="ltr">android:directBootAware</code></dt>
+<dd><p>Whether or not the activity is <i>direct-boot aware</i>; that is,
+whether or not it can run before the user unlocks the device.</p>
+
+<p class="note"><b>Note: </b>During
+<a href="/training/articles/direct-boot">Direct Boot</a>, an activity in
+your application can only access the data that is stored in
+<i>device protected</i> storage.</p>
+
+<p>The default value is <code translate="no" dir="ltr">"false"</code>.</p>
+</dd>
+
+<dt><a name="dlmode"></a><code translate="no" dir="ltr">android:documentLaunchMode</code></dt>
+<dd>Specifies how a new instance of an activity should be added to a task each time it is
+launched. This attribute permits the user to have multiple documents from the same application
+appear in the <a href="/guide/components/recents">overview screen</a>.
+
+<p>This attribute has four values which produce the following effects when the user opens a document
+with the application:</p>
+
+<table>
+<tr>
+  <th>Value</th>
+  <th>Description</th>
+</tr><tr>
+  <td>"<code translate="no" dir="ltr">intoExisting</code>"</td>
+  <td>The system searches for a task whose base intent's <code translate="no" dir="ltr">ComponentName</code> and data URI
+    match those of the launching intent. If the system finds such a task, the system clears the
+    task, and restarts with the root activity receiving a call to
+    <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onNewIntent(android.content.Intent)">onNewIntent(android.content.Intent)</a></code>.
+    If the system does not find such a task, the system creates a new task.</td>
+</tr><tr>
+    <td>"<code translate="no" dir="ltr">always</code>"</td>
+    <td>The activity creates a new task for the document, even if the document is already opened.
+    This is the same as setting both the <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_DOCUMENT">FLAG_ACTIVITY_NEW_DOCUMENT</a></code>
+    and <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_MULTIPLE_TASK">FLAG_ACTIVITY_MULTIPLE_TASK</a></code> flags.</td>
+</tr><tr>
+    <td>"<code translate="no" dir="ltr">none</code>"</td>
+    <td>The activity does not create a new task for the activity. This is the default value, which
+    creates a new task only when <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_TASK">FLAG_ACTIVITY_NEW_TASK</a></code> is set.
+    The overview screen treats the activity as it would by default: it displays a single task for
+    the app, which resumes from whatever activity the user last invoked.</td>
+</tr><tr>
+    <td>"<code translate="no" dir="ltr">never</code>"</td>
+    <td>This activity is not launched into a new document even if the Intent contains
+    <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_DOCUMENT">FLAG_ACTIVITY_NEW_DOCUMENT</a></code>. Setting this overrides the behavior
+    of the <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_DOCUMENT">FLAG_ACTIVITY_NEW_DOCUMENT</a></code> and
+    <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_MULTIPLE_TASK">FLAG_ACTIVITY_MULTIPLE_TASK</a></code> flags, if either of these are set in
+    the activity, and the overview screen displays a single task for the app, which resumes from
+    whatever activity the user last invoked.</td>
+</tr>
+</table>
+
+<p class="note"><strong>Note:</strong> For values other than "<code translate="no" dir="ltr">none</code>" and "<code translate="no" dir="ltr">never</code>" the
+activity must be defined with <code translate="no" dir="ltr">launchMode="standard"</code>. If this attribute is not specified,
+<code translate="no" dir="ltr">documentLaunchMode="none"</code> is used.</p>
+</dd>
+
+<dt><a name="enabled"></a><code translate="no" dir="ltr">android:enabled</code></dt>
+<dd>Whether or not the activity can be instantiated by the system &mdash;
+<code translate="no" dir="ltr">"true"</code> if it can be, and "<code translate="no" dir="ltr">false</code>" if not.  The default value
+is "<code translate="no" dir="ltr">true</code>".
+
+<p>
+The <code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a>
+</code> element has its own<code translate="no" dir="ltr">
+<a href="/guide/topics/manifest/application-element#enabled">enabled</a></code>
+attribute that applies to all application components, including activities.  The
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+and <code translate="no" dir="ltr">&lt;activity&gt;</code> attributes must both be "<code translate="no" dir="ltr">true</code>" (as they both
+are by default) for the system to be able to instantiate the activity.  If either
+is "<code translate="no" dir="ltr">false</code>", it cannot be instantiated.
+</p></dd>
+
+<dt><a name="exclude"></a><code translate="no" dir="ltr">android:excludeFromRecents</code></dt>
+<dd>Whether or not the task initiated by this activity should be excluded from the list of recently
+used applications, the <a href="/guide/components/recents">
+overview screen</a>. That is, when this activity is the root activity of a new
+task, this attribute determines whether the task should not appear in the list of recent apps. Set
+"<code translate="no" dir="ltr">true</code>" if the task should be <em>excluded</em> from the list; set "<code translate="no" dir="ltr">false</code>" if it
+should be <em>included</em>. The default value is "<code translate="no" dir="ltr">false</code>".
+</p></dd>
+
+<dt><a name="exported"></a><code translate="no" dir="ltr">android:exported</code></dt>
+<dd>This element sets whether the activity can be launched by components of other
+applications &mdash; "<code translate="no" dir="ltr">true</code>" if it can be, and "<code translate="no" dir="ltr">false</code>" if not.
+If "<code translate="no" dir="ltr">false</code>", the activity can be launched only by components of the
+same application or applications with the same user ID.
+
+<p>
+If you are using intent filters, you should not set this element
+"<code translate="no" dir="ltr">false</code>". If you do so, and an app tries to call the activity,
+system throws an <code translate="no" dir="ltr"><a href="/reference/android/content/ActivityNotFoundException">ActivityNotFoundException</a></code>. Instead,
+you should prevent other apps from calling the activity by not setting intent filters for it.
+</p>
+
+<p>
+If you do not have intent filters, the default value for this element is "<code translate="no" dir="ltr">false</code>".
+If you set the element "<code translate="no" dir="ltr">true</code>", the activity is accessible to
+any app that knows its exact class name, but does not resolve when the system tries to
+match an implicit intent.
+</p>
+
+<p>
+This attribute is not the only way to limit an activity's exposure to other
+applications.  You can also use a permission to limit the external entities that
+can invoke the activity  (see the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/activity-element#prmsn">permission</a></code>
+attribute).
+</p></dd>
+
+<dt><a name="finish"></a><code translate="no" dir="ltr">android:finishOnTaskLaunch</code></dt>
+<dd>Whether or not an existing instance of the activity should be shut down
+(finished) whenever the user again launches its task (chooses the task on the
+home screen) &mdash; "<code translate="no" dir="ltr">true</code>" if it should be shut down, and "<code translate="no" dir="ltr">false</code>"
+if not. The default value is "<code translate="no" dir="ltr">false</code>".
+
+<p>
+If this attribute and
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/activity-element#reparent">allowTaskReparenting</a></code>
+are both "<code translate="no" dir="ltr">true</code>", this attribute trumps the other.  The affinity of the
+activity is ignored.  The activity is not re-parented, but destroyed.
+</p>
+
+<dt><a name="hwaccel"></a><code translate="no" dir="ltr">android:hardwareAccelerated</code></dt>
+<dd>Whether or not hardware-accelerated rendering should be enabled for this
+Activity &mdash; "<code translate="no" dir="ltr">true</code>" if it should be enabled, and "<code translate="no" dir="ltr">false</code>" if
+not. The default value is "<code translate="no" dir="ltr">false</code>".
+
+
+<p>Starting from Android 3.0, a hardware-accelerated OpenGL renderer is
+available to applications, to improve performance for many common 2D graphics
+operations. When the hardware-accelerated renderer is enabled, most operations
+in Canvas, Paint, Xfermode, ColorFilter, Shader, and Camera are accelerated.
+This results in smoother animations, smoother scrolling, and improved
+responsiveness overall, even for applications that do not explicitly make use
+the framework's OpenGL libraries. Because of the increased resources required to
+enable hardware acceleration, your app will consume more RAM.</p>
+
+<p>Note that not all of the OpenGL 2D operations are accelerated. If you enable
+the hardware-accelerated renderer, test your application to ensure that it can
+make use of the renderer without errors.</p>
+</dd>
+
+<dt><a name="icon"></a><code translate="no" dir="ltr">android:icon</code></dt>
+<dd>An icon representing the activity. The icon is displayed to users when
+a representation of the activity is required on-screen.  For example, icons
+for activities that initiate tasks are displayed in the launcher window.
+The icon is often accompanied by a label (see the <a href="#label"><code translate="no" dir="ltr">android:label</code></a> attribute).
+</p>
+
+<p>
+This attribute must be set as a reference to a drawable resource containing
+the image definition.  If it is not set, the icon specified for the application
+as a whole is used instead (see the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+element's <code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#icon">icon</a></code> attribute).
+</p>
+
+<p>
+The activity's icon &mdash; whether set here or by the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+element &mdash; is also the default icon for all the activity's intent filters (see the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/intent-filter-element">&lt;intent-filter&gt;</a></code> element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/intent-filter-element#icon">icon</a></code> attribute).
+</p></dd>
+
+<dt><a name="immersive"></a><code translate="no" dir="ltr">android:immersive</code></dt>
+<dd>Sets the immersive mode setting for the current activity. If the
+<code translate="no" dir="ltr">android:immersive</code> attribute is set to <code translate="no" dir="ltr">true</code> in the
+app's manifest entry for this activity, the <code translate="no" dir="ltr"><a href="/reference/android/content/pm/ActivityInfo#flags">ActivityInfo.flags</a></code> member always has its
+<code translate="no" dir="ltr"><a href="/reference/android/content/pm/ActivityInfo#FLAG_IMMERSIVE">FLAG_IMMERSIVE</a></code> bit set, even if the
+immersive mode is changed at runtime using the <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#setImmersive(boolean)">setImmersive()</a></code> method.</dd>
+
+<dt><a name="label"></a><code translate="no" dir="ltr">android:label</code></dt>
+<dd>A user-readable label for the activity.  The label is displayed on-screen
+when the activity must be represented to the user. It's often displayed along
+with the activity icon.
+
+<p>
+If this attribute is not set, the label set for the application as a whole is
+used instead (see the <code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code> element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#label">label</a></code> attribute).
+</p>
+
+<p>
+The activity's label &mdash; whether set here or by the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code> element &mdash; is also the
+default label for all the activity's intent filters (see the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/intent-filter-element">&lt;intent-filter&gt;</a></code> element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/intent-filter-element#label">label</a></code> attribute).
+</p>
+
+<p>
+The label should be set as a reference to a string resource, so that
+it can be localized like other strings in the user interface.
+However, as a convenience while you're developing the application,
+it can also be set as a raw string.
+</p></dd>
+
+<dt><a name="lmode"></a><code translate="no" dir="ltr">android:launchMode</code></dt>
+<dd>An instruction on how the activity should be launched.  There are four modes
+that work in conjunction with activity flags (<code translate="no" dir="ltr">FLAG_ACTIVITY_*</code> constants)
+in <code translate="no" dir="ltr"><a href="/reference/android/content/Intent">Intent</a></code> objects to determine what should happen when
+the activity is called upon to handle an intent. They are:</p>
+
+<p style="margin-left: 2em">"<code translate="no" dir="ltr">standard</code>"
+<br>"<code translate="no" dir="ltr">singleTop</code>"
+<br>"<code translate="no" dir="ltr">singleTask</code>"
+<br>"<code translate="no" dir="ltr">singleInstance</code>"</p>
+
+<p>
+The default mode is "<code translate="no" dir="ltr">standard</code>".
+</p>
+
+<p>
+As shown in the table below, the modes fall into two main groups, with
+"<code translate="no" dir="ltr">standard</code>" and "<code translate="no" dir="ltr">singleTop</code>" activities on one side, and
+"<code translate="no" dir="ltr">singleTask</code>" and "<code translate="no" dir="ltr">singleInstance</code>" activities on the other.
+An activity with the "<code translate="no" dir="ltr">standard</code>" or "<code translate="no" dir="ltr">singleTop</code>" launch mode
+can be instantiated multiple times.  The instances can belong to any task
+and can be located anywhere in the activity stack.  Typically, they're
+launched into the task that called
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/content/Context#startActivity(android.content.Intent)">startActivity()</a></code></code>
+(unless the Intent object contains a
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_TASK">FLAG_ACTIVITY_NEW_TASK</a></code></code>
+instruction, in which case a different task is chosen &mdash; see the
+<a href="#aff">taskAffinity</a> attribute).
+</p>
+
+<p>
+In contrast, "<code translate="no" dir="ltr">singleTask</code>" and "<code translate="no" dir="ltr">singleInstance</code>" activities
+can only begin a task.  They are always at the root of the activity stack.
+Moreover, the device can hold only one instance of the activity at a time
+&mdash; only one such task.
+</p>
+
+<p>
+The "<code translate="no" dir="ltr">standard</code>" and "<code translate="no" dir="ltr">singleTop</code>" modes differ from each other
+in just one respect:  Every time there's a new intent for a "<code translate="no" dir="ltr">standard</code>"
+activity, a new instance of the class is created to respond to that intent.
+Each instance handles a single intent.
+Similarly, a new instance of a "<code translate="no" dir="ltr">singleTop</code>" activity may also be
+created to handle a new intent.  However, if the target task already has an
+existing instance of the activity at the top of its stack, that instance
+will receive the new intent (in an
+<code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onNewIntent(android.content.Intent)">onNewIntent()</a></code> call);
+a new instance is not created.
+In other circumstances &mdash; for example, if an existing instance of the
+"<code translate="no" dir="ltr">singleTop</code>" activity is in the target task, but not at the top of
+the stack, or if it's at the top of a stack, but not in the target task
+&mdash; a new instance would be created and pushed on the stack.
+</p>
+
+<p>Similarly, if you
+<a href="/training/implementing-navigation/ancestral">navigate
+up</a> to an activity on the current stack, the behavior is determined by the
+parent activity's launch mode. If the parent activity has launch mode <code translate="no" dir="ltr">singleTop</code> (or the <code translate="no" dir="ltr">up</code> intent contains <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_CLEAR_TOP">FLAG_ACTIVITY_CLEAR_TOP</a></code>), the parent is brought to the
+top of the stack, and its state is preserved. The navigation intent is received
+by the parent activity's <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onNewIntent(android.content.Intent)">onNewIntent()</a></code>
+method.  If the parent activity has launch mode <code translate="no" dir="ltr">standard</code> (and the
+<code translate="no" dir="ltr">up</code> intent does not contain <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_CLEAR_TOP">FLAG_ACTIVITY_CLEAR_TOP</a></code>), the current activity and its
+parent are both popped off the stack, and a new instance of the parent activity
+is created to receive the navigation intent.
+</p>
+
+
+<p>
+The "<code translate="no" dir="ltr">singleTask</code>" and "<code translate="no" dir="ltr">singleInstance</code>" modes also differ from
+each other in only one respect:  A "<code translate="no" dir="ltr">singleTask</code>" activity allows other
+activities to be part of its task. It's always at the root of its task, but
+other activities (necessarily "<code translate="no" dir="ltr">standard</code>" and "<code translate="no" dir="ltr">singleTop</code>"
+activities) can be launched into that task.  A "<code translate="no" dir="ltr">singleInstance</code>"
+activity, on the other hand, permits no other activities to be part of its task.
+It's the only activity in the task.  If it starts another activity, that
+activity is assigned to a different task &mdash; as if <code translate="no" dir="ltr">FLAG_ACTIVITY_NEW_TASK</code> was in the intent.
+</p>
+
+<table>
+<tr>
+<th>Use Cases</th>
+<th>Launch Mode</th>
+<th>Multiple Instances?</th>
+<th>Comments</th>
+</tr>
+<tr>
+<td rowspan="2" style="width:20%;">Normal launches for most activities</td>
+<td>"<code translate="no" dir="ltr">standard</code>"</td>
+<td>Yes</td>
+<td>Default. The system always creates a new instance of the activity in the
+target task and routes the intent to it.</td>
+</tr>
+<tr>
+<td>"<code translate="no" dir="ltr">singleTop</code>"</td>
+<td>Conditionally</td>
+<td>If an instance of the activity already exists at the top of the target task,
+the system routes the intent to that instance through a call to its <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onNewIntent(android.content.Intent)">onNewIntent()</a></code> method, rather than creating a
+new instance of the activity.</td>
+</tr>
+<tr>
+<td rowspan="2">Specialized launches<br>
+<em>(not recommended for general use)</em></td>
+<td>"<code translate="no" dir="ltr">singleTask</code>"</td>
+<td>No</td>
+<td>The system creates the activity at the root of a new task and routes the
+intent to it. However, if an instance of the activity already exists, the system
+routes the intent to existing instance through a call to its <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onNewIntent(android.content.Intent)">onNewIntent()</a></code> method, rather than creating a
+new one.</td>
+</tr>
+<tr>
+<td>"<code translate="no" dir="ltr">singleInstance</code>"</td>
+<td>No</td>
+<td>Same as "<code translate="no" dir="ltr">singleTask"</code>, except that the system doesn't launch any
+other activities into the task holding the instance. The activity is always the
+single and only member of its task.</td>
+</tr>
+</table>
+
+<p>As shown in the table above, <code translate="no" dir="ltr">standard</code> is the default mode and is
+appropriate for most types of activities. <code translate="no" dir="ltr">SingleTop</code> is also a
+common and useful launch mode for many types of activities. The other modes
+&mdash; <code translate="no" dir="ltr">singleTask</code> and <code translate="no" dir="ltr">singleInstance</code> &mdash; are
+<span style="color:red">not appropriate for most applications</span>,
+since they result in an interaction model that is likely to be unfamiliar to
+users and is very different from most other applications.
+
+<p>Regardless of the launch mode that you choose, make sure to test the usability
+of the activity during launch and when navigating back to it from
+other activities and tasks using the <em>Back</em> button. </p>
+
+<p>For more information on launch modes and their interaction with Intent
+flags, see the
+<a href="/guide/components/tasks-and-back-stack">Tasks and Back Stack</a>
+document.
+</p>
+</dd>
+
+<!-- ##api level 23## -->
+<dt><a name="ltmode"></a><code translate="no" dir="ltr">android:lockTaskMode</code></dt>
+<dd>Determines how the system presents this activity when the device is running in
+<a href="/work/dpc/dedicated-devices/lock-task-mode">lock task mode</a>.
+
+<p>Android can run tasks in an immersive, kiosk-like fashion called lock task mode. When the system
+runs in lock task mode, device users typically can’t see notifications, access non-allowlisted apps,
+or return to the home screen (unless the Home app is allowlisted). Only apps that have been
+allowlisted by a device policy controller (DPC) can run when the system is in lock task mode. System
+and <a href="https://source.android.com/devices/tech/config/perms-allowlist">privileged apps</a>,
+however, can run in lock task mode without being allowlisted.</p>
+
+<p>The value can be any one of the following
+<a href="/reference/android/R.attr#lockTaskMode"><code translate="no" dir="ltr">R.attr.lockTaskMode</code></a> string values:
+</p>
+
+<table>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code translate="no" dir="ltr">"normal"</code></td>
+<td><b>Default value. </b>This is the default value. Tasks don't launch into lock task mode but can
+be placed there by calling
+<a href="/reference/android/app/Activity#startLockTask()"><code translate="no" dir="ltr">startLockTask()</code></a>.
+</td>
+</tr>
+<tr>
+<td><code translate="no" dir="ltr">"never"</code></td>
+<td><p>Tasks don't launch into lockTask mode, and the device user can't pin these tasks from the
+  overview screen.</p>
+<p><p class="note"><b>Note:</b> This mode is only available to system and privileged applications.
+Non-privileged apps with this value are treated as <code translate="no" dir="ltr">normal</code>.</p></td>
+</tr>
+<tr>
+<td><code translate="no" dir="ltr">"if_whitelisted"</code></td>
+<td>If the DPC authorizes this package using
+<a href="/reference/android/app/admin/DevicePolicyManager#setLockTaskPackages(android.content.ComponentName,%20java.lang.String[])"><code translate="no" dir="ltr">DevicePolicyManager.setLockTaskPackages()</code></a>,
+then this mode is identical to <code translate="no" dir="ltr">always</code>, except that the activity needs to call
+<a href="/reference/android/app/Activity#stopLockTask()"><code translate="no" dir="ltr">stopLockTask()</code></a> before being
+able to finish if it is the last locked task. If the DPC does not authorize this package then this
+mode is identical to <code translate="no" dir="ltr">normal</code>.</td>
+</tr>
+<tr>
+<td><code translate="no" dir="ltr">"always"</code></td>
+<td><p>Tasks rooted at this activity always launch into lock task mode. If the system is already in
+lock task mode when this task is launched then the new task are launched on top of the current task.
+Tasks launched in this mode can exit lock task mode by calling
+<a href="/reference/android/app/Activity#finish()"><code translate="no" dir="ltr">finish()</code></a>.</p>
+<p class="note"><b>Note:</b> This mode is only available to system and privileged applications.
+Non-privileged apps with this value are treated as <code translate="no" dir="ltr">normal</code>.</p></td>
+</tr>
+</table>
+
+<p>This attribute was introduced in API Level 23.</p>
+</dd>
+
+<dt><a name="maxrecents"></a><code translate="no" dir="ltr">android:maxRecents</code></dt>
+<dd>The maximum number of tasks rooted at this activity in the <a href="/guide/components/recents">
+overview screen</a>. When this number of entries is reached, the system removes the least-recently
+used instance from the overview screen. Valid values are 1 through 50 (25 on low memory devices);
+zero is invalid. This must be an integer value, such as 50. The default value is 16.
+</dd>
+
+<dt><a name="maxaspectratio"></a><code translate="no" dir="ltr">android:maxAspectRatio</code></dt>
+<dd>The maximum aspect ratio the activity supports. If the app runs
+on a device with a wider aspect ratio, the system automatically letterboxes the app,
+leaving portions of the screen unused so the app can run at its specified maximum aspect ratio.
+
+Maximum aspect ratio is expressed as the decimal form of the quotient of the device's longer
+dimension divided by its shorter dimension. For example, if the maximum aspect ratio is 7:3,
+set the value of this attribute to 2.33.
+
+On non-wearable devices, the value of this attribute needs to be 1.33 or greater.
+On wearable devices, it must be 1.0 or greater. Otherwise, the system ignores the
+set value.
+
+<p class="note"><strong>Note: </strong> This attribute is ignored if the activity has
+<code translate="no" dir="ltr"><a href="/reference/android/R.attr#resizeableActivity">resizeableActivity</a></code> set to true, since that means your activity
+supports any size.
+</p>
+
+<p>
+  For more information about this attribute, see <a href="/guide/practices/screens_support">
+  Supporting Multiple Screens.</a>
+</p>
+</dd>
+
+<dt><a name="multi"></a><code translate="no" dir="ltr">android:multiprocess</code></dt>
+<dd>Whether an instance of the activity can be launched into the process of the component
+that started it &mdash; "<code translate="no" dir="ltr">true</code>" if it can be, and "<code translate="no" dir="ltr">false</code>" if not.
+The default value is "<code translate="no" dir="ltr">false</code>".
+
+<p>
+Normally, a new instance of an activity is launched into the process of the
+application that defined it, so all instances of the activity run in the same
+process.  However, if this flag is set to "<code translate="no" dir="ltr">true</code>", instances of the
+activity can run in multiple processes, allowing the system to create instances
+wherever they are used (provided permissions allow it), something that is almost
+never necessary or desirable.
+</p></dd>
+
+<dt><a name="nm"></a><code translate="no" dir="ltr">android:name</code></dt>
+<dd>The name of the class that implements the activity, a subclass of
+<code translate="no" dir="ltr"><a href="/reference/android/app/Activity">Activity</a></code>.  The attribute value should be a fully qualified
+class name (such as, "<code translate="no" dir="ltr">com.example.project.ExtracurricularActivity</code>").
+However, as a shorthand, if the first character of the name is a period
+(for example, "<code translate="no" dir="ltr">.ExtracurricularActivity</code>"), it is appended to the
+package name specified in the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/manifest-element">&lt;manifest&gt;</a></code>
+element.
+<p>Once you publish your application, you <a
+href="http://android-developers.blogspot.com/2011/06/things-that-cannot-change.html">should not
+change this name</a> (unless you've set <code translate="no" dir="ltr"><a
+href="#exported">android:exported</a>="false"</code>).</p>
+
+<p>
+There is no default.  The name must be specified.
+</p></dd>
+
+<!-- ##api level 3## -->
+<dt><a name="nohist"></a><code translate="no" dir="ltr">android:noHistory</code></dt>
+<dd>Whether or not the activity should be removed from the activity stack and
+finished (its <code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#finish()">finish()</a></code></code>
+method called) when the user navigates away from it and it's no longer
+visible on screen &mdash; "<code translate="no" dir="ltr">true</code>" if it should be finished, and
+"<code translate="no" dir="ltr">false</code>" if not.  The default value is "<code translate="no" dir="ltr">false</code>".
+
+<p>
+A value of "<code translate="no" dir="ltr">true</code>" means that the activity will not leave a
+historical trace.  It will not remain in the activity stack for the task,
+so the user will not be able to return to it. In this case,
+<code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onActivityResult(int, int, android.content.Intent)">onActivityResult()</a></code> is never called if you
+start another activity for a result from this activity.
+</p>
+
+<p>
+This attribute was introduced in API Level 3.
+</p>
+</dd>
+
+<!-- api level 16 -->
+<dt><a name="parent"></a><code translate="no" dir="ltr">android:parentActivityName</code></dt>
+<dd>The class name of the logical parent of the activity. The name here must match the class
+  name given to the corresponding <code translate="no" dir="ltr">&lt;activity&gt;</code> element's
+  <a href="#nm"><code translate="no" dir="ltr">android:name</code></a> attribute.
+
+<p>The system reads this attribute to determine which activity should be started when
+  the user presses the Up button in the action bar. The system can also use this information to
+  synthesize a back stack of activities with <code translate="no" dir="ltr"><a href="/reference/android/app/TaskStackBuilder">TaskStackBuilder</a></code>.</p>
+
+<p>To support API levels 4 - 16, you can also declare the parent activity with a <code translate="no" dir="ltr">&lt;meta-data&gt;</code> element that specifies a value for <code translate="no" dir="ltr">"android.support.PARENT_ACTIVITY"</code>.
+For example:</p>
+<pre class="prettyprint lang-xml" translate="no" dir="ltr">
+&lt;activity
+    android:name="com.example.app.ChildActivity"
+    android:label="@string/title_child_activity"
+    android:parentActivityName="com.example.app.MainActivity" >
+    &lt;!-- Parent activity meta-data to support API level 4+ -->
+    &lt;meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="com.example.app.MainActivity" />
+&lt;/activity>
+</pre>
+
+<p>For more information about declaring the parent activity to support Up navigation,
+read <a href="/training/implementing-navigation/ancestral">Providing Up
+Navigation</a>.</p>
+
+<p>
+This attribute was introduced in API Level 16.
+</p>
+</dd>
+
+<dt><a name="persistableMode"></a><code translate="no" dir="ltr">android:persistableMode</code></dt>
+<dd><p>Defines how an instance of an activity is preserved within a containing
+task across device restarts.</p>
+
+<p>If the root activity of a task sets this attribute's value to
+<code translate="no" dir="ltr">persistRootOnly</code>, then only the root activity is preserved.
+Otherwise, the activities that are higher up the task's
+<a href="/guide/components/activities/tasks-and-back-stack">back stack</a>
+are examined; any of these activities that set this attribute's value to
+<code translate="no" dir="ltr">persistAcrossReboots</code> are preserved.
+
+<p>If you use this attribute, you must set its value to one of the
+following:</p>
+
+<table>
+  <tr>
+    <th>Value</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code translate="no" dir="ltr">persistRootOnly</code></td>
+    <td><b>Default value. </b>When the system restarts, the activity task is
+    preserved, but only the root activity's launching intent is used.</p>
+
+    <p>When your app's launching intent loads your app's root activity, the
+    activity doesn't receive a <code translate="no" dir="ltr"><a href="/reference/android/os/PersistableBundle">PersistableBundle</a></code> object.
+    Therefore, don't use
+    <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onSaveInstanceState(android.os.Bundle, android.os.PersistableBundle)">onSaveInstanceState()</a></code>
+    to preserve the state of your app's root activity across a device
+    restart.</p>
+
+    <p class="note"><b>Note: </b>This attribute value affects your app's
+    behavior only if it's set on your app's root activity.</p>
+    </td>
+  </tr>
+  <tr>
+    <td><code translate="no" dir="ltr">persistAcrossReboots</code></td>
+    <td><p>This activity's state is preserved, along with the state of each
+    activity higher up the
+    <a href="/guide/components/activities/tasks-and-back-stack">back
+    stack</a> that has its own <code translate="no" dir="ltr">persistableMode</code> attribute set to
+    <code translate="no" dir="ltr">persistAcrossReboots</code>. If an activity doesn't have
+    a <code translate="no" dir="ltr">persistableMode</code> attribute that is set to
+    <code translate="no" dir="ltr">persistAcrossReboots</code>, or if it's launched using the
+    <code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_DOCUMENT">Intent.FLAG_ACTIVITY_NEW_DOCUMENT</a></code>
+    flag, then that activity, along with all activities higher up the back
+    stack, aren't preserved.</p>
+
+    <p>When an intent loads an activity whose <code translate="no" dir="ltr">persistableMode</code>
+    attribute is set to <code translate="no" dir="ltr">persistAcrossReboots</code> in your app, the
+    activity receives a <code translate="no" dir="ltr"><a href="/reference/android/os/PersistableBundle">PersistableBundle</a></code> object in its
+    <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onCreate(android.os.Bundle, android.os.PersistableBundle)">onCreate()</a></code> method.
+    Therefore, you can use
+    <code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onSaveInstanceState(android.os.Bundle, android.os.PersistableBundle)">onSaveInstanceState()</a></code>
+    to preserve the state of an activity across a device restart as long as its
+    <code translate="no" dir="ltr">persistableMode</code> attribute is set to
+    <code translate="no" dir="ltr">persistAcrossReboots</code>.</p>
+
+    <p class="note"><b>Note: </b>This attribute value affects your app's
+    behavior even if it's set on an activity other than your app's root
+    activity.</p></td>
+  </tr>
+  <tr>
+    <td><code translate="no" dir="ltr">persistNever</code></td>
+    <td><p>The activity's state isn't preserved.</p>
+
+    <p class="note"><b>Note: </b>This attribute value affects your app's
+    behavior only if it's set on your app's root activity.</p></td>
+  </tr>
+</table>
+
+<p>This attribute was introduced in API level 21.</p>
+</dd>
+
+<dt><a name="prmsn"></a><code translate="no" dir="ltr">android:permission</code></dt>
+<dd>The name of a permission that clients must have to launch the activity
+or otherwise get it to respond to an intent.  If a caller of
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/content/Context#startActivity(android.content.Intent)">startActivity()</a></code></code> or
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#startActivityForResult(android.content.Intent, int)">startActivityForResult()</a></code></code>
+has not been granted the specified permission, its intent will not be
+delivered to the activity.
+
+<p>
+If this attribute is not set, the permission set by the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#prmsn">permission</a></code>
+attribute applies to the activity.  If neither attribute is set, the activity is
+not protected by a permission.
+</p>
+
+<p>
+For more information on permissions, see the
+<a href="/guide/topics/manifest/manifest-intro#sectperm">Permissions</a>
+section in the introduction and another document,
+<a href="/guide/topics/security/security">Security and
+Permissions</a>.
+</p></dd>
+
+<dt><a name="proc"></a><code translate="no" dir="ltr">android:process</code></dt>
+<dd>The name of the process in which the activity should run. Normally, all components of an
+application run in a default process name created for the application and you do
+not need to use this attribute. But if necessary, you can override the default process
+name with this attribute, allowing you to spread your app components across
+multiple processes.
+
+<p>
+If the name assigned to this attribute begins with a colon (':'), a new
+process, private to the application, is created when it's needed and
+the activity runs in that process.
+If the process name begins with a lowercase character, the activity will run
+in a global process of that name, provided that it has permission to do so.
+This allows components in different applications to share a process, reducing
+resource usage.
+</p>
+
+<p>The <code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element"
+>&lt;application&gt;</a></code> element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#proc">process</a></code>
+attribute can set a different default process name for all components.
+</dd>
+
+<dt><a name="relinquish"></a><code translate="no" dir="ltr">android:relinquishTaskIdentity</code></dt>
+<dd>Whether or not the activity relinquishes its task identifiers to an activity above it in the
+task stack. A task whose root activity has this attribute set to "<code translate="no" dir="ltr">true</code>" replaces the base
+Intent with that of the next activity in the task. If the next activity also has this attribute set
+to "<code translate="no" dir="ltr">true</code>" then it will yield the base Intent to any activity that it launches in the same
+task. This continues for each activity until an activity is encountered which has this attribute set
+to "<code translate="no" dir="ltr">false</code>". The default value is "<code translate="no" dir="ltr">false</code>".
+
+<p>This attribute set to "<code translate="no" dir="ltr">true</code>" also permits the activity's use of the
+<code translate="no" dir="ltr"><a href="/reference/android/app/ActivityManager.TaskDescription">ActivityManager.TaskDescription</a></code> to change labels, colors
+and icons in the <a href="/guide/components/recents">overview screen</a>.</p>
+</dd>
+
+<dt id="resizeableActivity"><code translate="no" dir="ltr">resizeableActivity</code></dt>
+
+<dd>
+<p>
+  Specifies whether the app supports <a href="/guide/topics/ui/multi-window">multi-window display</a>. You
+  can set this attribute in either the <code translate="no" dir="ltr">&lt;activity&gt;</code> or
+  <a href="/guide/topics/manifest/application-element"><code translate="no" dir="ltr">&lt;application&gt;</code></a>
+  element.
+</p>
+
+<p>
+  If you set this attribute to true, the user can launch the activity in
+  split-screen and freeform modes. If you set the attribute to false, the
+  activity does not support multi-window mode. If this value is false, and the
+  user attempts to launch the activity in multi-window mode, the activity takes
+  over the full screen.
+</p>
+
+<p>
+  If your app targets API level 24 or higher, but you do not specify a value
+  for this attribute, the attribute's value defaults to true.
+</p>
+
+<p>
+  This attribute was added in API level 24.
+</p>
+</dd>
+
+<dt><a name="screen"></a><code translate="no" dir="ltr">android:screenOrientation</code></dt>
+<dd>The orientation of the activity's display on the device. The system ignores
+  this attribute if the activity is running in <a
+  href="/guide/topics/ui/multi-window">multi-window mode</a>.
+
+<p>The value can be any one of the following strings:</p>
+
+<table>
+<tr>
+   <td>"<code translate="no" dir="ltr">unspecified</code>"</td>
+   <td>The default value.  The system chooses the orientation.  The policy it
+       uses, and therefore the choices made in specific contexts, may differ
+       from device to device.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">behind</code>"</td>
+   <td>The same orientation as the activity that's immediately beneath it in
+       the activity stack.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">landscape</code>"</td>
+   <td>Landscape orientation (the display is wider than it is tall).</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">portrait</code>"</td>
+   <td>Portrait orientation (the display is taller than it is wide).</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">reverseLandscape</code>"</td>
+   <td>Landscape orientation in the opposite direction from normal landscape.
+<em>Added in API level 9.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">reversePortrait</code>"</td>
+   <td>Portrait orientation in the opposite direction from normal portrait.
+<em>Added in API level 9.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">sensorLandscape</code>"</td>
+   <td>Landscape orientation, but can be either normal or reverse landscape based on the device
+sensor. The sensor is used even if the user has locked sensor-based rotation.
+<em>Added in API level 9.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">sensorPortrait</code>"</td>
+   <td>Portrait orientation, but can be either normal or reverse portrait based on the device
+sensor. The sensor is used even if the user has locked sensor-based rotation.
+<em>Added in API level 9.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">userLandscape</code>"</td>
+   <td>Landscape orientation, but can be either normal or reverse landscape based on the device
+sensor and the user's preference.
+<em>Added in API level 18.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">userPortrait</code>"</td>
+   <td>Portrait orientation, but can be either normal or reverse portrait based on the device
+sensor and the user's preference.
+<em>Added in API level 18.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">sensor</code>"</td>
+   <td>The orientation is determined by the device orientation sensor. The orientation of the
+display depends on how the user is holding the device; it changes when the user rotates the
+device. Some devices, though, will not rotate to all four possible orientations, by default. To
+allow all four orientations, use <code translate="no" dir="ltr">"fullSensor"</code> The sensor is used even if the user
+locked sensor-based rotation.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">fullSensor</code>"</td>
+   <td>The orientation is determined by the device orientation sensor for any of the 4 orientations.
+This is similar to <code translate="no" dir="ltr">"sensor"</code> except this allows any of the 4 possible screen orientations,
+regardless of what the device will normally do (for example, some devices won't normally use reverse
+portrait or reverse landscape, but this enables those). <em>Added in API level 9.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">nosensor</code>"</td>
+   <td>The orientation is determined without reference to a physical orientation sensor. The sensor
+is ignored, so the display will not rotate based on how the user moves the device.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">user</code>"</td>
+   <td>The user's current preferred orientation.</td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">fullUser</code>"</td>
+   <td>If the user has locked sensor-based rotation, this behaves the same as <code translate="no" dir="ltr">user</code>,
+   otherwise it behaves the same as <code translate="no" dir="ltr">fullSensor</code> and allows any of the 4 possible
+   screen orientations.
+    <em>Added in API level 18.</em></td>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">locked</code>"</td>
+   <td>Locks the orientation to its current rotation, whatever that is.
+<em>Added in API level 18.</em></td>
+</tr>
+</table>
+
+<p class="note"><strong>Note:</strong> When you declare one of the landscape or portrait values,
+it is considered a hard requirement for the orientation in which the activity runs. As such,
+the value you declare enables filtering by services such as Google Play so your application is
+available only to devices that support the orientation required by your activities. For
+example, if you declare either <code translate="no" dir="ltr">"landscape"</code>, <code translate="no" dir="ltr">"reverseLandscape"</code>, or
+<code translate="no" dir="ltr">"sensorLandscape"</code>, then your application will be available only to devices that support
+landscape orientation. However, you should also explicitly declare that
+your application requires either portrait or landscape orientation with the <a
+href="/guide/topics/manifest/uses-feature-element"><code translate="no" dir="ltr">&lt;uses-feature&gt;</code></a>
+element. For example, <code translate="no" dir="ltr">&lt;uses-feature
+android:name="android.hardware.screen.portrait"/></code>. This is purely a filtering behavior
+provided by Google Play (and other services that support it) and the platform itself does not
+control whether your app can be installed when a device supports only certain orientations.</p>
+
+</dd>
+
+<dt><a name="showForAllUsers"></a><code translate="no" dir="ltr">android:showForAllUsers</code></dt>
+<dd>
+  <p>Whether or not the activity is shown when the device's current user is
+  different than the user who launched the activity. You can set this attribute
+  to a literal value&mdash;<code translate="no" dir="ltr">"true"</code> or <code translate="no" dir="ltr">"false"</code>&mdash;or
+  you can set the attribute to a resource or theme attribute that contains a
+  boolean value.</p>
+
+  <p>This attribute was added in API level 23.</p>
+</dd>
+
+<dt><a name="state"></a><code translate="no" dir="ltr">android:stateNotNeeded</code></dt>
+<dd>Whether or not the activity can be killed and successfully restarted
+without having saved its state &mdash; "<code translate="no" dir="ltr">true</code>" if it can be restarted
+without reference to its previous state, and "<code translate="no" dir="ltr">false</code>" if its previous
+state is required.  The default value is "<code translate="no" dir="ltr">false</code>".
+
+<p>
+Normally, before an activity is temporarily shut down to save resources, its
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onSaveInstanceState(android.os.Bundle)">onSaveInstanceState()</a></code></code>
+method is called.  This method stores the current state of the activity in a
+<code translate="no" dir="ltr"><a href="/reference/android/os/Bundle">Bundle</a></code> object, which is then passed to
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/app/Activity#onCreate(android.os.Bundle)">onCreate()</a></code></code> when the activity
+is restarted.  If this attribute is set to "<code translate="no" dir="ltr">true</code>",
+<code translate="no" dir="ltr">onSaveInstanceState()</code> may not be called and <code translate="no" dir="ltr">onCreate()</code> will
+be passed <code translate="no" dir="ltr">null</code> instead of the Bundle &mdash; just as it was when the
+activity started for the first time.
+</p>
+
+<p>
+A "<code translate="no" dir="ltr">true</code>" setting ensures that the activity can be restarted in the
+absence of retained state.  For example, the activity that displays the
+home screen uses this setting to make sure that it does not get removed if it
+crashes for some reason.
+</p></dd>
+
+<dt id="supportsPIP"><code translate="no" dir="ltr">supportsPictureInPicture</code></dt>
+
+<dd>
+<p>
+  Specifies whether the activity supports <a href="/training/tv/playback/picture-in-picture">
+  Picture-in-Picture</a> display.
+</p>
+
+<p>This attribute was added in API level 24.</p>
+</dd>
+
+<dt><a name="aff"></a><code translate="no" dir="ltr">android:taskAffinity</code></dt>
+<dd>The task that the activity has an affinity for.  Activities with
+the same affinity conceptually belong to the same task (to the same
+"application" from the user's perspective).  The affinity of a task
+is determined by the affinity of its root activity.
+
+<p>
+The affinity determines two things &mdash; the task that the activity is re-parented
+to (see the <code translate="no" dir="ltr"><a href="/guide/topics/manifest/activity-element#reparent">allowTaskReparenting</a></code>
+attribute) and the task that will house the activity when it is launched
+with the <code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/content/Intent#FLAG_ACTIVITY_NEW_TASK">FLAG_ACTIVITY_NEW_TASK</a></code></code>
+flag.
+</p>
+
+<p>
+By default, all activities in an application have the same affinity.  You
+can set this attribute to group them differently, and even place
+activities defined in different applications within the same task.  To
+specify that the activity does not have an affinity for any task, set
+it to an empty string.
+
+<p>
+If this attribute is not set, the activity inherits the affinity set
+for the application (see the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#aff">taskAffinity</a></code>
+attribute).  The name of the default affinity for an application is
+the package name set by the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/manifest-element">&lt;manifest&gt;</a></code>
+element.
+</p>
+
+<dt><a name="theme"></a><code translate="no" dir="ltr">android:theme</code></dt>
+<dd>A reference to a style resource defining an overall theme for the activity.
+This automatically sets the activity's context to use this theme (see
+<code translate="no" dir="ltr"><code translate="no" dir="ltr"><a href="/reference/android/content/Context#setTheme(int)">setTheme()</a></code></code>, and may also
+cause "starting" animations prior to the activity being launched (to better
+match what the activity actually looks like).
+
+<p>
+If this attribute is not set, the activity inherits the theme set for the
+application as a whole &mdash; from the
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element">&lt;application&gt;</a></code>
+element's
+<code translate="no" dir="ltr"><a href="/guide/topics/manifest/application-element#theme">theme</a></code>
+attribute.  If that attribute is also not set, the default system theme is used. For more
+information, see the <a
+href="/guide/topics/ui/themes">Styles and Themes</a> developer guide.
+</p>
+<dd>
+
+<!-- ##api level 14## -->
+<dt><a name="uioptions"></a><code translate="no" dir="ltr">android:uiOptions</code></dt>
+<dd>Extra options for an activity's UI.
+  <p>Must be one of the following values.</p>
+
+  <table>
+    <tr><th>Value</th><th>Description</th></tr>
+    <tr><td><code translate="no" dir="ltr">"none"</code></td><td>No extra UI options. This is the default.</td></tr>
+    <tr><td><code translate="no" dir="ltr">"splitActionBarWhenNarrow"</code></td><td>Add a bar at
+the bottom of the screen to display action items in the <em>app bar</em> (also known as the
+<em>action bar</em>), when
+constrained for horizontal space (such as when in portrait mode on a handset). Instead of a small
+number of action items appearing in the app bar at the top of the screen, the app bar is
+split into the top navigation section and the bottom bar for action items. This ensures a reasonable
+amount of space is made available not only for the action items, but also for navigation and title
+elements at the top. Menu items are not split across the two bars; they always appear
+together.</td></tr>
+  </table>
+  <p>For more information about the app bar, see the <a
+href="/training/appbar">Adding the App Bar</a> training class.</p>
+  <p>This attribute was added in API level 14.</p>
+</dd>
+
+
+<!-- ##api level 3## -->
+<dt><a name="wsoft"></a><code translate="no" dir="ltr">android:windowSoftInputMode</code></dt>
+<dd>How the main window of the activity interacts with the window containing
+the on-screen soft keyboard.  The setting for this attribute affects two
+things:
+
+<ul>
+<li>The state of the soft keyboard &mdash; whether it is hidden or visible
+&mdash; when the activity becomes the focus of user attention.</li>
+
+<li>The adjustment made to the activity's main window &mdash; whether it is
+resized smaller to make room for the soft keyboard or whether its contents
+pan to make the current focus visible when part of the window is covered by
+the soft keyboard.</li>
+</ul>
+
+<p>
+The setting must be one of the values listed in the following table, or a
+combination of one "<code translate="no" dir="ltr">state...</code>" value plus one "<code translate="no" dir="ltr">adjust...</code>"
+value.  Setting multiple values in either group &mdash; multiple
+"<code translate="no" dir="ltr">state...</code>" values, for example &mdash; has undefined results.
+Individual values are separated by a vertical bar (<code translate="no" dir="ltr">|</code>).  For example:
+</p>
+
+<pre class="prettyprint lang-xml" translate="no" dir="ltr">&lt;activity android:windowSoftInputMode="stateVisible|adjustResize" ... &gt;</pre>
+
+<p>
+Values set here (other than "<code translate="no" dir="ltr">stateUnspecified</code>" and
+"<code translate="no" dir="ltr">adjustUnspecified</code>") override values set in the theme.
+</p>
+
+<table>
+<tr>
+   <th>Value</th>
+   <th>Description</th>
+</tr><tr>
+   <td>"<code translate="no" dir="ltr">stateUnspecified</code>"</td>
+   <td>The state of the soft keyboard (whether it is hidden or visible)
+       is not specified.  The system will choose an appropriate state or
+       rely on the setting in the theme.
+
+       <p>
+       This is the default setting for the behavior of the soft keyboard.
+       </p></td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">stateUnchanged</code>"</td>
+   <td>The soft keyboard is kept in whatever state it was last in,
+       whether visible or hidden, when the activity comes to the fore.</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">stateHidden</code>"</td>
+   <td>The soft keyboard is hidden when the user chooses the activity
+       &mdash; that is, when the user affirmatively navigates forward to the
+       activity, rather than backs into it because of leaving another activity.</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">stateAlwaysHidden</code>"</td>
+   <td>The soft keyboard is always hidden when the activity's main window
+       has input focus.</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">stateVisible</code>"</td>
+   <td>The soft keyboard is visible when that's normally appropriate
+       (when the user is navigating forward to the activity's main window).</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">stateAlwaysVisible</code>"</td>
+   <td>The soft keyboard is made visible when the user chooses the
+       activity &mdash; that is, when the user affirmatively navigates forward
+       to the activity, rather than backs into it because of leaving another
+       activity.</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">adjustUnspecified</code>"</td>
+   <td>It is unspecified whether the activity's main window resizes
+       to make room for the soft keyboard, or whether the contents
+       of the window pan to make the current focus visible on-screen.
+       The system will automatically select one of these modes depending
+       on whether the content of the window has any layout views that
+       can scroll their contents.  If there is such a view, the window
+       will be resized, on the assumption that scrolling can make all
+       of the window's contents visible within a smaller area.
+
+       <p>
+       This is the default setting for the behavior of the main window.
+       </p></td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">adjustResize</code>"</td>
+   <td>The activity's main window is always resized to make room for
+       the soft keyboard on screen.</td>
+</tr></tr>
+   <td>"<code translate="no" dir="ltr">adjustPan</code>"</td>
+   <td>The activity's main window is not resized to make room for the soft
+       keyboard.  Rather, the contents of the window are automatically
+       panned so that the current focus is never obscured by the keyboard
+       and users can always see what they are typing.  This is generally less
+       desirable than resizing, because the user may need to close the soft
+       keyboard to get at and interact with obscured parts of the window.</td>
+</tr>
+</table>
+
+<p>
+This attribute was introduced in API Level 3.
+</p></dd>
+</dl></dd>
+
+<!-- ##api level indication## -->

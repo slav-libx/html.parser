@@ -49,9 +49,9 @@ object Form1: TForm1
       Touch.InteractiveGestures = [LongTap, DoubleTap]
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 1
-      Position.X = 97.000000000000000000
+      Position.X = 360.000000000000000000
       Position.Y = 11.000000000000000000
-      Size.Width = 754.000000000000000000
+      Size.Width = 491.000000000000000000
       Size.Height = 22.000000000000000000
       Size.PlatformDefault = False
       OnKeyDown = Edit1KeyDown
@@ -143,5 +143,14 @@ object Form1: TForm1
       Text = 'Styles'
       OnClick = ListBoxItem6Click
     end
+  end
+  object ComboBox1: TComboBox
+    Position.X = 96.000000000000000000
+    Position.Y = 11.000000000000000000
+    Size.Width = 254.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    OnChange = ComboBox1Change
   end
 end

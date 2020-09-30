@@ -26,6 +26,7 @@ type
     ListBoxItem5: TListBoxItem;
     ListBoxItem6: TListBoxItem;
     ListBoxItem0: TListBoxItem;
+    ComboBox1: TComboBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -38,6 +39,7 @@ type
     procedure ListBoxItem0Click(Sender: TObject);
     procedure Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
+    procedure ComboBox1Change(Sender: TObject);
   private
     Source: string;
     DOM: TJSONObject;
@@ -65,6 +67,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+  for var S in TDirectory.GetFiles('.','*.html') do
+    ComboBox1.Items.Add(S);
+  ComboBox1.ItemIndex:=0;
   SetEnabledContent(False);
 end;
 
@@ -72,6 +77,14 @@ procedure TForm1.SetEnabledContent(Value: Boolean);
 begin
   ListBox1.Enabled:=Value;
   Memo1.Enabled:=Value;
+end;
+
+procedure TForm1.ComboBox1Change(Sender: TObject);
+begin
+  SetEnabledContent(False);
+  Memo1.Text:='';
+  DOM.Free;
+  Dom:=nil;
 end;
 
 procedure TForm1.Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -88,33 +101,46 @@ procedure TForm1.Button1Click(Sender: TObject);
 var C: Cardinal;
 begin
 
-//  Source:='programming-csharp.ru.html';
+ // Source:='programming-csharp.ru.html';
   Source:='googd.html';
-  //Source:='yout.html';
-//  Source:='page_google.html';
- // Source:='page_habrahabr-70330.html';
+//  Source:='yout.html';
+ // Source:='page_google.html';
+// Source:='page_habrahabr-70330.html';
 //  Source:='page_habrahabr-index.html';
 //  Source:='page_wikipedia.html';
 //  Source:='banketservice.ru.html';
+//  Source:='dt.html';
+
+  Source:=ComboBox1.Selected.Text;
 
   SetEnabledContent(False);
-
+  Memo1.Text:='';
   DOM.Free;
   Dom:=nil;
 
-  Source:=TFile.ReadAllText(Source,TEncoding.UTF8);
+  TThread.CreateAnonymousThread(procedure
+  begin
 
-  C:=TThread.GetTickCount;
-  DOM:=HTMLParse(Source);
-  C:=TThread.GetTickCount-C;
+    Source:=TFile.ReadAllText(Source,TEncoding.UTF8);
 
-  Label1.Text:='Parsing time: '+C.ToString+' ms';
+    C:=TThread.GetTickCount;
+    DOM:=HTMLParse(Source);
+    C:=TThread.GetTickCount-C;
 
-  SetEnabledContent(True);
+    TThread.Synchronize(nil,procedure
+    begin
 
-  ListBoxItem1.SetIsSelectedInternal(True,False);
+      Label1.Text:='Parsing time: '+C.ToString+' ms';
 
-  Click(ListBoxItem1);
+      SetEnabledContent(True);
+
+      ListBoxItem1.SetIsSelectedInternal(True,False);
+
+      Click(ListBoxItem1);
+
+    end);
+
+  end).Start;
 
 end;
 

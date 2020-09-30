@@ -4,6 +4,7 @@ interface
 
 uses
   System.SysUtils,
+  System.Generics.Collections,
   System.JSON;
 
 function HTMLParse(const Source: string): TJSONObject;
@@ -88,7 +89,8 @@ begin
   if Tag.StartsWith('<!') then
   begin
     S:=1;
-    E:=Tag.IndexOfAny([' ','[','/',#10,#13],S);
+    if Tag.StartsWith('<!--') then
+      E:=4 else E:=Tag.IndexOfAny([' ','[','/',#10,#13],S);
     if E=-1 then
       Result.AddPair('__name',Tag.Substring(S,L-S))
     else begin
@@ -113,7 +115,7 @@ end;
 
 function HTMLGet(Parent: TJSONObject; const Content: string; StartIndex: Integer): Integer;
 var Tag: TJSONObject;
-  S,N,Text: string;
+  S,M,N,Text: string;
   P: Integer;
 begin
 
@@ -148,10 +150,98 @@ begin
     else
       Tag.AddPair('__value',Text);
   end else
-  if not ',!doctype,link,meta,img,br,option,input,!--,!,'.Contains(','+N+',') and not S.EndsWith('/>') then
+  if not ',!doctype,link,meta,img,br,input,!--,!,'.Contains(','+N+',') and not S.EndsWith('/>') then
     Result:=HTMLGet(Tag,Content,Result);
 
   Result:=HTMLGet(Parent,Content,Result);
+
+end;
+
+procedure HTMLGet2(Result: TJSONObject; const Content: string);
+var
+  Tag: TJSONObject;
+  S,M,N,Text: string;
+  P: Integer;
+  Stack: TList<TJSONObject>;
+  StartIndex,TagIndex: Integer;
+begin
+
+  Stack:=TList<TJSONObject>.Create;
+
+  Stack.Add(Result);
+
+  StartIndex:=0;
+
+  while Stack.Count>0 do
+  begin
+
+    TagIndex:=GetOpenTag(Content,StartIndex);
+
+    if TagIndex>=Content.Length then Break;
+
+    P:=TagIndex;
+
+    Text:=Content.Substring(StartIndex,TagIndex-StartIndex).Trim;
+
+    if Text<>'' then Stack.Last.AddPair('__text',Text);
+
+    S:=ReadTag(Content,TagIndex);
+
+    StartIndex:=TagIndex;
+
+    if S.StartsWith('</') then
+    begin
+      M:='</'+Stack.Last.GetValue('__name','').ToLower+'>';
+      if M<>S then
+      begin
+        if M='</p>' then
+          Stack.Count:=Stack.Count-1
+        else
+          Continue;
+      end;
+      Stack.Count:=Stack.Count-1;
+      Continue;
+    end;
+
+    Tag:=CreateTag(S,P);
+
+    if ',dl,dd,td,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
+    if ',dl,dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
+      Stack.Count:=Stack.Count-1;
+
+      var XX2: string:='';
+      for var K2:=1 to Stack.Count-1 do
+        XX2:=XX2+Stack[K2].GetValue('__name','')+'|';
+
+      Tag.AddPair('__xpath',XX2);
+
+    Stack.Last.AddPair('__tag',Tag);
+    Stack.Add(Tag);
+
+    N:=Stack.Last.GetValue('__name','').ToLower;
+
+    if ',script,style,textarea,'.Contains(','+N+',') and not S.EndsWith('/>') then
+    begin
+      Text:=ReadText(Content,N,StartIndex).Trim;
+      if Text<>'' then
+      if N='textarea' then
+        Stack.Last.AddPair('__text',Text)
+      else
+        Stack.Last.AddPair('__value',Text);
+      Stack.Count:=Stack.Count-1;
+    end else
+
+    if ',!doctype,link,meta,img,br,input,!--,!,'.Contains(','+N+',') then
+      Stack.Count:=Stack.Count-1 else
+
+    if S.EndsWith('/>') then
+      Stack.Count:=Stack.Count-1;
+
+  end;
+
+  //if Stack.Count<>1 then raise Exception.Create('error document structure');
+
+  Stack.Free;
 
 end;
 
@@ -159,7 +249,8 @@ function HTMLParse(const Source: string): TJSONObject;
 begin
   Result:=TJSONObject.Create;
   try
-    HTMLGet(Result,Source,0);
+    //HTMLGet(Result,Source,0);
+    HTMLGet2(Result,Source);
   except
     Result.Free;
     raise;
