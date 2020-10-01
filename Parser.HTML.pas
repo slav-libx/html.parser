@@ -164,6 +164,14 @@ var
   P: Integer;
   Stack: TList<TJSONObject>;
   StartIndex,TagIndex: Integer;
+
+  function GetXPath: string;
+  begin
+    Result:='';
+    for var I:=1 to Stack.Count-1 do
+      Result:=Result+Stack[I].GetValue('__name','')+'.';
+  end;
+
 begin
 
   Stack:=TList<TJSONObject>.Create;
@@ -209,11 +217,7 @@ begin
     if ',dl,dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
       Stack.Count:=Stack.Count-1;
 
-      var XX2: string:='';
-      for var K2:=1 to Stack.Count-1 do
-        XX2:=XX2+Stack[K2].GetValue('__name','')+'|';
-
-      Tag.AddPair('__xpath',XX2);
+    Tag.AddPair('__xpath',GetXPath);
 
     Stack.Last.AddPair('__tag',Tag);
     Stack.Add(Tag);
@@ -231,7 +235,7 @@ begin
       Stack.Count:=Stack.Count-1;
     end else
 
-    if ',!doctype,link,meta,img,br,input,!--,!,'.Contains(','+N+',') then
+    if ',!doctype,link,meta,img,br,hr,input,!--,!,'.Contains(','+N+',') then
       Stack.Count:=Stack.Count-1 else
 
     if S.EndsWith('/>') then
@@ -239,7 +243,7 @@ begin
 
   end;
 
-  //if Stack.Count<>1 then raise Exception.Create('error document structure');
+  if Stack.Count<>1 then raise Exception.Create('error document structure');
 
   Stack.Free;
 

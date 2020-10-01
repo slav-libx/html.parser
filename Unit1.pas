@@ -70,6 +70,7 @@ begin
   for var S in TDirectory.GetFiles('.','*.html') do
     ComboBox1.Items.Add(S);
   ComboBox1.ItemIndex:=0;
+  ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf('.\http _fire-monkey.ru_.html');
   SetEnabledContent(False);
 end;
 
