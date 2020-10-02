@@ -10,23 +10,6 @@ object Form1: TForm1
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object Memo1: TMemo
-    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-    DataDetectorTypes = []
-    HideSelectionOnExit = False
-    ReadOnly = True
-    StyledSettings = [Style, FontColor]
-    TextSettings.Font.Family = 'Consolas'
-    TextSettings.Font.Size = 14.000000000000000000
-    Align = Client
-    Margins.Right = 10.000000000000000000
-    Size.Width = 754.000000000000000000
-    Size.Height = 540.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 0
-    Viewport.Width = 750.000000000000000000
-    Viewport.Height = 536.000000000000000000
-  end
   object Layout1: TRectangle
     Align = Top
     Fill.Kind = None
@@ -95,7 +78,7 @@ object Form1: TForm1
     Size.Height = 540.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'transparentlistboxstyle'
-    TabOrder = 3
+    TabOrder = 2
     DisableFocusEffect = True
     DefaultItemStyles.ItemStyle = ''
     DefaultItemStyles.GroupHeaderStyle = ''
@@ -113,32 +96,38 @@ object Form1: TForm1
       Text = 'Structure'
       OnClick = ListBoxItem1Click
     end
-    object ListBoxItem2: TListBoxItem
+    object ListBoxItem7: TListBoxItem
       Position.Y = 38.000000000000000000
+      TabOrder = 7
+      Text = 'Tree'
+      OnClick = ListBoxItem7Click
+    end
+    object ListBoxItem2: TListBoxItem
+      Position.Y = 57.000000000000000000
       TabOrder = 1
       Text = 'Text'
       OnClick = ListBoxItem2Click
     end
     object ListBoxItem3: TListBoxItem
-      Position.Y = 57.000000000000000000
+      Position.Y = 76.000000000000000000
       TabOrder = 2
       Text = 'Links'
       OnClick = ListBoxItem3Click
     end
     object ListBoxItem4: TListBoxItem
-      Position.Y = 76.000000000000000000
+      Position.Y = 95.000000000000000000
       TabOrder = 3
       Text = 'Images'
       OnClick = ListBoxItem4Click
     end
     object ListBoxItem5: TListBoxItem
-      Position.Y = 95.000000000000000000
+      Position.Y = 114.000000000000000000
       TabOrder = 4
       Text = 'Scripts'
       OnClick = ListBoxItem5Click
     end
     object ListBoxItem6: TListBoxItem
-      Position.Y = 114.000000000000000000
+      Position.Y = 133.000000000000000000
       TabOrder = 5
       Text = 'Styles'
       OnClick = ListBoxItem6Click
@@ -150,7 +139,40 @@ object Form1: TForm1
     Size.Width = 254.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 4
+    TabOrder = 3
     OnChange = ComboBox1Change
+  end
+  object Layout2: TLayout
+    Align = Client
+    Margins.Right = 10.000000000000000000
+    Size.Width = 754.000000000000000000
+    Size.Height = 540.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    object Memo1: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      HideSelectionOnExit = False
+      ReadOnly = True
+      StyledSettings = [Style, FontColor]
+      TextSettings.Font.Family = 'Consolas'
+      TextSettings.Font.Size = 14.000000000000000000
+      Align = Contents
+      Size.Width = 754.000000000000000000
+      Size.Height = 540.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Viewport.Width = 750.000000000000000000
+      Viewport.Height = 536.000000000000000000
+    end
+    object TreeView1: TTreeView
+      Align = Contents
+      Size.Width = 754.000000000000000000
+      Size.Height = 540.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Viewport.Width = 750.000000000000000000
+      Viewport.Height = 536.000000000000000000
+    end
   end
 end

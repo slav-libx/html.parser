@@ -60,7 +60,7 @@ end;
 
 function SplitAttributes(const Attributes: string): TArray<string>;
 begin
-  Result:=Attributes.Trim([' ']).Split([' ',#8,#9,#10,#13,')','(','[',']'],
+  Result:=Attributes.Trim([' ']).Split([' ',#10,#13,#8,')','(','[',']'],
     '"','"',TStringSplitOptions.ExcludeEmpty);
 end;
 
@@ -116,21 +116,21 @@ var
   Tag: TJSONObject;
   S,M,N,Text: string;
   P: Integer;
-  Stack: TList<TJSONObject>;
+  Stack: TStack<TJSONObject>;
   StartIndex,TagIndex: Integer;
 
   function GetXPath: string;
   begin
     Result:='';
     for var I:=1 to Stack.Count-1 do
-      Result:=Result+Stack[I].GetValue('__name','')+'/';
+      Result:=Result+Stack.List[I].GetValue('__name','')+'.';
   end;
 
 begin
 
-  Stack:=TList<TJSONObject>.Create;
+  Stack:=TStack<TJSONObject>.Create;
 
-  Stack.Add(Result);
+  Stack.Push(Result);
 
   StartIndex:=0;
 
@@ -145,7 +145,7 @@ begin
 
     Text:=Content.Substring(StartIndex,TagIndex-StartIndex).Trim;
 
-    if Text<>'' then Stack.Last.AddPair('__text',Text);
+    if Text<>'' then Stack.Peek.AddPair('__text',Text);
 
     S:=ReadTag(Content,TagIndex);
 
@@ -153,55 +153,51 @@ begin
 
     if S.StartsWith('</') then
     begin
-      M:='</'+Stack.Last.GetValue('__name','').ToLower+'>';
+      M:='</'+Stack.Peek.GetValue('__name','').ToLower+'>';
       if M<>S then
       begin
         if M='</p>' then
-          Stack.Count:=Stack.Count-1
+          Stack.Pop
         else
           Continue;
       end;
-      Stack.Count:=Stack.Count-1;
+      Stack.Pop;
       Continue;
     end;
 
     Tag:=CreateTag(S,P);
 
-    if ',option,'.Contains(Tag.GetValue('__name','').ToLower) then
-    if ',option,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
-
-    if ',dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
-    if ',dd,td,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
+    if ',dl,dd,td,'.Contains(Stack.Peek.GetValue('__name','').ToLower) then
+    if ',dl,dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
+      Stack.Pop;
 
     Tag.AddPair('__xpath',GetXPath);
 
-    Stack.Last.AddPair('__tag',Tag);
+    Stack.Peek.AddPair('__tag',Tag);
 
-    Stack.Add(Tag);
+    Stack.Push(Tag);
 
-    N:=Stack.Last.GetValue('__name','').ToLower;
+    N:=Stack.Peek.GetValue('__name','').ToLower;
 
     if ',script,style,textarea,'.Contains(','+N+',') and not S.EndsWith('/>') then
     begin
       Text:=ReadText(Content,N,StartIndex).Trim;
       if Text<>'' then
       if N='textarea' then
-        Stack.Last.AddPair('__text',Text)
+        Stack.Peek.AddPair('__text',Text)
       else
-        Stack.Last.AddPair('__value',Text);
-      Stack.Count:=Stack.Count-1;
+        Stack.Peek.AddPair('__value',Text);
+      Stack.Pop;
     end else
 
     if N.StartsWith('!') then
-      Stack.Count:=Stack.Count-1 else
+      Stack.Pop else
 
     if ',link,meta,img,br,hr,input,'.Contains(','+N+',') then
-      Stack.Count:=Stack.Count-1 else
+      Stack.Pop else
 
     if S.EndsWith('/>') then
-      Stack.Count:=Stack.Count-1;
+      Stack.Pop;
 
   end;
 

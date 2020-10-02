@@ -3,11 +3,12 @@ unit Unit1;
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.IOUtils, System.JSON,
+  System.SysUtils, System.Types, System.UITypes, System.UIConsts, System.Classes,
+  System.Variants, System.IOUtils, System.JSON,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Layouts,
-  Parser.HTML, System.NetEncoding, FMX.Edit, FMX.Objects, FMX.ListBox;
+  Parser.HTML, System.NetEncoding, FMX.Edit, FMX.Objects, FMX.ListBox,
+  FMX.TreeView, System.ImageList, FMX.ImgList;
 
 type
   TForm1 = class(TForm)
@@ -27,6 +28,9 @@ type
     ListBoxItem6: TListBoxItem;
     ListBoxItem0: TListBoxItem;
     ComboBox1: TComboBox;
+    TreeView1: TTreeView;
+    Layout2: TLayout;
+    ListBoxItem7: TListBoxItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -40,10 +44,12 @@ type
     procedure Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure ComboBox1Change(Sender: TObject);
+    procedure ListBoxItem7Click(Sender: TObject);
   private
     Source: string;
     DOM: TJSONObject;
     procedure SetEnabledContent(Value: Boolean);
+    procedure ShowViews(MemoParent,TreeParent: TControl);
   public
     { Public declarations }
   end;
@@ -67,17 +73,26 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  for var S in TDirectory.GetFiles('.','*.html') do
+  for var S in TDirectory.GetFiles('html','*.*') do
     ComboBox1.Items.Add(S);
   ComboBox1.ItemIndex:=0;
-  ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf('.\http _fire-monkey.ru_.html');
+  ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf('html\banketservice.ru.html');
   SetEnabledContent(False);
+  Memo1.Parent:=nil;
+  TreeView1.Parent:=nil;
 end;
 
 procedure TForm1.SetEnabledContent(Value: Boolean);
 begin
   ListBox1.Enabled:=Value;
   Memo1.Enabled:=Value;
+  TreeView1.Enabled:=Value;
+end;
+
+procedure TForm1.ShowViews(MemoParent,TreeParent: TControl);
+begin
+  Memo1.Parent:=MemoParent;
+  TreeView1.Parent:=TreeParent;
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
@@ -86,6 +101,7 @@ begin
   Memo1.Text:='';
   DOM.Free;
   Dom:=nil;
+  ShowViews(nil,nil);
 end;
 
 procedure TForm1.Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -102,6 +118,8 @@ procedure TForm1.Button1Click(Sender: TObject);
 var C: Cardinal;
 begin
 
+  ShowViews(nil,nil);
+
  // Source:='programming-csharp.ru.html';
   Source:='googd.html';
 //  Source:='yout.html';
@@ -116,8 +134,11 @@ begin
 
   SetEnabledContent(False);
   Memo1.Text:='';
+  TreeView1.Clear;
   DOM.Free;
   Dom:=nil;
+
+  Label1.Text:='Parsing...';
 
   TThread.CreateAnonymousThread(procedure
   begin
@@ -158,14 +179,63 @@ begin
   end;
 end;
 
+function GetDiplayText(const Source: string): string;
+begin
+  Result:=Source.Replace(#13,' ').Replace(#10,' ');
+end;
+
+procedure SetItemColor(Item: TTreeViewItem; const Color: TAlphaColor);
+begin
+  Item.StyledSettings:=Item.StyledSettings-[TStyledSetting.FontColor];
+  Item.TextSettings.FontColor:=Color;
+end;
+
+procedure AddTreeView(Parent: TControl; jsObject: TJSONObject);
+var Item: TTreeViewItem;
+begin
+  for var P in jsObject do
+  begin
+    if P.JsonString.Value='__tag' then
+    begin
+      Item:=TTreeViewItem.Create(Parent.Owner);
+      Item.Parent:=Parent;
+      Item.Text:=GetDiplayText(P.JsonValue.GetValue('__source',''));
+      if P.JsonValue.GetValue('__name','').StartsWith('!--') then SetItemColor(Item,claGray);
+      AddTreeView(Item,TJSONObject(P.JsonValue));
+    end else
+    if P.JsonString.Value='__text' then
+    begin
+      Item:=TTreeViewItem.Create(Parent.Owner);
+      Item.Parent:=Parent;
+      Item.Text:=TNetEncoding.HTML.Decode(GetDiplayText(P.JsonValue.Value));
+      SetItemColor(Item,claBlue);
+    end;
+  end;
+end;
+
+procedure TForm1.ListBoxItem0Click(Sender: TObject);
+begin
+  ShowViews(Layout2,nil);
+  Memo1.Text:=Source;
+end;
+
+procedure TForm1.ListBoxItem7Click(Sender: TObject);
+begin
+  ShowViews(nil,Layout2);
+  if TreeView1.Count=0 then AddTreeView(TreeView1,DOM);
+end;
+
 procedure TForm1.ListBoxItem1Click(Sender: TObject);
 begin
+  ShowViews(Layout2,nil);
   Memo1.Text:=DOM.Format;
 end;
 
 procedure TForm1.ListBoxItem2Click(Sender: TObject);
 var S: string;
 begin
+
+  ShowViews(Layout2,nil);
 
   S:='';
 
@@ -183,6 +253,8 @@ end;
 procedure TForm1.ListBoxItem3Click(Sender: TObject);
 var S,V: string;
 begin
+
+  ShowViews(Layout2,nil);
 
   S:='';
 
@@ -213,6 +285,8 @@ procedure TForm1.ListBoxItem4Click(Sender: TObject);
 var S,V: string;
 begin
 
+  ShowViews(Layout2,nil);
+
   S:='';
 
   DOMEnum(DOM,
@@ -241,6 +315,8 @@ procedure TForm1.ListBoxItem5Click(Sender: TObject);
 var S,V: string;
 begin
 
+  ShowViews(Layout2,nil);
+
   S:='';
 
   DOMEnum(DOM,
@@ -264,6 +340,8 @@ procedure TForm1.ListBoxItem6Click(Sender: TObject);
 var S,V: string;
 begin
 
+  ShowViews(Layout2,nil);
+
   S:='';
 
   DOMEnum(DOM,
@@ -284,11 +362,6 @@ begin
 
   Memo1.Text:=S;
 
-end;
-
-procedure TForm1.ListBoxItem0Click(Sender: TObject);
-begin
-  Memo1.Text:=Source;
 end;
 
 procedure TForm1.SearchEditButton1Click(Sender: TObject);
