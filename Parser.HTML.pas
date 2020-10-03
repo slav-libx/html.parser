@@ -167,12 +167,7 @@ begin
 end;
 
 procedure HTMLGet(Result: TJSONObject; const Content: string);
-var
-  Tag: TJSONObject;
-  Require,TagName,Text: string;
-  Stack: TList<TJSONObject>;
-  StartIndex,TagIndex: Integer;
-  T: TTag;
+var Stack: TList<TJSONObject>;
 
   function GetXPath: string;
   begin
@@ -181,15 +176,33 @@ var
       Result:=Result+Stack[I].GetValue('__name','')+'/';
   end;
 
+  function Last: TJSONObject;
+  begin
+    Result:=Stack.Last;
+  end;
+
+  procedure Push(const T: TTag);
+  var Tag: TJSONObject;
+  begin
+    Tag:=CreateTag(T,GetXPath);
+    Last.AddPair('__tag',Tag);
+    Stack.Add(Tag);
+  end;
+
+  procedure Pop;
+  begin
+    Stack.Count:=Stack.Count-1;
+  end;
+
   procedure Close(const T: string);
   var N: string;
   begin
     while Stack.Count>0 do
     begin
-      N:='/'+Stack.Last.GetValue('__name','').ToLower;
+      N:='/'+Last.GetValue('__name','').ToLower;
       if T=N then
       begin
-        Stack.Count:=Stack.Count-1;
+        Pop;
         Break;
       end else begin
         if T='/p' then Break;
@@ -199,11 +212,15 @@ var
         if T='/i' then Break;
         if T='/tr' then Break;
         if T='/span' then Break;
-        Stack.Count:=Stack.Count-1;
+        Pop;
       end;
     end;
   end;
 
+var
+  Require,TagName,Text: string;
+  StartIndex,TagIndex: Integer;
+  T: TTag;
 begin
 
   Stack:=TList<TJSONObject>.Create;
@@ -224,69 +241,39 @@ begin
 
     Text:=Content.Substring(TagIndex,StartIndex-TagIndex).Trim;
 
-    if Text<>'' then Stack.Last.AddPair('__text',Text);
+    if Text<>'' then Last.AddPair('__text',Text);
 
     T:=ReadTag(Content,StartIndex);
 
     if T.Closed then
     begin
-
       Close(T.Name);
-      Continue;
-
-      Require:='/'+Stack.Last.GetValue('__name','').ToLower;
-      if Require<>T.Name then
-      begin
-
-        if Require='/span' then
-        if T.Name='/div' then
-          Stack.Count:=Stack.Count-1;
-
-        if Require='/div' then
-        if T.Name='/span' then
-        begin
-          Stack.Count:=Stack.Count-1;
-          Stack.Count:=Stack.Count-1;
-          Continue;
-        end;
-
-        if Require='/p' then
-          Stack.Count:=Stack.Count-1
-        else
-          Continue;
-
-      end;
-      Stack.Count:=Stack.Count-1;
       Continue;
     end;
 
     TagName:=T.Name.ToLower;
 
     if ',address,article,aside,blockquote,div,dl,fieldset,footer,form,h1,h2,h3,h4,h5,h6,header,hr,menu,nav,ol,pre,section,table,ul,p,'.
-      Contains(Tag.GetValue('__name','').ToLower) then
-    if ',p,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
+      Contains(TagName) then
+    if ',p,'.Contains(Last.GetValue('__name','').ToLower) then
+      Pop;
 
-    if ',option,'.Contains(Tag.GetValue('__name','').ToLower) then
-    if ',option,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
+    if ',option,'.Contains(TagName) then
+    if ',option,'.Contains(Last.GetValue('__name','').ToLower) then
+      Pop;
 
-    if ',li,'.Contains(Tag.GetValue('__name','').ToLower) then
-    if ',li,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
+    if ',li,'.Contains(TagName) then
+    if ',li,'.Contains(Last.GetValue('__name','').ToLower) then
+      Pop;
 
-    if ',dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
-    if ',dd,td,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
-      Stack.Count:=Stack.Count-1;
+    if ',dd,td,'.Contains(TagName) then
+    if ',dd,td,'.Contains(Last.GetValue('__name','').ToLower) then
+      Pop;
 
-    Tag:=CreateTag(T,GetXPath);
-
-    Stack.Last.AddPair('__tag',Tag);
-
-    Stack.Add(Tag);
+    Push(T);
 
     if T.SelfClosed then
-      Stack.Count:=Stack.Count-1
+      Pop
     else
 
     if ',script,style,textarea,'.Contains(','+TagName+',') then
@@ -294,17 +281,17 @@ begin
       Text:=ReadText(Content,'</'+TagName+'>',StartIndex).Trim;
       if Text<>'' then
       if TagName='textarea' then
-        Stack.Last.AddPair('__text',Text)
+        Last.AddPair('__text',Text)
       else
-        Stack.Last.AddPair('__value',Text);
-      Stack.Count:=Stack.Count-1;
+        Last.AddPair('__value',Text);
+      Pop;
     end else
 
     if TagName.StartsWith('!') then
-      Stack.Count:=Stack.Count-1 else
+      Pop else
 
     if ',link,meta,img,br,hr,input,'.Contains(','+TagName+',') then
-      Stack.Count:=Stack.Count-1;
+      Pop;
 
   end;
 
