@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils,
   System.Generics.Collections,
-  System.JSON;
+  System.JSON,
+  FMX.Utils;
 
 function HTMLParse(const Source: string): TJSONObject;
 
@@ -13,111 +14,165 @@ implementation
 
 // https://css-live.ru/verstka/do-not-close-tags.html
 
+type
+  TTag = record
+    Name: string;
+    Attributes: TArray<string>;
+    Comment: string;
+    Closed: Boolean;
+    SelfClosed: Boolean;
+    StartPos: Integer;
+    EndPos: Integer;
+    function Source: string;
+  end;
+
+function TTag.Source: string;
+begin
+  Result:='<'+Name;
+  for var S in Attributes do Result:=Result+' '+S;
+  if Comment<>'' then
+    Result:=Result+' '+Comment+' -->'
+  else
+  if Name.StartsWith('!') then
+    Result:=Result+'>'
+  else
+  if SelfClosed then
+    Result:=Result+' />'
+  else
+    Result:=Result+'>';
+end;
+
 function GetOpenTag(const Content: string; P: Integer): Integer;
 begin
   Result:=Content.IndexOf('<',P);
   if Result=-1 then Result:=Content.Length;
 end;
 
-function ReadTag(const Content: string; var P: Integer): string;
-var
-  StartIndex: Integer;
-  CloseText: string;
-begin
-
-  StartIndex:=P;
-
-  if Content.Substring(StartIndex,4)='<!--' then
-  begin
-    CloseText:='-->';
-    P:=Content.IndexOf(CloseText,StartIndex);
-  end else begin
-    CloseText:='>';
-    P:=Content.IndexOfAnyUnquoted(['>'],'"','"',P);
-  end;
-
-  if P<0 then
-    P:=Content.Length
-  else
-    P:=P+CloseText.Length;
-
-  Result:=Content.Substring(StartIndex,P-StartIndex);
-
-end;
-
-function ReadText(const Content,Tag: string; var P: Integer): string;
+function ReadText(const Content,EndText: string; var P: Integer): string;
 var E: Integer;
 begin
   Result:='';
-  E:=Content.IndexOf('</'+Tag+'>',P);
+  E:=Content.IndexOf(EndText,P);
   if E=-1 then
     P:=Content.Length
   else begin
     Result:=Content.Substring(P,E-P);
-    P:=E+Tag.Length+3;
+    P:=E+EndText.Length;
   end;
 end;
 
-function SplitAttributes(const Attributes: string): TArray<string>;
+function ReadName(const Content: string; var P: Integer): string;
 begin
-  Result:=Attributes.Trim([' ']).Split([' ',#8,#9,#10,#13,')','(','[',']'],
-    '"','"',TStringSplitOptions.ExcludeEmpty);
+  Result:='!--';
+  if Content.Substring(P,3)=Result then
+    Inc(P,Result.Length)
+  else
+  if Content.Substring(P,1)='/' then
+  begin
+    Inc(P);
+    Result:='/'+GetToken(P,Content,#8#9#10#13' ','/>');
+  end else
+    Result:=GetToken(P,Content,#8#9#10#13' ','/>');
+end;
+
+function ReadAttribute(const Content: string; var P: Integer): string;
+var
+  Value: string;
+  I: Integer;
+  Q: Char;
+begin
+  Result:=GetToken(P,Content,#8#9#10#13' ','=>');
+  if P<Content.Length then
+  if Content.Chars[P]='=' then
+  begin
+    Inc(P); // '='
+    Value:=GetToken(P,Content,#8#9#10#13' ','"''>'); // value unquoted
+    if Value.IsEmpty then
+    begin
+      Q:=Content.Chars[P]; // value quoted "value"|'value'
+      I:=Content.IndexOfAnyUnquoted(#8#9#10#13' />'.ToCharArray,Q,Q,P);
+      if I>P then
+      begin
+        Value:=Content.Substring(P,I-P);
+        P:=I;
+      end;
+    end;
+    Result:=Result+'='+Value; // attr=value|"value"|'value'
+  end;
+end;
+
+function ReadTag(const Content: string; var P: Integer): TTag;
+var A: string;
+begin
+
+  Result:=Default(TTag);
+
+  Result.StartPos:=P;
+  Inc(P); // '<'
+  Result.Name:=ReadName(Content,P);
+  Result.Closed:=Result.Name.StartsWith('/');
+
+  if Result.Name='!--' then
+    Result.Comment:=ReadText(Content,'-->',P).Trim
+
+  else begin
+
+    while not Result.SelfClosed do
+    begin
+      A:=ReadAttribute(Content,P);
+      if A.IsEmpty then Break;
+      if A='/' then
+        Result.SelfClosed:=True
+      else
+        Result.Attributes:=Result.Attributes+[A];
+    end;
+
+    Inc(P); // '>'
+
+  end;
+
+  Result.EndPos:=P;
+
 end;
 
 function CreateAttribute(const Attribute: string): TJSONPair;
 var P: Integer;
 begin
+
   P:=Attribute.IndexOf('=');
+
   if P=-1 then
     Result:=TJSONPair.Create(Attribute,TJSONNull.Create)
   else
     Result:=TJSONPair.Create(Attribute.Substring(0,P),Attribute.Substring(P+1).Trim(['"','''']));
+
 end;
 
-function CreateTag(const Tag: string; SourcePos: Integer): TJSONObject;
-var S,E,L: Integer;
+function CreateTag(const Tag: TTag; const XPath: string): TJSONObject;
 begin
 
   Result:=TJSONObject.Create;
-  Result.AddPair('__source',Tag);
-  Result.AddPair('__pos',TJSONNumber.Create(SourcePos));
 
-  L:=Tag.Length;
+  Result.AddPair('__source',Tag.Source);
+  Result.AddPair('__pos',TJSONNumber.Create(Tag.StartPos));
+  Result.AddPair('__name',Tag.Name);
+  Result.AddPair('__xpath',XPath);
 
-  if Tag.StartsWith('<!') then
-  begin
-    S:=1;
-    if Tag.StartsWith('<!--') then
-      E:=4 else E:=Tag.IndexOfAny([' ','[','/',#10,#13],S);
-    if E=-1 then
-      Result.AddPair('__name',Tag.Substring(S,L-S))
-    else begin
-      Result.AddPair('__name',Tag.Substring(S,E-S));
-      S:=E;
-      E:=L-1;
-      if Tag.EndsWith('-->') then E:=E-2;
-      Result.AddPair('__value',Tag.Substring(S,E-S).Trim);
-    end;
-  end else begin
-    S:=1;
-    E:=L-1;
-    if Tag.EndsWith('/>') then E:=E-1;
-    for var A in SplitAttributes(Tag.Substring(S,E-S).Trim) do
-    if Result.Count=2 then
-      Result.AddPair('__name',A)
-    else
-      Result.AddPair(CreateAttribute(A));
-  end;
+  if Tag.Comment<>'' then
+    Result.AddPair('__value',Tag.Comment);
+
+  for var A in Tag.Attributes do
+    Result.AddPair(CreateAttribute(A));
 
 end;
 
 procedure HTMLGet(Result: TJSONObject; const Content: string);
 var
   Tag: TJSONObject;
-  S,M,N,Text: string;
-  P: Integer;
+  Require,TagName,Text: string;
   Stack: TList<TJSONObject>;
   StartIndex,TagIndex: Integer;
+  T: TTag;
 
   function GetXPath: string;
   begin
@@ -126,9 +181,33 @@ var
       Result:=Result+Stack[I].GetValue('__name','')+'/';
   end;
 
+  procedure Close(const T: string);
+  var N: string;
+  begin
+    while Stack.Count>0 do
+    begin
+      N:='/'+Stack.Last.GetValue('__name','').ToLower;
+      if T=N then
+      begin
+        Stack.Count:=Stack.Count-1;
+        Break;
+      end else begin
+        if T='/p' then Break;
+        if T='/li' then Break;
+        if T='/td' then Break;
+        if T='/dd' then Break;
+        if T='/i' then Break;
+        if T='/tr' then Break;
+        if T='/span' then Break;
+        Stack.Count:=Stack.Count-1;
+      end;
+    end;
+  end;
+
 begin
 
   Stack:=TList<TJSONObject>.Create;
+  try
 
   Stack.Add(Result);
 
@@ -137,77 +216,104 @@ begin
   while Stack.Count>0 do
   begin
 
-    TagIndex:=GetOpenTag(Content,StartIndex);
+    TagIndex:=StartIndex;
 
-    if TagIndex>=Content.Length then Break;
+    StartIndex:=GetOpenTag(Content,StartIndex);
 
-    P:=TagIndex;
+    if StartIndex>=Content.Length then Break;
 
-    Text:=Content.Substring(StartIndex,TagIndex-StartIndex).Trim;
+    Text:=Content.Substring(TagIndex,StartIndex-TagIndex).Trim;
 
     if Text<>'' then Stack.Last.AddPair('__text',Text);
 
-    S:=ReadTag(Content,TagIndex);
+    T:=ReadTag(Content,StartIndex);
 
-    StartIndex:=TagIndex;
-
-    if S.StartsWith('</') then
+    if T.Closed then
     begin
-      M:='</'+Stack.Last.GetValue('__name','').ToLower+'>';
-      if M<>S then
+
+      Close(T.Name);
+      Continue;
+
+      Require:='/'+Stack.Last.GetValue('__name','').ToLower;
+      if Require<>T.Name then
       begin
-        if M='</p>' then
+
+        if Require='/span' then
+        if T.Name='/div' then
+          Stack.Count:=Stack.Count-1;
+
+        if Require='/div' then
+        if T.Name='/span' then
+        begin
+          Stack.Count:=Stack.Count-1;
+          Stack.Count:=Stack.Count-1;
+          Continue;
+        end;
+
+        if Require='/p' then
           Stack.Count:=Stack.Count-1
         else
           Continue;
+
       end;
       Stack.Count:=Stack.Count-1;
       Continue;
     end;
 
-    Tag:=CreateTag(S,P);
+    TagName:=T.Name.ToLower;
+
+    if ',address,article,aside,blockquote,div,dl,fieldset,footer,form,h1,h2,h3,h4,h5,h6,header,hr,menu,nav,ol,pre,section,table,ul,p,'.
+      Contains(Tag.GetValue('__name','').ToLower) then
+    if ',p,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
+      Stack.Count:=Stack.Count-1;
 
     if ',option,'.Contains(Tag.GetValue('__name','').ToLower) then
     if ',option,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
+      Stack.Count:=Stack.Count-1;
+
+    if ',li,'.Contains(Tag.GetValue('__name','').ToLower) then
+    if ',li,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
       Stack.Count:=Stack.Count-1;
 
     if ',dd,td,'.Contains(Tag.GetValue('__name','').ToLower) then
     if ',dd,td,'.Contains(Stack.Last.GetValue('__name','').ToLower) then
       Stack.Count:=Stack.Count-1;
 
-    Tag.AddPair('__xpath',GetXPath);
+    Tag:=CreateTag(T,GetXPath);
 
     Stack.Last.AddPair('__tag',Tag);
 
     Stack.Add(Tag);
 
-    N:=Stack.Last.GetValue('__name','').ToLower;
+    if T.SelfClosed then
+      Stack.Count:=Stack.Count-1
+    else
 
-    if ',script,style,textarea,'.Contains(','+N+',') and not S.EndsWith('/>') then
+    if ',script,style,textarea,'.Contains(','+TagName+',') then
     begin
-      Text:=ReadText(Content,N,StartIndex).Trim;
+      Text:=ReadText(Content,'</'+TagName+'>',StartIndex).Trim;
       if Text<>'' then
-      if N='textarea' then
+      if TagName='textarea' then
         Stack.Last.AddPair('__text',Text)
       else
         Stack.Last.AddPair('__value',Text);
       Stack.Count:=Stack.Count-1;
     end else
 
-    if N.StartsWith('!') then
+    if TagName.StartsWith('!') then
       Stack.Count:=Stack.Count-1 else
 
-    if ',link,meta,img,br,hr,input,'.Contains(','+N+',') then
-      Stack.Count:=Stack.Count-1 else
-
-    if S.EndsWith('/>') then
+    if ',link,meta,img,br,hr,input,'.Contains(','+TagName+',') then
       Stack.Count:=Stack.Count-1;
 
   end;
 
-  if Stack.Count<>1 then raise Exception.Create('error document structure');
+  if Stack.Count<>1 then
+    raise Exception.Create('error document structure');
 
-  Stack.Free;
+  finally
+    Stack.Free;
+  end;
 
 end;
 

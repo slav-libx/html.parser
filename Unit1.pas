@@ -8,7 +8,7 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Layouts,
   Parser.HTML, System.NetEncoding, FMX.Edit, FMX.Objects, FMX.ListBox,
-  FMX.TreeView, System.ImageList, FMX.ImgList;
+  FMX.TreeView, System.ImageList, FMX.ImgList, FMX.ComboEdit, FMX.Styles.Objects;
 
 type
   TForm1 = class(TForm)
@@ -16,8 +16,6 @@ type
     Button1: TButton;
     Layout1: TRectangle;
     Label1: TLabel;
-    Edit1: TEdit;
-    SearchEditButton1: TSearchEditButton;
     Rectangle1: TRectangle;
     ListBox1: TListBox;
     ListBoxItem1: TListBoxItem;
@@ -31,6 +29,9 @@ type
     TreeView1: TTreeView;
     Layout2: TLayout;
     ListBoxItem7: TListBoxItem;
+    ComboEdit1: TComboEdit;
+    SearchEditButton2: TSearchEditButton;
+    Layout3: TLayout;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -45,6 +46,8 @@ type
       Shift: TShiftState);
     procedure ComboBox1Change(Sender: TObject);
     procedure ListBoxItem7Click(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure ComboEdit1ApplyStyleLookup(Sender: TObject);
   private
     Source: string;
     DOM: TJSONObject;
@@ -76,10 +79,18 @@ begin
   for var S in TDirectory.GetFiles('html','*.*') do
     ComboBox1.Items.Add(S);
   ComboBox1.ItemIndex:=0;
-  ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf('html\banketservice.ru.html');
+  ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf(
+  //'html\banketservice.ru.html');
+  //'html\scr.html');
+  'html\page_wikipedia.html');
   SetEnabledContent(False);
   Memo1.Parent:=nil;
   TreeView1.Parent:=nil;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  DOM.Free;
 end;
 
 procedure TForm1.SetEnabledContent(Value: Boolean);
@@ -104,13 +115,18 @@ begin
   ShowViews(nil,nil);
 end;
 
+procedure TForm1.ComboEdit1ApplyStyleLookup(Sender: TObject);
+begin
+  ComboEdit1.StylesData['content.Margins.Left']:=25;
+end;
+
 procedure TForm1.Edit1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
   Shift: TShiftState);
 begin
   if Key=vkReturn then
   begin
     Key:=0;
-    Click(SearchEditButton1);
+    Click(SearchEditButton2);
   end;
 end;
 
@@ -146,7 +162,13 @@ begin
     Source:=TFile.ReadAllText(Source,TEncoding.UTF8);
 
     C:=TThread.GetTickCount;
+    try
     DOM:=HTMLParse(Source);
+    except on E: Exception do
+    begin
+      DOM:=TJSONObject.Create;
+      DOM.AddPair('error',E.Message);
+    end end;
     C:=TThread.GetTickCount-C;
 
     TThread.Synchronize(nil,procedure
@@ -364,16 +386,26 @@ begin
 
 end;
 
+procedure AddStrings(Strings: TStrings; const Text: string);
+var P: Integer;
+begin
+  P:=Strings.IndexOf(Text);
+  if P<>-1 then Strings.Delete(P);
+  if Text<>'' then Strings.Insert(0,Text);
+end;
+
 procedure TForm1.SearchEditButton1Click(Sender: TObject);
 var P: Integer;
 begin
 
-  P:=Memo1.Lines.Text.IndexOf(Edit1.Text,Memo1.SelStart+Memo1.SelLength);
+  AddStrings(ComboEdit1.Items,ComboEdit1.Text);
+
+  P:=Memo1.Lines.Text.IndexOf(ComboEdit1.Text,Memo1.SelStart+Memo1.SelLength);
 
   if P>=0 then
   begin
     Memo1.SelStart:=P;
-    Memo1.SelLength:=Edit1.Text.Length;
+    Memo1.SelLength:=ComboEdit1.Text.Length;
   end else begin
     Memo1.SelLength:=0;
     Beep;
