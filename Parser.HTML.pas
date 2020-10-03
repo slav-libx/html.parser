@@ -212,6 +212,7 @@ var Stack: TList<TJSONObject>;
         if T='/i' then Break;
         if T='/tr' then Break;
         if T='/span' then Break;
+
         Pop;
       end;
     end;
@@ -245,13 +246,13 @@ begin
 
     T:=ReadTag(Content,StartIndex);
 
+    TagName:=T.Name.ToLower;
+
     if T.Closed then
     begin
-      Close(T.Name);
+      Close(TagName);
       Continue;
     end;
-
-    TagName:=T.Name.ToLower;
 
     if ',address,article,aside,blockquote,div,dl,fieldset,footer,form,h1,h2,h3,h4,h5,h6,header,hr,menu,nav,ol,pre,section,table,ul,p,'.
       Contains(TagName) then
@@ -295,8 +296,7 @@ begin
 
   end;
 
-  if Stack.Count<>1 then
-    raise Exception.Create('error document structure');
+  if Stack.Count<>1 then raise Exception.Create('error document structure');
 
   finally
     Stack.Free;
