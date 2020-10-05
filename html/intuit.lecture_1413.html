@@ -1,0 +1,952 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru" dir="ltr" prefix="ya: http://webmaster.yandex.ru/vocabularies/">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta property="ya:interaction" content="XML_FORM" />
+        <meta property="ya:interaction:url" content="https://intuit.ru/sites/all/themes/intuit/yandex_interactive.xml" />
+        <!--<script type="text/javascript" src="/intuit_user_ha_login/vk/openapi"></script>-->
+        <!--<script type="text/javascript" src="/intuit_user_ha_login/vk/share"></script>-->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="/sites/all/themes/intuit/favicon.ico" type="image/x-icon" />
+    <title>НОУ ИНТУИТ | Лекция | Общий терминальный интерфейс</title>
+    <link type="text/css" rel="stylesheet" media="all" href="/sites/default/files/css/css_d5a38c272fdac5b3d492156c42f13539.css" />
+<link type="text/css" rel="stylesheet" media="print" href="/sites/default/files/css/css_88cb6b8f1d13ad44cb15a93eaa507b43.css" />
+    <script type="text/javascript" src="/sites/all/modules/jquery_update/replace/jquery.js?d"></script>
+<script type="text/javascript" src="/misc/drupal.js?d"></script>
+<script type="text/javascript" src="/sites/default/files/languages/ru_232ad9f18e4714ad4cbfe8578f61e008.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_advertising/js/intuit_advertising.ads.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_person_account/themes/js/check_accounts.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/lightbox2/js/lightbox.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/poormanscron/poormanscron.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_person_account/themes/js/person_account_pay.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_person_account/themes/js/person_account_rechange_form.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/int_studies/themes/js/lecture.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/tooltip/jquery.tooltip.min.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/cookie/jquery.cookie.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/jquery.timers-1.2.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/int_studies/themes/js/lecture_user_control.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.core.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.widget.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.position.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.mouse.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.draggable.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.resizable.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.button.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_ui/jquery.ui/ui/jquery.ui.dialog.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/system.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/universal-ajax-control.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/popup_list.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/jQuery_list_pager.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/page_functions.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/jquery.int.contextmenu.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/privacy_control.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/hint/jquery.hint.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/elastic/jquery.elastic.source.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/autoresize/autoresize.jquery.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/jquery.int.elastic.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_common_interface/modules/js/share_thoughts_dialog.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_menu/menu_themes/js/left_navigation_block.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/intuit_social/themes/js/right_pannel_block.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/int_search/int_search.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/jquery.livequery.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/aoc_popup.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/aocmobi_popup.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/language.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/intuit.js?d"></script>
+<script type="text/javascript" src="/sites/all/modules/jquery_update/replace/jquery.form.js?d"></script>
+<script type="text/javascript" src="/sites/all/themes/intuit/login.js?d"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, { "basePath": "\/", "intuit_advertising": [ ".horizontal-advertising-block", ".vertical-160-advertising-block", ".vertical-240-advertising-block", ".vertical-advertising-for-right-column1-block", ".inline-advertising-for-lecture-block", ".random-horizontal-advertising-block", ".frontpage-horizontal-advertising-block", ".innerpage-horizontal-advertising-block", ".inner-horizontal-advertising-block", "#course-advertising2-informer" ], "person_account": { "basePath": "\/intuituser\/person_account", "runNext": 1601901176 }, "lightbox2": { "rtl": "0", "file_path": "\/(\\w\\w\/)sites\/default\/files", "default_image": "\/sites\/all\/modules\/lightbox2\/images\/brokenimage.jpg", "border_size": 10, "font_color": "000", "box_color": "fff", "top_position": "", "overlay_opacity": "0.8", "overlay_color": "000", "disable_close_click": 1, "resize_sequence": 0, "resize_speed": 400, "fade_in_speed": 400, "slide_down_speed": 600, "use_alt_layout": 1, "disable_resize": 0, "disable_zoom": 0, "force_show_nav": 0, "show_caption": 1, "loop_items": 0, "node_link_text": "View Image Details", "node_link_target": 0, "image_count": "Image !current of !total", "video_count": "Video !current of !total", "page_count": "Page !current of !total", "lite_press_x_close": "press \u003ca href=\"#\" onclick=\"hideLightbox(); return FALSE;\"\u003e\u003ckbd\u003ex\u003c\/kbd\u003e\u003c\/a\u003e to close", "download_link_text": "", "enable_login": false, "enable_contact": false, "keys_close": "c x 27", "keys_previous": "p 37", "keys_next": "n 39", "keys_zoom": "z", "keys_play_pause": "32", "display_image_size": "original", "image_node_sizes": "()", "trigger_lightbox_classes": "", "trigger_lightbox_group_classes": "", "trigger_slideshow_classes": "", "trigger_lightframe_classes": "", "trigger_lightframe_group_classes": "", "custom_class_handler": 0, "custom_trigger_classes": "", "disable_for_gallery_lists": true, "disable_for_acidfree_gallery_lists": true, "enable_acidfree_videos": true, "slideshow_interval": 5000, "slideshow_automatic_start": true, "slideshow_automatic_exit": true, "show_play_pause": true, "pause_on_next_click": false, "pause_on_previous_click": true, "loop_slides": false, "iframe_width": 600, "iframe_height": 400, "iframe_border": 1, "enable_video": 0 }, "cron": { "basePath": "\/poormanscron", "runNext": 1601913602 } });
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+document.write("<sc" + "ript type='text/javascript' src='https://an.yandex.ru/system/context.js'><" + "/script>");
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+document.write("<sc" + "ript type='text/javascript' src='https://an.yandex.ru/system/context.js'><" + "/script>");
+//--><!]]>
+</script>
+          <meta name="description" content="Анализируются основные понятия и объекты общего терминального интерфейса, 
+			служебные программы и функции для управления терминалами," />
+              <meta name="keywords" content="POSIX,терминал,терминальное устройство,символьный специальный файл,псевдотерминал,главное устройство,подчиненное устройство,полнодуплексный режим,очередь ввода,очередь вывода" />    
+              
+    <meta property="og:image" content="https://intuit.ru/sites/all/themes/intuit/images/4vk.png" />
+    <link rel="image_src" href="https://intuit.ru/sites/all/themes/intuit/images/4vk.png" />
+      
+<script async type="text/javascript" src="//clickio.mgr.consensu.org/t/consent_214053.js"></script>
+<script async type="text/javascript" src="//s.luxupcdnc.com/t/pb214053.js"></script>
+<script async type="text/javascript" src="//s.luxupcdnc.com/t/common_402.js"></script>
+<script async id="__lxGc__rtr" type="text/javascript" src="//s.clickiocdn.com/t/214053/360.js"></script>
+     <!-- 28.09.2020-->
+      <script async src='https://yastatic.net/pcode/adfox/header-bidding.js'></script>
+<script>
+    const adfoxBiddersMap = {
+        'myTarget': '816008' ,
+        'betweenDigital': '871789' ,
+    };
+    var adUnits = [
+        {
+            code: 'adfox_155972944194112345',
+            sizes: [ [240,400] ],
+            bids: [
+                {
+                    bidder: 'myTarget',
+                    params: {
+                        placementId: 482726,
+                    }
+                },                {
+                    bidder: 'betweenDigital',
+                    params: {
+                        placementId: 3149298,
+                    }
+                },
+            ]
+        },
+        {
+            code: 'adfox_156016928467189461',
+            sizes: [ [750,300],[728,90] ],
+            bids: [
+                {
+                    bidder: 'myTarget',
+                    params: {
+                        placementId: 487178,
+                    }
+                },                {
+                    bidder: 'betweenDigital',
+                    params: {
+                        placementId: 3159072,
+                    }
+                },
+            ]
+        },
+
+    ];
+    var userTimeout = 500;
+    window.YaHeaderBiddingSettings = {
+        biddersMap: adfoxBiddersMap,
+        adUnits: adUnits,
+        timeout: userTimeout
+    };
+</script>
+<script>(function(){function a(){__clADF__.adxAllowed(0)}var b=window,c=b.document,d=c.getElementsByTagName('head')[0];d||(d=c.createElement('head'),b.appendChild(d)),b.__clADF__={state:0,loaded:0,adxAllowed:function(a){if(1!=this.loaded){n='adfoxAsyncParams',b[n]&&b[n].forEach(function(b){b.params.pk=a}),n1=n+'Scroll',b[n1]&&b[n1].forEach(function(b){b[0].params.pk=a}),n1=n+'Adaptive',b[n1]&&b[n1].forEach(function(b){b[0].params.pk=a}),n='Adaptive',b[n]&&b[n].forEach(function(b){b[0].params.pk=a}),this.state=a;var d=document.createElement('script');d.setAttribute('src','https://yastatic.net/pcode/adfox/loader.js'),d.setAttribute('async','async');var e=c.getElementsByTagName('head')[0];e||(e=c.createElement('head'),b.appendChild(e)),e.appendChild(d),this.loaded=1}}};var e=c.createElement('script');e.setAttribute('src','//clickiocdn.com/hbadx/?f=__clADF__&rt='+new Date().getTime()+'&site_id=214053&title='+encodeURIComponent(c.title)+'&r='+encodeURIComponent(c.referrer)),e.setAttribute('async','async'),e.onreadystatechange=function(){'loaded'!=this.readyState&&'complete'!=this.readyState&&setTimeout(a,0)},e.onerror=function(){setTimeout(a,0)},d.appendChild(e),setTimeout(a,3e3)})();</script>
+      <!-- 28.09.2020-->
+                  <!-- 14.06.2019-->
+  </head>
+  <body>
+      <script async type='text/javascript' src='//s.luxupcdnc.com/t/common_402.js'></script>
+  <script class='__lxGc__' type='text/javascript'>
+
+      ((__lxGc__=window.__lxGc__||{'s':{},'b':0})['s']['_214053']=__lxGc__['s']['_214053']||{'b':{}})['b']['_655063']={'i':__lxGc__.b++};
+
+  </script>
+    <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+  
+    <div id="page-content">
+        <div class="inner-horizontal-advertising-block test">
+            <!-- Yandex.RTB R-A-98260-2mm -->
+<div id="yandex_rtb_R-A-98260-2"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-98260-2",
+                renderTo: "yandex_rtb_R-A-98260-2",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script>
+        </div>
+      <div id="main-wraper">
+          <div class="main-wraper-tr">
+              <div class="main-wraper-td"><div class="inner-horizontal-advertising-block">
+        <!-- Yandex.RTB R-A-98260-2 -->
+<div id="yandex_rtb_R-A-98260-2"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-98260-2",
+                renderTo: "yandex_rtb_R-A-98260-2",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script>
+
+</div>              </div>
+          </div>
+          <div class="main-wraper-tr">
+              <div class="main-wraper-td"><div style="align:center; height:28px;"><div style="margin-right:-17px; margin-left:-17px; margin-top:0px; margin-bottom:0px;"><div style="border-style: solid; border-top-width: 2px; border-left-width: 0px; border-right-width: 0px; border-bottom-width: 2px; border-color: #ff8800;"><div style="text-align:center; font-size:16px; font-family:Arial;"><b><style>.AAA a {color: red!important;}</style><div class="AAA"><a  control_type="dialog" request_url="/intuituser/person_account/pay_update" destination_block_id="rechange-dialog-block" request_data_source="attr" request_data="service=3" dialog_min_size="true" no_check_plain="1" dialog_title="" class="ajax-command-anchor" href="#">Учитесь и получайте официальные документы БЕСПЛАТНО. Вы можете поддержать наш проект.</a></div></b></div></div></div></div>              </div>
+          </div>
+        <div class="main-wraper-tr">
+          <div class="main-wraper-td" style="height:58px;">
+
+
+
+            <div id="header">
+              <div id="site-logo">
+                <a href="/" title="Национальный Открытый Университет &quot;ИНТУИТ&quot;">
+                               <img src="/sites/all/themes/intuit/logo.png" alt="Национальный Открытый Университет "ИНТУИТ"" id="logo" />
+                             </a>              </div>
+              <div id="login-box-region"><div id="UserLoginBlock"><a href="/intuit" title="Регистрация новых пользователей">Регистрация</a><a href="/user/login" id="userLoginModalOpen" title="Вход для зарегистрированных пользователей">Вход</a></div><div id="block-intuit_common_interface-intuit_login" class="block-intuit_common_interface">
+
+
+  <div class="content"><form action="/studies/courses/47/47/lecture/1413"  accept-charset="UTF-8" method="post" id="user-login-form">
+<div><div class="form-item table" id="edit-name-wrapper"><div class='tr'><div class="label-wrapper"><label for="edit-name">Электронный адрес: <span class="form-required" title="Обязательное поле">*</span></label></div><div class="input-wrapper"><input type="text" maxlength="60" name="name" id="edit-name" size="15" value="" class="form-text required" /></div><div class="placeholder"></div></div></div><div class="form-item table" id="edit-pass-wrapper"><div class='tr'><div class="label-wrapper"><label for="edit-pass">Пароль: <span class="form-required" title="Обязательное поле">*</span></label></div><div class="input-wrapper"><input type="password" name="pass" id="edit-pass"  maxlength="60"  size="15"  class="form-text required" /></div><div class="placeholder"></div></div></div><div class="submit-button-wrapper">
+              <div id="button-op" class="submit-button">
+                <div class="submit-button-border-1">
+                  <div class="submit-button-border-2">
+                    <div class="submit-button-border-3">
+                      <input type="submit" name="op" id="edit-submit-1" value="Войти"  class="form-submit" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><a  control_type="dialog" request_url="/int_user/json/remind_password_dialog" destination_block_id="remind-password-dialog" dialog_title="Забыли пароль?" request_data_source="attr" request_data="" id="forget-pass" dialog_min_size="true" dialog_buttons="[
+                                                                {
+                                                                  &#039;text&#039;: &#039;Выслать пароль&#039;,
+                                                                  &#039;click&#039;: function() { finishRemaindingPassword(); }
+                                                                },
+                                                                {
+                                                                  &#039;text&#039;: &#039;Отмена&#039;,
+                                                                  &#039;class&#039;: &#039;cancel-button&#039;,
+                                                                  &#039;click&#039;: function() { $(this).dialog(&#039;close&#039;); }
+                                                                }
+                                                              ]" class="ajax-command-anchor" href="#">Забыли пароль?</a><input type="hidden" name="form_build_id" id="form-61c00a0bc599a6f7f5131dd1a410aa25" value="form-61c00a0bc599a6f7f5131dd1a410aa25"  />
+<input type="hidden" name="form_id" id="edit-user-login-block" value="user_login_block"  />
+<div class="form-item table" id="edit-memorize-wrapper"><div class='tr'><div class="input-wrapper additional-padding"><label class="option" for="edit-memorize"><input type="checkbox" name="" id="edit-memorize" value="1"  checked="checked"  class="form-checkbox" /> Запомнить меня</label></div><div class="placeholder"></div></div></div><div id="left-top-corner"></div>
+                                                     <div id="left-bottom-corner"></div>
+                                                     <div id="right-top-corner"></div>
+                                                     <div id="right-bottom-corner"></div>
+                                                     <h2 id="title">Авторизоваться</h2><a href="/studies/courses" id="enter-as-guest">Зайти как гость</a>
+</div></form>
+</div>
+</div>
+</div>
+              <div id="slogan-box">Твой путь к знаниям!</div>
+              <div id="search-box-region"><form action="/studies/courses/47/47/lecture/1413?page=1"  accept-charset="UTF-8" method="post" id="search-theme-form">
+<div><div id="search" class="container-inline">
+  <div class="search-table"><div class="search-cell fld-search-cell"><div class="form-item table" id="edit-search-theme-form-1-wrapper"><div class='tr'><div class="input-wrapper additional-padding"><input type="text" maxlength="128" name="search_theme_form" id="edit-search-theme-form-1" size="15" value="" title="Искать" class="form-text" /></div><div class="placeholder"></div></div></div></div><div class="search-cell btn-search-cell"><input type="submit" name="op" id="edit-submit-2" value=""  title="Расширенный поиск" class="form-submit" />
+</div><div class="search-cell adv-search-cell"></div></div><input type="hidden" name="form_build_id" id="form-f972ee8c9749178c3ce808868bde0837" value="form-f972ee8c9749178c3ce808868bde0837"  />
+<input type="hidden" name="form_id" id="edit-search-theme-form" value="search_theme_form"  />
+</div>
+
+</div></form>
+</div>
+            </div>
+          </div>
+        </div>
+        <div class="main-wraper-tr">
+          <div class="main-wraper-td" style="height:60px;">
+            <div id="header-panel">
+            <div id="block-intuit_menu-main_menu" class="block-intuit_menu">
+
+
+  <div class="content"><div id="main-menu">
+    <div class="main-menu-tr">
+        <div class="container">
+            <div class="top">
+                <div class="first-level">
+                    <div class="item-list"><ul><li class="selected first"><b class="left"></b><a href="/studies" title="Учеба">Учеба</a><b class="right"></b></li>
+<li class=""><b class="left"></b><a href="/academies" title="Академии">Академии</a><b class="right"></b></li>
+<li class=""><b class="left"></b><a href="/teachers" title="Учителя">Учителя</a><b class="right"></b></li>
+<li class=""><b class="left"></b><a href="/ratings" title="Рейтинг">Рейтинг</a><b class="right"></b></li>
+<li class=""><b class="left"></b><a href="/questions" title="Вопросы">Вопросы</a><b class="right"></b></li>
+<li class="last"><b class="left"></b><a href="/goods_store" title="Магазин">Магазин</a><b class="right"></b></li>
+</ul></div>                </div>
+                <div class="orgaization-info">
+                    <a href="/content/svedeniya-ob-obrazovatelnoj-organizatsii" target="_blank">
+                        Сведения об образовательной организации
+                    </a>
+                </div>
+                <div class="additional">
+                    <div class="aoc">
+                                            </div>
+                    <div class="locale">
+                                            </div>
+                    <div class="submenu">
+                        <div class="item-list"><ul><li class="first"><a href="/news" title="RSS"><b class="left rss"></b><span>Новости</span></a></li>
+<li class=""><a href="/help" title="Помощь"><b class="left help"></b><span>Помощь</span></a></li>
+<li class=""><a href="/content/about-project" title="О проекте"><b class="left about"></b><span>О проекте</span></a></li>
+<li class="last"><a href="/site_map" title="Карта сайта"><b class="left site_map"></b></a></li>
+</ul></div>                    </div>
+                </div>
+            </div>
+            <div class="second-level table">
+                <div class="tr">
+                    <div class="menu td">
+                        <div class="item-list"><ul><li class="selected first"><a href="/studies/courses">Курсы</a></li>
+<li class=""><a href="/studies/school">Школа</a></li>
+<li class=""><a href="/studies/mini_mba">Мини-МБА</a></li>
+<li class=""><a href="/studies/professional_retraining">Профессиональная переподготовка</a></li>
+<li class=""><a href="/studies/professional_skill_improvements">Повышение квалификации</a></li>
+<li class="last"><a href="/studies/certification">Сертификации</a></li>
+</ul></div><div class="right-part-slinks "><div class="item-list"><ul class="right-part-ul"><li id="vklink" class="right-part-li first"><a href="https://vk.com/nouintuit" external="1" title="Вконтакте" target="_blank"></a></li>
+<li id="fblink" class="right-part-li"><a href="https://facebook.com/nouintuit" external="1" title="Facebook" target="_blank"></a></li>
+<li id="twlink" class="right-part-li"><a href="https://twitter.com/nouintuit" external="1" title="Twitter" target="_blank"></a></li>
+<li id="oklink" class="right-part-li last"><a href="https://www.odnoklassniki.ru/group/52905067217125" external="1" title="Одноклассники" target="_blank"></a></li>
+</ul></div></div>                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-side">
+            <b></b>
+        </div>
+    </div>
+</div></div>
+</div>
+                      </div>
+          </div>
+        </div>
+        <div class="main-wraper-tr">
+          <div class="main-wraper-td" style="height: 100%;">
+            <div id="panel-container" class="table">
+              <div id="panel-wrapper" class="tr">
+                                <div id="left-panel" class="column td">
+                    <div id="block-intuit_menu-left_navigation" class="block-intuit_menu">
+
+
+  <div class="content"><div id="left-navigation">
+      <div class="top-menu">
+    <div class="item-list"><ul class="menu"><li class="left-navigation-first-level first"><div  class="non- non-collapse-button" name="0">
+                                        <span style="float: left;" class="pic about_course"></span>
+                                        <span style="float: left;" class="text">О курсе</span>
+                                      </div><span style="clear: both;"></span><div class="item-list"><ul class="non-collapsible-submenu submenu" id="non-collapsible-item-0" style="display:block;"><li class="first"><a href="/studies/courses/47/47/info">Информация</a></li>
+<li class=""><a href="/studies/courses/47/47/glossary">Глоссарий</a></li>
+<li class=""><a href="/studies/courses/47/47/diplomas">Дипломы</a></li>
+<li class=""><a href="/studies/courses/47/47/questions">Вопросы и ответы</a></li>
+<li class=""><a href="/studies/courses/47/47/students">Студенты</a></li>
+<li class=""><a href="/studies/courses/47/47/ratings">Рейтинг выпускников</a></li>
+<li class=""><a href="/studies/courses/47/47/opinions">Мнения</a></li>
+<li class=""><a href="/studies/courses/47/47/literature">Литература</a></li>
+<li class="last"><a href="/studies/courses/47/47/curriculums">Учебные программы</a></li>
+</ul></div></li>
+<li class="left-navigation-first-level last"><div  class="non- non-collapse-button" name="1">
+                                        <span style="float: left;" class="pic about_course"></span>
+                                        <span style="float: left;" class="text">План занятий</span>
+                                      </div><span style="clear: both;"></span><div class="item-list"><ul class="non-collapsible-submenu submenu" id="non-collapsible-item-1" style="display:block;"><li class="first"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="30 вопросов" class="ajax-command-anchor" href="#">Экзамен экстерном</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1397" class="lecture-title notselected" title="Основные понятия и идеи стандарта POSIX">Лекция&nbsp;1</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 1</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1399" class="lecture-title notselected" title="Язык shell">Лекция&nbsp;2</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 2</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1401" class="lecture-title notselected" title="Утилиты и функции, обслуживающие понятие &quot;пользователь&quot;">Лекция&nbsp;3</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 3</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1403" class="lecture-title notselected" title="Организация файловой системы">Лекция&nbsp;4</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 4</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1405" class="lecture-title notselected" title="Файловый ввод/вывод">Лекция&nbsp;5</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 5</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1407" class="lecture-title notselected" title="Средства обработки структурированных данных">Лекция&nbsp;6</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 6</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1409" class="lecture-title notselected" title="Процессы">Лекция&nbsp;7</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 7</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1411" class="lecture-title notselected" title="Средства межпроцессного взаимодействия">Лекция&nbsp;8</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 8</a></li>
+<li><div class="lecture-navigation-wrapper selected">
+                                                       <a href="/studies/courses/47/47/lecture/1413" class="lecture-title  active" title="Общий терминальный интерфейс">Лекция&nbsp;9</a>
+                                                          <div class="navigation-wrapper" style="display:block;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 9</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1415" class="lecture-title notselected" title="Опрос характеристик хостов и их
+использование в приложениях">Лекция&nbsp;10</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 10</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1417" class="lecture-title notselected" title="Сетевые средства">Лекция&nbsp;11</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 11</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1419" class="lecture-title notselected" title="Время и работа с ним">Лекция&nbsp;12</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 12</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1421" class="lecture-title notselected" title="Языково-культурная среда">Лекция&nbsp;13</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 13</a></li>
+<li><div class="lecture-navigation-wrapper">
+                                                       <a href="/studies/courses/47/47/lecture/1423" class="lecture-title notselected" title="Заключение">Лекция&nbsp;14</a>
+                                                          <div class="navigation-wrapper" style="display:none;"><div class="lecture_content">
+<div class="lecture_content_adds"></div>
+<ul></ul>
+</div>
+</div>
+                                                        </div></li>
+<li class=""><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="5 вопросов" class="ajax-command-anchor" href="#">Тест 14</a></li>
+<li class="last"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" title="20 вопросов" class="ajax-command-anchor" href="#">Экзамен</a></li>
+</ul></div></li>
+</ul></div>  </div>
+        <div class="content">
+    <div class="donate">
+                Вы можете <div class="donate-control">
+    <a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#"><span class="donate">поддержать</span></a></div> этот курс.
+             </div>  </div>
+  </div>
+</div>
+</div>
+<div id="block-intuit_advertising-vertical_160_advertising" class="block-intuit_advertising">
+
+
+  <div class="content"><div id="id-pure-content-d1d8bc6dc30758e6554c67ec87e3173c" class="vertical-160-advertising-block">
+      <script async type='text/javascript' src='//s.luxupcdnc.com/t/common_402.js'></script>
+<script class='__lxGc__' type='text/javascript'>
+((__lxGc__=window.__lxGc__||{'s':{},'b':0})['s']['_214053']=__lxGc__['s']['_214053']||{'b':{}})['b']['_630511']={'i':__lxGc__.b++};
+</script>    </div>
+</div>
+</div>
+                </div>
+                <div class="column td margin-18"></div>
+                                <div id="center-panel" class="column td">
+                                                                                                            <div  id="course-lecture-block"  class="entities-standard-block ">
+  <div class="table header">
+    <div class="row">
+            <div class="title">        
+                  
+        <span class="zag">
+        <span title="текстовый курс" class="text-paper"></span><a href="/studies/courses/47/47/info"><span class="spelling-content-entity" data="iduniver_edu_prog=47&idcourse=47&type=4&comment=title"><h3 class='inn'>Программирование в стандарте POSIX</h3></span></a>        </span>
+      </div>
+                  <div class="links" style="padding-left:10px;">
+        <span id="course-information-button" class="closed">[+]</span>      </div>
+          </div>
+  </div>
+  <div class="container">
+        <div class="content">
+      <div class="horizontal-advertising-block  top">
+    <div>
+      <script async type='text/javascript' src='//    s.luxupcdnc.com/t/common_402.js'></script>
+                            <script class='__lxGc__' type='text/javascript'>
+                            ((__lxGc__=window.__lxGc__||{'s':{},'b':0})['s']['_214053']=__lxGc__['s']['_214053']||{'b':{}})['b']['_630456']={'i':__lxGc__.b++};
+                            </script>    </div>
+    <div id="id-study-content-lecture-top-2">
+          </div>
+</div>
+    <div id="course-information" class="info-item">
+                    <div id="" class="info-item">
+                Опубликован:&nbsp;<span>15.06.2004</span> | Доступ:&nbsp;<span>свободный</span> | Студентов:&nbsp;<span><span title="Учатся">2478</span> / <span title="Закончили">667</span></span> | Оценка:&nbsp;<span><span title="Качество лекций"><meta itemprop="rating" content="4.35" />4.35</span> / <span title="Качество заданий">3.96</span></span> | Длительность:&nbsp;<span>27:47:00</span>    </div>
+    <div id="" class="info-item">
+                ISBN: 978-5-9556-0011-6    </div>
+    <div id="" class="info-item">
+                Тема:&nbsp;<span id="entity_47_0"><a href="/studies/courses?page=1&amp;service=0&amp;option_id=13" rel="nofollow">Программирование</a></span>    </div>
+    <div id="" class="info-item">
+                Специальности: <span id="entity_47_1"><a href="/studies/courses?page=1&amp;service=2&amp;option_id=184" rel="nofollow">Программист</a>, <a href="/studies/courses?page=1&amp;service=2&amp;option_id=200" rel="nofollow">Архитектор программного обеспечения</a></span>    </div>
+    <div id="" class="info-item">
+                Теги: <span id="entity_47_tags"><a href="/studies/courses?page=1&amp;service=1&amp;option_id=572" rel="nofollow">awk</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=500" rel="nofollow">posix</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1341" rel="nofollow">SIG</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1344" rel="nofollow">аргумент опции</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=230" rel="nofollow">базы данных</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1343" rel="nofollow">действующий идентификатор</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1345" rel="nofollow">идентификатор группы процесса</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=238" rel="nofollow">интерфейсы</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=509" rel="nofollow">каталоги</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=510" rel="nofollow">командная строка</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1342" rel="nofollow">локальный адрес</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1347" rel="nofollow">маршрутное имя</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=458" rel="nofollow">операционные системы</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=629" rel="nofollow">потоки</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=201" rel="nofollow">протоколы</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=633" rel="nofollow">регулярные выражения</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=461" rel="nofollow">сервисы</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1346" rel="nofollow">спецификатор преобразования</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=112" rel="nofollow">стандарты</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=639" rel="nofollow">указатели</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1116" rel="nofollow">управляющий терминал</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=657" rel="nofollow">утилиты</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=875" rel="nofollow">элементы</a>, <a href="/studies/courses?page=1&amp;service=1&amp;option_id=1340" rel="nofollow">языково-культурная среда</a></span>    </div>
+<script  type="text/javascript">if($("#course-information-button").hasClass("closed"))
+                        {
+                          $("#course-information").hide();
+                          $("#course-information-button").html("[+]");
+                        }
+                        else
+                        {
+                          $("#course-information-button").html("[-]");
+                        }
+                        $("#course-information-button").bind("click", function() 
+                                                                      { 
+                                                                        $("#course-information").toggle("fast", function () 
+                                                                                                        {
+                                                                                                          var $button = $("#course-information-button");
+                                                                                                          if($button.hasClass("closed")) 
+                                                                                                          {
+                                                                                                            $button.removeClass("closed");
+                                                                                                            $button.html("[-]");
+                                                                                                          }
+                                                                                                          else
+                                                                                                          {
+                                                                                                            $button.addClass("closed");
+                                                                                                            $button.html("[+]");
+                                                                                                          }
+                                                                                                        });
+                                                                      });</script>    </div>
+    <div id="course-controls" class="info-item">
+                    <div id="course-semicontrols" class="info-item">
+                <span>    <div id="course-signin-button" class="info-item">
+                <div id="signin-button-47" class="feature"><div class="text entity-signin-button"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="red ajax-command-anchor" href="#">Записаться</a></div></div>    </div>
+</span> | <span><div id="likit-control-likeit-courses-47">  <a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#">Вам нравится?</a>&nbsp;  Нравится&nbsp;<a  control_type="dialog" request_url="/intuit_common_interface/json/likeit_list" destination_block_id="likeit-list" dialog_title="Нравится" request_data_source="attr" request_data="type=like_course&amp;id=47" title="Показать всех пользователей" dialog_attr="{width:450}" no_check_plain="1" dialog_buttons="{&#039;Закрыть&#039; : function() { $(this).dialog(&#039;close&#039;); } }" class="ajax-command-anchor" href="#"><span>17</span>&nbsp;студентам</a>  </div></span> | <span><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#">Поделиться</a></span> | <span><div class="donate-control">
+      <span class="donate-icon"></span>
+    <a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=studies%2Fcourses%2F47%2F47%2Flecture%2F1413&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#"><span class="donate">Поддержать курс</span></a></div></span> | <span><a href="/goods_store/ebooks/8189" class="red">Скачать электронную книгу</a></span>    </div>
+    </div>
+<div  id="lecture-block"  class="entities-standard-block ">
+  <div class="table header plated">
+    <div class="row">
+            <div class="title">        
+                  
+        <span class="zag">
+        Лекция&nbsp;9: <span class="spelling-content-entity" data="iduniver_edu_prog=47&idcourse=47&idlecture=722&type=2&comment=title"><h1 class='inn'>Общий терминальный интерфейс</h1></span>        </span>
+      </div>
+                  <div class="links" style="padding-left:10px;">
+        <div class="lecture-user-control">
+    <div class="font-size-control">
+    <span class="less" title="Уменьшить шрифт"></span><span class="normal" title="Вы можете изменить размер шрифта в лекциях">A</span><span class="more" title="Увеличить шрифт"></span>
+  </div>
+    |  <div class="print-control">
+    <a href="/intuit?destination=studies%2Fcourses%2F47%2F47%2Fprint_lecture%2F1413">версия для печати</a>  </div>
+    
+    </div>
+      </div>
+          </div>
+  </div>
+  <div class="container">
+        <div class="content">
+      <div class="pager"><a href="/studies/courses/47/47/lecture/1411">&lt; Лекция&nbsp;8</a> || <b>Лекция&nbsp;9</b>: <span class="page current-page">1</span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=2" class="page active">2</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=3" class="page active">3</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=4" class="page active">4</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=5" class="page active">5</a></span> || <a href="/studies/courses/47/47/lecture/1415">Лекция&nbsp;10 &gt;</a></div><div class="annotation"><span class="text">Аннотация: </span><span class="spelling-content-entity" data="iduniver_edu_prog=47&idcourse=47&idlecture=722&type=2&comment=annotation">Анализируются основные понятия и объекты общего терминального интерфейса, 
+			служебные программы и функции для управления терминалами, 
+			особенности терминального ввода/вывода, псевдотерминалы.</span></div><div class="keywords"><span class="text">Ключевые слова: </span><a href="/studies/courses/47/47/lecture/1413?page=1#keyword1" rel="nofollow">POSIX</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword2" rel="nofollow">терминал</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword3" rel="nofollow">терминальное устройство</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword4" rel="nofollow">символьный специальный файл</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword5" rel="nofollow">псевдотерминал</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword7" rel="nofollow">главное устройство</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword8" rel="nofollow">подчиненное устройство</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword13" rel="nofollow">полнодуплексный режим</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword15" rel="nofollow">очередь ввода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword17" rel="nofollow">очередь вывода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword19" rel="nofollow">канонический режим ввода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword20" rel="nofollow">неканонический режим ввода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword21" rel="nofollow">режимы ввода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword23" rel="nofollow">буферизация</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword24" rel="nofollow">перевод строки</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword26" rel="nofollow">забой</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword28" rel="nofollow">приложение</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword30" rel="nofollow">байт</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword36" rel="nofollow">локальные режимы</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword37" rel="nofollow">эхоотображение</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword38" rel="nofollow">режимы вывода</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword41" rel="nofollow">специальные управляющие символы</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword42" rel="nofollow">сигнал прерывания</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword44" rel="nofollow">управляющий терминал</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword47" rel="nofollow">уничожение строки</a>, <a href="/studies/courses/47/47/lecture/1413?page=1#keyword56" rel="nofollow">специальный символ</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword62" rel="nofollow">EOL</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword64" rel="nofollow">поле</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword65" rel="nofollow">разрыв соединения</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword69" rel="nofollow">возврат каретки</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword75" rel="nofollow">контроль четности</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword76" rel="nofollow">бит</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword78" rel="nofollow">старт/стопное управление вводом</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword79" rel="nofollow">старт/стопное управление выводом</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword82" rel="nofollow">вывод</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword90" rel="nofollow">управляющие режимы</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword97" rel="nofollow">контроль</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword98" rel="nofollow">скорость передачи</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword100" rel="nofollow">значение</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword106" rel="nofollow">характеристика терминала</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword109" rel="nofollow">пробел</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword116" rel="nofollow">INTR</a>, <a href="/studies/courses/47/47/lecture/1413?page=2#keyword117" rel="nofollow">функция</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword118" rel="nofollow">программа</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword119" rel="nofollow">имя терминала</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword123" rel="nofollow">стандартный ввод</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword124" rel="nofollow">файловый дескриптор</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword129" rel="nofollow">указатель</a>, <a href="/studies/courses/47/47/lecture/1413?page=3#keyword133" rel="nofollow">утилита</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword150" rel="nofollow">инициализация</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword157" rel="nofollow">управляющие</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword159" rel="nofollow">присваивание</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword160" rel="nofollow">управляющая последовательность</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword162" rel="nofollow">KBS</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword163" rel="nofollow">опрос</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword166" rel="nofollow">пара функций</a>, <a href="/studies/courses/47/47/lecture/1413?page=4#keyword168" rel="nofollow">аргумент</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword209" rel="nofollow">мультиплексирование ввода/вывода</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword210" rel="nofollow">FDS</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword212" rel="nofollow">запись</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword213" rel="nofollow">блокирование процесса</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword215" rel="nofollow">командный интерпретатор</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword218" rel="nofollow">curses</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword227" rel="nofollow">идентификатор группы процесса</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword237" rel="nofollow">операции</a>, <a href="/studies/courses/47/47/lecture/1413?page=5#keyword245" rel="nofollow">массив</a></div><div class="border"></div><div class="eoi spelling-content-entity" data="iduniver_edu_prog=47&idcourse=47&idlecture=722&type=2&comment=lecture-text&page=1"><a xmlns:edi="http://www.intuit.ru/2010/edi" name="sect1"></a><h3>Основные понятия и объекты</h3><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_1">В стандарте <a name="keyword1"></a><span class="keyword">POSIX</span>-2001 <span class="keyword_def"><a name="keyword2"></a><span class="keyword">терминал</span></span>  или <a name="keyword-context2"></a> <span class="keyword_def"><a name="keyword3"></a><span class="keyword">терминальное устройство</span></span>  определяется как 
+<a name="keyword4"></a><span class="keyword">символьный специальный файл</span>, удовлетворяющий спецификациям общего терминального 
+интерфейса.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_1"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_2">Наряду с физическими устройствами в стандарте рассматриваются <a name="keyword-context3"></a> <span class="keyword_def"><a name="keyword5"></a><span class="keyword">псевдотерминалы</span></span>  - 
+сущности, поддерживающие интерфейс, идентичный терминальному. <span class="keyword">Псевдотерминал</span>  
+состоит из двух "устройств": <span class="keyword">главного</span>  и <span class="keyword">подчиненного</span>. <a name="keyword-context4"></a> <span class="keyword_def"><a name="keyword9"></a><span class="keyword">Подчиненное "устройство"</span></span>  
+предоставляет процессам терминальный интерфейс, не опирающийся на прямую 
+аппаратную поддержку. Данные, которые записываются на <a name="keyword10"></a><span class="keyword">главное устройство</span>, 
+становятся входными для <span class="keyword">подчиненного</span>  и наоборот.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_2"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_3"><a name="keyword-context5"></a>Обычно <span class="keyword">терминальное устройство</span>  работает в <span class="keyword_def"><a name="keyword13"></a><span class="keyword">полнодуплексном режиме</span></span>, когда ввод и 
+вывод могут совмещаться во времени.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_3"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_4"><a name="keyword-context6"></a>С каждым <span class="keyword">терминальным устройством</span>  ассоциирована <span class="keyword_def"><a name="keyword15"></a><span class="keyword">очередь ввода</span></span>, куда система 
+помещает входные данные до того, как их прочитают прикладные процессы. На 
+размер этой <span class="keyword">очереди</span>  (в байтах) может быть наложено ограничение <span class="texample">{MAX_INPUT}</span>. <a name="keyword-context7"></a>Поддерживается также <span class="keyword_def"><a name="keyword17"></a><span class="keyword">очередь вывода</span></span>, где хранятся записанные прикладными 
+процессами, но еще не выведенные на <span class="keyword">терминал</span>  символы.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_4"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_6"><a name="keyword-context8"></a>Ввод может происходить в <span class="keyword">каноническом</span>  и <span class="keyword">неканоническом</span>  <span class="keyword_def"><a name="keyword21"></a><span class="keyword">режимах</span></span> .   <a name="keyword-context9"></a> <span class="keyword_def"><a name="keyword22"></a><span class="keyword">Канонический 
+режим</span></span>  означает построчную <a name="keyword23"></a><span class="keyword">буферизацию</span>  ввода системой, т. е. запрос на чтение 
+из прикладной программы будет удовлетворен лишь после того, как с клавиатуры
+поступит символ <span class="keyword">перевода строки</span>  или конца файла, а прочитает программа заведомо 
+не больше одной строки, независимо от того, сколько байт она запросила. На 
+размер строки может быть наложено ограничение <span class="texample">{MAX_CANON}</span>. <span class="keyword">Канонический режим</span> 
+подразумевает также естественную обработку системой символов <span class="keyword">забоя</span>  и 
+уничтожения строки.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_6"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_8">(Отметим, что в <span class="keyword">каноническом режиме</span>  <a name="keyword28"></a><span class="keyword">приложение</span> не обязано сразу прочитать всю <span class="keyword">буферизованную</span>  строку. Можно запросить любое количество <a name="keyword30"></a><span class="keyword">байт</span> (даже один), и 
+данные не будут потеряны.)</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_8"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_9"><a name="keyword-context10"></a>В <span class="keyword_def"><a name="keyword31"></a><span class="keyword">неканоническом режиме</span></span>  входные данные не подвергаются препроцессированию системой,
+а обработка запроса на чтение зависит от двух параметров - <span class="texample">MIN</span>  и <span class="texample">TIME</span>. 
+Запрос на чтение не будет удовлетворен, пока не поступит по крайней мере <span class="texample">MIN</span>  байт или не 
+истечет время задержки <span class="texample">TIME</span>  (время задается в десятых долях секунды). Нулевое 
+значение <span class="texample">TIME</span>  трактуется как бесконечная задержка.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_9"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_15">Более точно, если <span class="texample">MIN &gt; 0</span>, <span class="texample">TIME</span>  трактуется как задержка между поступлениями <a name="keyword32"></a><span class="keyword">байт</span>; 
+следовательно, отсчет времени начинается после прихода очередного байта. Если <span class="texample">MIN = 0</span>, <span class="texample">TIME</span>  означает общее время обслуживания запроса на чтение. Такой подход
+позволяет эффективно читать во время вспышек активности ввода и не препятствует 
+побайтному вводу.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_15"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_20">Помимо <span class="keyword">режима</span>, <span class="keyword">канонического</span>  или нет, на передачу данных читающему процессу оказывает
+влияние флаг <span class="texample">O_NONBLOCK</span>, устанавливаемый функциями <span class="texample">open()</span>  или <span class="texample">fcntl()</span>,
+а на обработку входных символов - <span class="keyword">режимы ввода</span>  и <span class="keyword">локальные режимы</span>. Подобная обработка может включать,
+например, <span class="keyword">эхоотображение</span>  вводимых символов.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_20"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_24">Подвергаются обработке системой (в соответствии с <a name="keyword38"></a><span class="keyword">режимами вывода</span>) и выводимые
+прикладной программой символы (в частности, они могут <span class="keyword">буферизоваться</span> ).</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_24"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_25">Ряд управляющих символов играет специальную роль при вводе и/или выводе. Кратко 
+опишем эти функции, не уточняя их соответствия с нажатиями на клавиатуре, поскольку 
+оно зависит от реализации. Отметим, что за некоторыми очевидными исключениями (например, <span class="keyword">перевод строки</span> ), <span class="keyword">специальные управляющие символы</span>  не передаются читающему процессу.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_25"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_26"><pre>INTR</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_26"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_27">Генерирует <span class="keyword">сигнал прерывания</span>  ( <span class="texample">SIGINT</span> ), посылаемый всем процессам, для которых данный <span class="keyword">терминал</span>  является <span class="keyword">управляющим</span>.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_27"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_29"><pre>QUIT</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_29"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_30">Генерирует сигнал выхода.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_30"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_31"><pre>ERASE</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_31"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_32">При <span class="keyword">каноническом режиме ввода</span>  устраняет предыдущий символ, но не далее начала строки.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_32"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_33"><pre>KILL</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_33"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_34">При <span class="keyword">каноническом режиме ввода</span>  <span class="keyword">уничтожает</span>  всю строку.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_34"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_35"><pre>EOF</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_35"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_36">При <span class="keyword">каноническом режиме ввода</span>  при получении этого символа все <span class="keyword">буферизованные</span>  байты
+передаются процессу, а сам символ <span class="texample">EOF</span>  отбрасывается. Таким образом, если <span class="keyword">буферизованных</span> 
+<a name="keyword51"></a><span class="keyword">байт</span> нет, т. е. <span class="texample">EOF</span>  встретился в начале строки, в процесс будет передано нуль <a name="keyword52"></a><span class="keyword">байт</span>, 
+что и является стандартным обозначением конца файла.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_36"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_39"><pre>NL</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_39"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_40">Стандартный разделитель строк ( <span class="keyword">перевод строки</span> ) при <span class="keyword">каноническом режиме ввода</span>. Его нельзя изменить.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_40"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_41"><pre>EOL</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_41"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_42">Дополнительный разделитель строк, аналогичный <span class="texample">NL</span>, при <span class="keyword">каноническом режиме ввода</span>. Обычно не используется.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_42"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_44"><pre>SUSP</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_44"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_45">Генерирует сигнал остановки.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_45"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_46"><pre>STOP</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_46"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_47"><a name="keyword56"></a><span class="keyword">Специальный символ</span> как при вводе, так и при выводе, распознаваемый в случае наличия флагов <span class="texample">IXON</span> 
+(управление выводом) или <span class="texample">IXOFF</span>  (управление вводом). Обычно используется для временной приостановки
+вывода, когда нужно прочитать текст на экране <span class="keyword">терминала</span>.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_47"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_50"><pre>START</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_50"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_51">Употребляется для возобновления вывода, приостановленного с помощью символа <span class="texample">STOP</span>.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_51"></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="example" id="id_53"><pre>CR</pre></div><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_53"></div><p xmlns:edi="http://www.intuit.ru/2010/edi" id="id_54">При <span class="keyword">каноническом режиме ввода</span>  и выполнении некоторых дополнительных условий - эквивалент <span class="keyword">перевода строки</span>.</p><div xmlns:edi="http://www.intuit.ru/2010/edi" class="lecture_mark" id="mark_54"></div></div><div class="next-button-wrapper"><a href="/studies/courses/47/47/lecture/1413?page=2" class="active"><div class="command-button" >
+            <div class="command-button-border-1">
+              <div class="command-button-border-2">
+                <div class="command-button-border-3">
+                  <b class="button-center">Дальше &gt;&gt;</b>
+                </div>
+              </div>
+            </div>
+          </div></a></div><div class="pager"><a href="/studies/courses/47/47/lecture/1411">&lt; Лекция&nbsp;8</a> || <b>Лекция&nbsp;9</b>: <span class="page current-page">1</span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=2" class="page active">2</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=3" class="page active">3</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=4" class="page active">4</a></span><span class="delimiter"></span><span class="page"><a href="/studies/courses/47/47/lecture/1413?page=5" class="page active">5</a></span> || <a href="/studies/courses/47/47/lecture/1415">Лекция&nbsp;10 &gt;</a></div><div class="horizontal-advertising-block ">
+    <div>
+      <div style='text-align: center'> <script async type='text/javascript' src='//s.luxupcdnc.com/t/common_402.js'></script>
+                                    <script class='__lxGc__' type='text/javascript'>
+                                    ((__lxGc__=window.__lxGc__||{'s':{},'b':0})['s']['_214053']=__lxGc__['s']['_214053']||{'b':{}})['b']['_630405']={'i':__lxGc__.b++};
+                                    </script></div>    </div>
+    <div id="id-study-content-lecture-bottom-1">
+          </div>
+</div>
+<!-- Yandex.RTB R-A-98260-1 -->
+<div id="yandex_rtb_R-A-98260-1"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-98260-1",
+                renderTo: "yandex_rtb_R-A-98260-1",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script>    </div>
+          </div>
+</div>
+    </div>
+          </div>
+</div>
+                                  </div>
+                <div class="column td margin-18"></div>
+                                <div id="right-panel" class="column td">
+                    <div id="block-intuit_social-right_pannel" class="block-intuit_social">
+
+
+  <div class="content"><div id="right-social-network-pannel" style="width: 256px;" >
+  <div class="common-content-without-border">
+    <div class="common-content-border-content">
+    <div  id="search-by-course-informer-block"  class="entities-standard-block ">
+  <div class="container">
+        <div class="content">
+      <div id="simple-by-course-search-form" style="display:block;"><form action="/studies/courses/47/47/search"  accept-charset="UTF-8" method="post" id="search-by-course-informer-form">
+<div><script  type="text/javascript">$(document).ready(function() { $("#search-by-course-informer-form #edit-data").hint(); });</script><div class="form-item table" id="edit-data-wrapper"><div class='tr'><div class="input-wrapper additional-padding"><input type="text" maxlength="256" name="data" id="edit-data" size="40" value="" title="Искать в курсе" class="form-text" /></div><div class="placeholder"></div></div></div><div class="submit-button-wrapper">
+              <div id="button-op" class="submit-button">
+                <div class="submit-button-border-1">
+                  <div class="submit-button-border-2">
+                    <div class="submit-button-border-3">
+                      <input type="submit" name="op" id="edit-search" value=""  class="form-submit" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><input type="hidden" name="form_build_id" id="form-295b87484ea92dab3a7f8836c4c89794" value="form-295b87484ea92dab3a7f8836c4c89794"  />
+<input type="hidden" name="form_id" id="edit-search-by-course-informer-form" value="search_by_course_informer_form"  />
+
+</div></form>
+</div>    </div>
+          </div>
+</div>
+<div  id="course-questions-informer"  class="entities-standard-block ">
+  <div class="table header">
+    <div class="row">
+            <div class="title">        
+                  
+        <h3>
+        <a href="/studies/courses/47/47/questions?finished=0">Вопросы и ответы</a>        </h3>
+      </div>
+                  <div class="links" style="padding-left:10px;">
+        <span><a href="/studies/courses/47/47/questions">вопросов: 1</a></span>      </div>
+          </div>
+  </div>
+  <div class="container">
+        <div class="list">
+      <div class="right-pannel-person-view table">
+  <div class="tr">
+    <div class="td picture">
+      <div class="int-avatar img48" user_id="34954" id="user_34954_avatar"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=intuituser%2Fuserpage%2F34954&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#"><img src="https://intuit.ru/sites/default/files/imagecache/img48/pictures/avatar-men-2.png" alt="Антон Коновалов" title="Антон Коновалов"  width="48" height="48" /></a></div>    </div>
+    <div class="td data">
+      <div class="name">
+        Антон Коновалов      </div>
+      <div class="text">
+        <table><tr><td>
+        <div id="592e4f9806283"><p>В настоящее время актуальный стандарт - это POSIX 2008 и его дополнение POSIX 1003.13<br>Планируется ли актуализация материалов данного очень полезного курса?</p></div>        </td></tr></table>
+      </div>
+      <div class="commands">
+        <span class="triangle"></span><a href="/studies/courses/47/47/questions">ответить</a>      </div>
+    </div>
+  </div>
+</div>    </div>
+          </div>
+</div>
+<div  id="course-advertising2-informer"  class="entities-standard-block ">
+  <div class="container">
+        <div class="list">
+      <!-- CLICKIO AdFox unit 643904 -->
+<div id='adfox_155972944194112345'></div>
+<script>
+    (function(w, n) {
+w[n] = w[n] || [];
+w[n].push([{
+        ownerId: 257193,
+        containerId: 'adfox_155972944194112345',
+                params: {
+            pk: __clADF__.state,
+            pp: 'ksp',
+            ps: 'digd',
+            p2: 'fpxb'
+        }
+    }, [ 'desktop', 'tablet', 'phone' ], {
+        tabletWidth: 1024,
+        phoneWidth: 767,
+        isAutoReloads: false
+    }]);})(window, 'adfoxAsyncParamsAdaptive');
+</script>    </div>
+          </div>
+</div>
+<div  id="course-students-informer"  class="entities-standard-block ">
+  <div class="table header">
+    <div class="row">
+            <div class="title">        
+                  
+        <h3>
+        <a href="/studies/courses/47/47/students?finished=0">Студенты</a>        </h3>
+      </div>
+                  <div class="links" style="padding-left:10px;">
+        <span><span><a href="/studies/courses/47/47/students">всего: 2478</a></span></span>      </div>
+          </div>
+  </div>
+  <div class="container">
+        <div class="list">
+      <div class="right-pannel-person-view table">
+  <div class="tr">
+    <div class="td picture">
+      <div class="int-avatar img48" user_id="641" id="user_641_avatar"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=intuituser%2Fuserpage%2F641&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#"><img src="https://intuit.ru/sites/default/files/imagecache/img48/pictures/avatar-men-2.png" alt="Павел Храмцов" title="Павел Храмцов"  width="48" height="48" /></a></div>    </div>
+    <div class="td data">
+      <div class="name">
+        Павел Храмцов      </div>
+      <div class="text">
+        <table><tr><td>
+        Россия        </td></tr></table>
+      </div>
+      <div class="commands">
+        <span class="triangle"></span><a  control_type="command" request_url="/intuit_social_friends/json/add_friend" destination_block_id="course-students-informer" request_data_source="attr" request_data="person_id=641&amp;block=informer" class="ajax-command-anchor" href="#">предложить дружбу</a>      </div>
+    </div>
+  </div>
+</div><div class="right-pannel-person-view table">
+  <div class="tr">
+    <div class="td picture">
+      <div class="int-avatar img48" user_id="772" id="user_772_avatar"><a  control_type="messagebox" dialog_title="Внимание!" no_check_plain="1" dialog_text="Вы не авторизованы. Желаете перейти на страницу входа?" dialog_buttons="{
+                                           &#039;Да&#039; : function() { window.location.href = &#039;/intuit?destination=intuituser%2Fuserpage%2F772&#039;; },
+                                           &#039;Нет&#039; : function() { $(this).dialog(&#039;close&#039;); }
+                                         }" class="ajax-command-anchor" href="#"><img src="https://intuit.ru/sites/default/files/imagecache/img48/pictures/avatar-men-2.png" alt="Денис Комаров" title="Денис Комаров"  width="48" height="48" /></a></div>    </div>
+    <div class="td data">
+      <div class="name">
+        Денис Комаров      </div>
+      <div class="text">
+        <table><tr><td>
+        Россия, Москва        </td></tr></table>
+      </div>
+      <div class="commands">
+        <span class="triangle"></span><a  control_type="command" request_url="/intuit_social_friends/json/add_friend" destination_block_id="course-students-informer" request_data_source="attr" request_data="person_id=772&amp;block=informer" class="ajax-command-anchor" href="#">предложить дружбу</a>      </div>
+    </div>
+  </div>
+</div>    </div>
+          </div>
+</div>
+<div id="id-pure-content-d1d8bc6dc30758e6554c67ec87e3173c-1" class="vertical-240-advertising-block">
+    
+    <!-- формат 240x400 каскадный стики -->
+    <script async type='text/javascript' src='//s.luxupcdnc.com/t/common_402.js'></script>
+    <script class='__lxGc__' type='text/javascript'>
+        ((__lxGc__=window.__lxGc__||{'s':{},'b':0})['s']['_214053']=__lxGc__['s']['_214053']||{'b':{}})['b']['_640364']={'i':__lxGc__.b++};
+    </script>
+</div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+                </div>
+                              </div>
+            </div>
+          </div>
+        </div>
+        <div class="main-wraper-tr">
+          <div class="main-wraper-td" style="height:94px;">
+            <div class="wrapper-wrapper">
+              <div id="footer-panel">
+                                <div id="block-intuit_footer-intuit_footer_block" class="block-intuit_footer">
+
+
+  <div class="content"><div style="text-align: center;">
+    </div>
+<div class="table footer">
+  <div class="tr">
+    <div class="td column-1">
+      © НОУ «ИНТУИТ»,<br/>2003 – 2020    </div>
+    <div class="td column-2">
+      <div class="footer-menu-wrapper">
+        <a href="/content/rules">Пользовательское соглашение</a> | <a href="/content/confidential">Политика конфиденциальности</a> | <a href="/content/reklama-na-sajte">Реклама на сайте</a> | <a href="/contactus/add">Напишите нам</a>      </div>
+      <div class="footer-contacts-wrapper">
+        <p>
+	Телефон: +7 (499) 253-9312, WhatsApp, Telegram, Viber: +7 (977) 954-84-50, факс: +7 (499) 253-9310, e-mail: <a href="mailto:info@intuit.ru">info@intuit.ru</a>, Skype: Intuit.ru</p>
+      </div>
+    </div>
+    <div class="td column-3">
+                </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var scripts = document.querySelectorAll('script');
+  var head= document.getElementsByTagName('head')[0];
+  for(var k = 0; k < scripts.length; k++ ) {
+    var script = scripts[k];
+    var src = script.src;
+    if (src != '' && src.indexOf('https://') == -1) {
+      var newscript= document.createElement('script');
+      var newSrc = src.replace('http://','https://');
+      newscript.type= 'text/javascript';
+      newscript.src= newSrc;
+      head.appendChild(newscript);
+    }
+  }
+</script>
+
+</div>
+</div>
+                              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -16,7 +16,6 @@ type
     Button1: TButton;
     Layout1: TRectangle;
     Label1: TLabel;
-    Rectangle1: TRectangle;
     ListBox1: TListBox;
     ListBoxItem1: TListBoxItem;
     ListBoxItem2: TListBoxItem;
@@ -32,6 +31,7 @@ type
     ComboEdit1: TComboEdit;
     SearchEditButton2: TSearchEditButton;
     Layout3: TLayout;
+    StatusBar1: TStatusBar;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -82,7 +82,8 @@ begin
   ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf(
   //'html\banketservice.ru.html');
   //'html\scr.html');
-  'html\page_wikipedia.html');
+  //'html\page_wikipedia.html');
+  'html\intuit.lecture_1413.html');
   SetEnabledContent(False);
   Memo1.Parent:=nil;
   TreeView1.Parent:=nil;
@@ -389,9 +390,11 @@ end;
 procedure AddStrings(Strings: TStrings; const Text: string);
 var P: Integer;
 begin
+  Strings.BeginUpdate;
   P:=Strings.IndexOf(Text);
   if P<>-1 then Strings.Delete(P);
   if Text<>'' then Strings.Insert(0,Text);
+  Strings.EndUpdate;
 end;
 
 procedure TForm1.SearchEditButton1Click(Sender: TObject);
