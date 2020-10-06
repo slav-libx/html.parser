@@ -19,41 +19,16 @@ https://css-live.ru/verstka/do-not-close-tags.html
 
 }
 
-type
-  TTag = record
-    Name: string;
-    Attributes: TArray<string>;
-    Comment: string;
-    Closed: Boolean;
-    SelfClosed: Boolean;
-    StartPos: Integer;
-    EndPos: Integer;
-    function AsText: string;
-  end;
+const
+  CHARS_WHITESPACES = #8#9#10#13' ';
 
-function TTag.AsText: string;
-begin
-  Result:='<'+Name;
-  for var S in Attributes do Result:=Result+' '+S;
-  if Comment<>'' then
-    Result:=Result+' '+Comment+' -->'
-  else
-  if Name.StartsWith('!') then
-    Result:=Result+'>'
-  else
-  if SelfClosed then
-    Result:=Result+' />'
-  else
-    Result:=Result+'>';
-end;
-
-function GetOpenTag(const Content: string; P: Integer): Integer;
+function GetBeginTag(const Content: string; P: Integer): Integer;
 begin
   Result:=Content.IndexOf('<',P);
   if Result=-1 then Result:=Content.Length;
 end;
 
-function ReadText(const Content,EndText: string; var P: Integer): string;
+function ReadTextTo(const Content,EndText: string; var P: Integer): string;
 var E: Integer;
 begin
   Result:='';
@@ -66,17 +41,34 @@ begin
   end;
 end;
 
-const
-  CHARS_WHITESPACES = #8#9#10#13' ';
-  CHARS_QUOTED = '''"';
+function ReadText(const Content: string; var P: Integer): string;
+var E: Integer;
+begin
+  Result:='';
+  while (P<Content.Length) and (Content.Chars[P]<>'<') do
+  begin
+    E:=Content.IndexOfAny(#10#13'<'.ToCharArray,P);
+    if E=-1 then
+    begin
+      P:=Content.Length;
+      Exit;
+    end else if E<>P then
+    begin
+      Result:=Result+Content.Substring(P,E-P);
+      P:=E;
+    end;
+    while (P<Content.Length) and CHARS_WHITESPACES.Contains(Content.Chars[P]) and
+      (Content.Chars[P]<>'<') do Inc(P);
+  end;
+end;
 
 function ReadName(const Content: string; var P: Integer): string;
 begin
   Result:='!--';
-  if Content.Substring(P,3)=Result then
+  if Content.Substring(P,3).Equals(Result) then
     Inc(P,Result.Length)
   else
-  if Content.Substring(P,1)='/' then
+  if Content.Substring(P,1).Equals('/') then
   begin
     Inc(P);
     Result:='/'+GetToken(P,Content,CHARS_WHITESPACES,'/>');
@@ -90,13 +82,13 @@ var
   Q: Char;
 begin
 
-  Result:=GetToken(P,Content,CHARS_WHITESPACES,CHARS_QUOTED+'>'+StopChars); // unquoted token
+  Result:=GetToken(P,Content,CHARS_WHITESPACES,'''">'+StopChars); // unquoted token
 
   if P<Content.Length then
   if Result.IsEmpty then
   begin
     Q:=Content.Chars[P];
-    if Q.IsInArray(CHARS_QUOTED.ToCharArray) then // quoted token
+    if Q.IsInArray('''"'.ToCharArray) then // quoted token
     begin
       I:=Content.IndexOfAnyUnquoted((CHARS_WHITESPACES+'/>').ToCharArray,Q,Q,P);
       if I>P then
@@ -123,40 +115,73 @@ begin
 
 end;
 
-function ReadTag(const Content: string; var P: Integer): TTag;
+type
+  TTag = record
+    Name: string;
+    Attributes: TArray<string>;
+    Comment: string;
+    Closed: Boolean;
+    SelfClosed: Boolean;
+    StartPos: Integer;
+    EndPos: Integer;
+    function AsText: string;
+    procedure Read(const Content: string; var P: Integer);
+  end;
+
+function TTag.AsText: string;
+begin
+  Result:='<'+Name;
+  for var S in Attributes do Result:=Result+' '+S;
+  if not Comment.IsEmpty then
+    Result:=Result+' '+Comment+' -->'
+  else
+  if Name.StartsWith('!') then
+    Result:=Result+'>'
+  else
+  if SelfClosed then
+    Result:=Result+' />'
+  else
+    Result:=Result+'>';
+end;
+
+procedure TTag.Read(const Content: string; var P: Integer);
 var A: string;
 begin
 
-  Result:=Default(TTag);
+  Self:=Default(TTag);
 
-  Result.StartPos:=P;
+  StartPos:=P;
+
   Inc(P); // '<'
-  Result.Name:=ReadName(Content,P);
-  Result.Closed:=Result.Name.StartsWith('/');
 
-  if Result.Closed then
-    Result.Name:=Result.Name.Substring(1); // trim "/"
+  Name:=ReadName(Content,P);
+  Closed:=Name.StartsWith('/');
 
-  if Result.Name='!--' then
-    Result.Comment:=ReadText(Content,'-->',P).Trim
+  if Closed then
+    Name:=Name.Substring(1); // trim "/"
+
+  if Name.Equals('!--') then
+    Comment:=ReadTextTo(Content,'-->',P).Trim
 
   else begin
 
-    while not Result.SelfClosed do
+    while True do
     begin
       A:=ReadAttribute(Content,P);
-      if A.IsEmpty then Break;
-      if A='/' then
-        Result.SelfClosed:=True
+      if A.IsEmpty then
+        Break
       else
-        Result.Attributes:=Result.Attributes+[A];
+        if A.Equals('/') then
+          SelfClosed:=True
+        else
+          Attributes:=Attributes+[A];
     end;
 
     Inc(P); // '>'
 
   end;
 
-  Result.EndPos:=P;
+  EndPos:=P;
 
 end;
 
@@ -167,10 +192,10 @@ begin
   P:=Attribute.IndexOfAnyUnquoted(['='],'"','"');
 
   if P=-1 then
-    Tag.AddPair(TJSONPair.Create(Attribute.Trim(CHARS_QUOTED.ToCharArray),TJSONNull.Create))
+    Tag.AddPair(TJSONPair.Create(Attribute.Trim('''"'.ToCharArray),TJSONNull.Create))
   else
-    Tag.AddPair(TJSONPair.Create(Attribute.Substring(0,P).Trim(CHARS_QUOTED.ToCharArray),
-      Attribute.Substring(P+1).Trim(CHARS_QUOTED.ToCharArray)));
+    Tag.AddPair(TJSONPair.Create(Attribute.Substring(0,P).Trim('''"'.ToCharArray),
+      Attribute.Substring(P+1).Trim('''"'.ToCharArray)));
 
 end;
 
@@ -184,7 +209,7 @@ begin
   Result.AddPair('__name',Tag.Name);
   Result.AddPair('__xpath',XPath);
 
-  if Tag.Comment<>'' then
+  if not Tag.Comment.IsEmpty then
     Result.AddPair('__value',Tag.Comment);
 
   for var A in Tag.Attributes do
@@ -249,8 +274,6 @@ begin
 end;
 
 procedure THTMLStack.CloseTo(const T: string);
-const
-  TAGS_CLOSE_EXPLICITLY = 'form,table,ul,form,section,select,table,div';
 var I: Integer; N: string;
 begin
 
@@ -259,12 +282,12 @@ begin
   while I>0 do
   begin
     N:=Items[I].GetValue('__name','').ToLower;
-    if N=T then
+    if N.Equals(T) then
     begin
       Count:=I;
       Exit;
     end else
-    if TagIn(N,TAGS_CLOSE_EXPLICITLY) then
+    if TagIn(N,'form,table,ul,form,section,select,table,div') then // these tags must be explicitly closed
       Exit;
     Dec(I);
   end;
@@ -277,6 +300,7 @@ var
   TagName,Text: string;
   StartIndex,TagIndex: Integer;
   Tag: TTag;
+  //S: string;
 begin
 
   Stack:=THTMLStack.Create;
@@ -291,15 +315,18 @@ begin
 
       TagIndex:=StartIndex;
 
-      StartIndex:=GetOpenTag(Content,StartIndex);
-
-      if StartIndex>=Content.Length then Break;
-
-      Text:=Content.Substring(TagIndex,StartIndex-TagIndex).Trim;
+      Text:=ReadText(Content,StartIndex);
 
       if Text<>'' then Stack.Last.AddPair('__text',Text);
 
-      Tag:=ReadTag(Content,StartIndex);
+//      StartIndex:=GetBeginTag(Content,StartIndex);
+
+      if StartIndex>=Content.Length then Break;
+
+//      Text:=Content.Substring(TagIndex,StartIndex-TagIndex).Trim;
+
+
+      Tag.Read(Content,StartIndex);
 
       TagName:=Tag.Name.ToLower;
 
@@ -309,10 +336,6 @@ begin
       else begin
 
         { implicit closing tags }
-
-        if TagIn(TagName,'script') and TagIn(Stack.LastName,'div') then  // ?
-          Stack.Close                                                    // ?
-        else
 
         if TagIn(TagName,'address,article,aside,blockquote,div,dl,fieldset,'+
           'footer,form,h1,h2,h3,h4,h5,h6,header,hr,menu,nav,ol,pre,section,'+
@@ -352,9 +375,9 @@ begin
         if TagIn(TagName,'script,style,textarea') then
         begin
 
-          Text:=ReadText(Content,'</'+TagName+'>',StartIndex).Trim;
+          Text:=ReadTextTo(Content,'</'+TagName+'>',StartIndex).Trim;
 
-          if Text<>'' then
+          if not Text.IsEmpty then
           if TagName='textarea' then
             Stack.Last.AddPair('__text',Text)
           else

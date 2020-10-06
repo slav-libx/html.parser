@@ -10,6 +10,7 @@ object Form1: TForm1
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnKeyDown = FormKeyDown
   DesignerMasterStyle = 0
   object Layout1: TRectangle
     Align = Top
@@ -69,26 +70,32 @@ object Form1: TForm1
       Text = 'Text'
       OnClick = ListBoxItem2Click
     end
-    object ListBoxItem3: TListBoxItem
+    object ListBoxItem8: TListBoxItem
       Position.Y = 76.000000000000000000
+      TabOrder = 8
+      Text = 'Smart Text'
+      OnClick = ListBoxItem8Click
+    end
+    object ListBoxItem3: TListBoxItem
+      Position.Y = 95.000000000000000000
       TabOrder = 2
       Text = 'Links'
       OnClick = ListBoxItem3Click
     end
     object ListBoxItem4: TListBoxItem
-      Position.Y = 95.000000000000000000
+      Position.Y = 114.000000000000000000
       TabOrder = 3
       Text = 'Images'
       OnClick = ListBoxItem4Click
     end
     object ListBoxItem5: TListBoxItem
-      Position.Y = 114.000000000000000000
+      Position.Y = 133.000000000000000000
       TabOrder = 4
       Text = 'Scripts'
       OnClick = ListBoxItem5Click
     end
     object ListBoxItem6: TListBoxItem
-      Position.Y = 133.000000000000000000
+      Position.Y = 152.000000000000000000
       TabOrder = 5
       Text = 'Styles'
       OnClick = ListBoxItem6Click
@@ -152,8 +159,10 @@ object Form1: TForm1
     object Layout3: TLayout
       Align = Left
       Locked = True
+      Margins.Top = 2.000000000000000000
+      Position.Y = 2.000000000000000000
       Size.Width = 22.000000000000000000
-      Size.Height = 22.000000000000000000
+      Size.Height = 20.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       object SearchEditButton2: TSearchEditButton
@@ -162,7 +171,7 @@ object Form1: TForm1
         HitTest = False
         Locked = True
         Size.Width = 22.000000000000000000
-        Size.Height = 22.000000000000000000
+        Size.Height = 20.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         OnClick = SearchEditButton1Click

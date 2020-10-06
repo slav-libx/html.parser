@@ -32,6 +32,7 @@ type
     SearchEditButton2: TSearchEditButton;
     Layout3: TLayout;
     StatusBar1: TStatusBar;
+    ListBoxItem8: TListBoxItem;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -48,6 +49,9 @@ type
     procedure ListBoxItem7Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ComboEdit1ApplyStyleLookup(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure ListBoxItem8Click(Sender: TObject);
   private
     Source: string;
     DOM: TJSONObject;
@@ -92,6 +96,27 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   DOM.Free;
+end;
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+begin
+  case Key of
+  vkF:
+    if ssCtrl in Shift then
+    if not ComboEdit1.IsFocused then
+    begin
+      Key:=0;
+      KeyChar:=#0;
+      ComboEdit1.SetFocus;
+    end;
+  vkF3:
+    begin
+      Key:=0;
+      KeyChar:=#0;
+      Click(SearchEditButton2);
+    end;
+  end;
 end;
 
 procedure TForm1.SetEnabledContent(Value: Boolean);
@@ -189,19 +214,6 @@ begin
 
 end;
 
-type
-  TEnumProc = reference to procedure(Parent: TJSONObject; Pair: TJSONPair);
-
-procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
-begin
-  for var Pair in DOM do
-  begin
-    EnumProc(DOM,Pair);
-    if Pair.JsonValue is TJSONObject then
-      DOMEnum(TJSONObject(Pair.JsonValue),EnumProc);
-  end;
-end;
-
 function GetDiplayText(const Source: string): string;
 begin
   Result:=Source.Replace(#13,' ').Replace(#10,' ');
@@ -218,7 +230,7 @@ var Item: TTreeViewItem;
 begin
   for var P in jsObject do
   begin
-    if P.JsonString.Value='__tag' then
+    if P.JsonString.Value.Equals('__tag') then
     begin
       Item:=TTreeViewItem.Create(Parent.Owner);
       Item.Parent:=Parent;
@@ -226,7 +238,7 @@ begin
       if P.JsonValue.GetValue('__name','').StartsWith('!--') then SetItemColor(Item,claGray);
       AddTreeView(Item,TJSONObject(P.JsonValue));
     end else
-    if P.JsonString.Value='__text' then
+    if P.JsonString.Value.Equals('__text') then
     begin
       Item:=TTreeViewItem.Create(Parent.Owner);
       Item.Parent:=Parent;
@@ -254,6 +266,33 @@ begin
   Memo1.Text:=DOM.Format;
 end;
 
+type
+  TEnumProc = reference to procedure(Pair: TJSONPair);
+
+procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
+begin
+  for var Pair in DOM do
+  begin
+    EnumProc(Pair);
+    if Pair.JsonValue is TJSONObject then
+      DOMEnum(TJSONObject(Pair.JsonValue),EnumProc);
+  end;
+end;
+
+function HTMLTextDecode(const Text: string): string;
+begin
+  Result:=TNetEncoding.HTML.Decode(Text).
+    // need optimized
+    Replace('&nbsp;',Chr(160)).Replace('&larr;',Chr($2190)).
+    Replace('&copy;',Chr(169)).Replace('&uarr;',Chr($2191)).
+    Replace('&rarr;',Chr($2192)).Replace('&ldquo',Chr($201C)).
+    Replace('&rdquo;',Chr($201D)).Replace('&hearts;',Chr($2665)).
+    Replace('&times;',Chr(215)).Replace('&reg',Chr(174)).
+    Replace('&ndash;',Chr($2013)).Replace('&laquo;',Chr(171)).
+    Replace('&raquo;',Chr(187)).Replace('&hellip;',Chr($2026)).
+    Replace('&middot;',Chr(183));
+end;
+
 procedure TForm1.ListBoxItem2Click(Sender: TObject);
 var S: string;
 begin
@@ -262,11 +301,39 @@ begin
 
   S:='';
 
-  DOMEnum(DOM,
-  procedure(Parent: TJSONObject; Pair: TJSONPair)
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
-    if Pair.JsonString.Value='__text' then
-      S:=S+TNetEncoding.HTML.Decode(Pair.JsonValue.Value)+Memo1.Lines.LineBreak;
+    if Pair.JsonString.Value.Equals('__text') then
+      S:=S+HTMLTextDecode(Pair.JsonValue.Value)+Memo1.Lines.LineBreak;
+  end);
+
+  Memo1.Text:=S;
+
+end;
+
+procedure TForm1.ListBoxItem8Click(Sender: TObject);
+var S: string; B: Boolean;
+begin
+
+  ShowViews(Layout2,nil);
+
+  S:='';
+
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
+  begin
+
+    if Pair.JsonString.Value.Equals('__text') then
+    begin
+      B:=True;
+      S:=S+HTMLTextDecode(Pair.JsonValue.Value);
+    end else
+    if Pair.JsonString.Value.Equals('__name') then
+    if B and ',br,li,p,option,td,div,'.Contains(','+Pair.JsonValue.Value+',') then
+    begin
+      B:=False;
+      S:=S+Memo1.Lines.LineBreak;
+    end;
+
   end);
 
   Memo1.Text:=S;
@@ -281,20 +348,19 @@ begin
 
   S:='';
 
-  DOMEnum(DOM,
-  procedure(Parent: TJSONObject; Pair: TJSONPair)
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
-    if Pair.JsonValue.GetValue('__name','')='a' then
+    if Pair.JsonValue.GetValue('__name','').Equals('a') then
     begin
       V:=Pair.JsonValue.GetValue('href','');
-      if V<>'' then
+      if not V.IsEmpty then
       begin
         S:=S+V;
         V:=Pair.JsonValue.GetValue('__text','');
-        if V='' then
+        if V.IsEmpty then
           V:=Pair.JsonValue.GetValue('title','');
-        if V<>'' then
-          S:=S+' "'+V+'"';
+        if not V.IsEmpty then
+          S:=S+' '+V.QuotedString('"');
         S:=S+Memo1.Lines.LineBreak;
       end;
     end;
@@ -312,18 +378,17 @@ begin
 
   S:='';
 
-  DOMEnum(DOM,
-  procedure(Parent: TJSONObject; Pair: TJSONPair)
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
-    if Pair.JsonValue.GetValue('__name','')='img' then
+    if Pair.JsonValue.GetValue('__name','').Equals('img') then
     begin
       S:=S+Pair.JsonValue.GetValue('src','');
       V:=Pair.JsonValue.GetValue('alt','');
-      if V<>'' then
+      if not V.IsEmpty then
         S:=S+' "'+V+'"'
       else begin
         V:=Pair.JsonValue.GetValue('title','');
-        if V<>'' then S:=S+' "'+V+'"';
+        if not V.IsEmpty then S:=S+' "'+V+'"';
       end;
       S:=S+' '+Pair.JsonValue.GetValue<string>('width','0')+'x'+
         Pair.JsonValue.GetValue<string>('height','0')+Memo1.Lines.LineBreak;
@@ -342,15 +407,14 @@ begin
 
   S:='';
 
-  DOMEnum(DOM,
-  procedure(Parent: TJSONObject; Pair: TJSONPair)
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
-    if Pair.JsonValue.GetValue('__name','')='script' then
+    if Pair.JsonValue.GetValue('__name','').Equals('script') then
     begin
       V:=Pair.JsonValue.GetValue('src','');
-      if V<>'' then S:=S+V+Memo1.Lines.LineBreak;
+      if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
       V:=Pair.JsonValue.GetValue('__value','');
-      if V<>'' then S:=S+V+Memo1.Lines.LineBreak;
+      if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
       S:=S+Memo1.Lines.LineBreak;
     end;
   end);
@@ -367,19 +431,18 @@ begin
 
   S:='';
 
-  DOMEnum(DOM,
-  procedure(Parent: TJSONObject; Pair: TJSONPair)
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
-    if Pair.JsonValue.GetValue('__name','')='style' then
+    if Pair.JsonValue.GetValue('__name','').Equals('style') then
     begin
       V:=Pair.JsonValue.GetValue('__value','');
-      if V<>'' then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
+      if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
     end else
     if Pair.JsonValue.GetValue('__name','')='link' then
     if Pair.JsonValue.GetValue('rel','')='stylesheet' then
     begin
       V:=Pair.JsonValue.GetValue('href','');
-      if V<>'' then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
+      if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
     end;
   end);
 
@@ -393,7 +456,7 @@ begin
   Strings.BeginUpdate;
   P:=Strings.IndexOf(Text);
   if P<>-1 then Strings.Delete(P);
-  if Text<>'' then Strings.Insert(0,Text);
+  if not Text.IsEmpty then Strings.Insert(0,Text);
   Strings.EndUpdate;
 end;
 
