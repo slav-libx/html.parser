@@ -120,11 +120,11 @@ object Form1: TForm1
     object TreeView1: TTreeView
       Align = Client
       Size.Width = 764.000000000000000000
-      Size.Height = 476.000000000000000000
+      Size.Height = 541.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       Viewport.Width = 760.000000000000000000
-      Viewport.Height = 472.000000000000000000
+      Viewport.Height = 537.000000000000000000
     end
     object Memo1: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -136,39 +136,23 @@ object Form1: TForm1
       TextSettings.Font.Size = 14.000000000000000000
       Align = Client
       Size.Width = 764.000000000000000000
-      Size.Height = 476.000000000000000000
+      Size.Height = 541.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 760.000000000000000000
-      Viewport.Height = 472.000000000000000000
-    end
-    object Memo2: TMemo
-      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
-      DataDetectorTypes = []
-      ReadOnly = True
-      StyledSettings = [Size, Style]
-      TextSettings.Font.Family = 'Consolas'
-      TextSettings.FontColor = claMaroon
-      Align = Bottom
-      Margins.Top = 4.000000000000000000
-      Position.Y = 480.000000000000000000
-      Size.Width = 764.000000000000000000
-      Size.Height = 61.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 2
-      Viewport.Width = 760.000000000000000000
-      Viewport.Height = 57.000000000000000000
+      Viewport.Height = 537.000000000000000000
     end
   end
   object ComboEdit1: TComboEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 4
     DropDownCount = 30
     ItemHeight = 19.000000000000000000
     ItemIndex = -1
     Position.X = 360.000000000000000000
     Position.Y = 11.000000000000000000
-    Size.Width = 241.000000000000000000
+    Size.Width = 489.000000000000000000
     Size.Height = 22.000000000000000000
     Size.PlatformDefault = False
     OnApplyStyleLookup = ComboEdit1ApplyStyleLookup

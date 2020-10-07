@@ -9,7 +9,8 @@ uses
   System.JSON,
   FMX.Utils;
 
-function HTMLParse(const Source: string; ErrorProc: TProc<string>): TJSONObject;
+function HTMLParse(const Source: string): TJSONObject;
+function TagIn(const Tag,Tags: string): Boolean;
 
 implementation
 
@@ -129,7 +130,7 @@ type
     Name: string;
     Attributes: TArray<string>;
     Comment: string;
-    Closed: Boolean;
+    Closing: Boolean;
     SelfClosed: Boolean;
     StartPos: Integer;
     EndPos: Integer;
@@ -164,9 +165,9 @@ begin
   Inc(P); // '<'
 
   Name:=ReadName(Content,P);
-  Closed:=Name.StartsWith('/');
+  Closing:=Name.StartsWith('/');
 
-  if Closed then
+  if Closing then
     Name:=Name.Substring(1); // trim "/"
 
   if Name.Equals('!--') then
@@ -335,7 +336,7 @@ begin
 
 end;
 
-procedure HTMLGet(Result: TJSONObject; const Content: string; ErrorProc: TProc<string>);
+procedure HTMLGet(Result: TJSONObject; const Content: string);
 var
   Stack: THTMLStack;
   TagName,Text: string;
@@ -366,7 +367,7 @@ begin
 
       TagName:=Tag.Name.ToLower;
 
-      if Tag.Closed then // </tag>
+      if Tag.Closing then // </tag>
         Stack.CloseTo(TagName)
 
       else begin
@@ -427,7 +428,7 @@ begin
 
     end;
 
-    if Stack.Count<>1 then ErrorProc('error document structure');
+    if Stack.Count<>1 then raise Exception.Create('error document structure');
 
   finally
     Stack.Free;
@@ -435,11 +436,11 @@ begin
 
 end;
 
-function HTMLParse(const Source: string; ErrorProc: TProc<string>): TJSONObject;
+function HTMLParse(const Source: string): TJSONObject;
 begin
   Result:=TJSONObject.Create;
   try
-    HTMLGet(Result,Source,ErrorProc);
+    HTMLGet(Result,Source);
   except
     Result.Free;
     raise;

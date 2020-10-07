@@ -33,7 +33,6 @@ type
     Layout3: TLayout;
     StatusBar1: TStatusBar;
     ListBoxItem8: TListBoxItem;
-    Memo2: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -125,7 +124,6 @@ begin
   ListBox1.Enabled:=Value;
   Memo1.Enabled:=Value;
   TreeView1.Enabled:=Value;
-  if not Value then Memo2.Visible:=False;
 end;
 
 procedure TForm1.ShowViews(MemoParent,TreeParent: TControl);
@@ -166,7 +164,6 @@ begin
 
   SetEnabledContent(False);
 
-  Memo2.Text:='';
   Memo1.Text:='';
   TreeView1.Clear;
 
@@ -184,12 +181,7 @@ begin
 
     C:=TThread.GetTickCount;
 
-    DOM:=HTMLParse(Source,
-      procedure(Text: string)
-      begin
-        Memo2.Visible:=True;
-        Memo2.Lines.Add(Text);
-      end);
+    DOM:=HTMLParse(Source);
 
     Label1.Text:=Format('Parsing time: %d ms',[TThread.GetTickCount-C]);
 
@@ -280,7 +272,7 @@ begin
     Replace('&times;',Chr(215)).Replace('&reg',Chr(174)).
     Replace('&ndash;',Chr($2013)).Replace('&laquo;',Chr(171)).
     Replace('&raquo;',Chr(187)).Replace('&hellip;',Chr($2026)).
-    Replace('&middot;',Chr(183));
+    Replace('&middot;',Chr(183)).Replace('&mdash;',Chr($2014));
 end;
 
 procedure TForm1.ListBoxItem2Click(Sender: TObject);
@@ -304,23 +296,26 @@ end;
 procedure TForm1.ListBoxItem8Click(Sender: TObject);
 var S: string; B: Boolean;
 
-  procedure DoEnum(DOM: TJSONObject);
+  procedure DoEnum(Tag: TJSONObject);
   var N: string;
   begin
 
-    N:=DOM.GetValue('__name','');
+    N:=Tag.GetValue('__name','');
 
-    if ',svg,img,'.Contains(','+N+',') then
+    if TagIn(N,'svg,img') then
       S:=S+'['+N+']'
     else
+    if TagIn(N,'article,pre,textarea') then
+      S:=S+Memo1.Lines.LineBreak
+    else
     if B then
-    if ',br,ul,li,p,pre,option,dt,td,div,h1,h2,h3,h4,h5,h6,'.Contains(','+N+',') then
+    if TagIn(N,'br,div,ul,p,pre,option,dt,td,h1,h2,h3,h4,h5,h6') then
     begin
       B:=False;
       S:=S+Memo1.Lines.LineBreak;
     end;
 
-    for var Pair in DOM do
+    for var Pair in Tag do
     begin
       if Pair.JsonValue is TJSONObject then
         DoEnum(TJSONObject(Pair.JsonValue))
@@ -332,11 +327,14 @@ var S: string; B: Boolean;
       end
     end;
 
-    if ',tab,'.Contains(','+N+',') then
+    if TagIn(N,'tab') then
       S:=S+' | '
     else
+    if TagIn(N,'pre,textarea') then
+      S:=S+Memo1.Lines.LineBreak
+    else
     if B then
-    if ',ul,li,p,pre,option,dt,td,div,h1,h2,h3,h4,h5,h6,'.Contains(','+N+',') then
+    if TagIn(N,'title,div,ul,li,p,pre,option,dt,td,h1,h2,h3,h4,h5,h6') then
     begin
       B:=False;
       S:=S+Memo1.Lines.LineBreak;
