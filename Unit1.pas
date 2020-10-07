@@ -33,6 +33,7 @@ type
     Layout3: TLayout;
     StatusBar1: TStatusBar;
     ListBoxItem8: TListBoxItem;
+    Memo2: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -124,6 +125,7 @@ begin
   ListBox1.Enabled:=Value;
   Memo1.Enabled:=Value;
   TreeView1.Enabled:=Value;
+  if not Value then Memo2.Visible:=False;
 end;
 
 procedure TForm1.ShowViews(MemoParent,TreeParent: TControl);
@@ -162,55 +164,42 @@ begin
 
   ShowViews(nil,nil);
 
- // Source:='programming-csharp.ru.html';
-  Source:='googd.html';
-//  Source:='yout.html';
- // Source:='page_google.html';
-// Source:='page_habrahabr-70330.html';
-//  Source:='page_habrahabr-index.html';
-//  Source:='page_wikipedia.html';
-//  Source:='banketservice.ru.html';
-//  Source:='dt.html';
+  SetEnabledContent(False);
+
+  Memo2.Text:='';
+  Memo1.Text:='';
+  TreeView1.Clear;
+
+  DOM.Free;
+  DOM:=nil;
 
   Source:=ComboBox1.Selected.Text;
 
-  SetEnabledContent(False);
-  Memo1.Text:='';
-  TreeView1.Clear;
-  DOM.Free;
-  Dom:=nil;
-
   Label1.Text:='Parsing...';
 
-  TThread.CreateAnonymousThread(procedure
+  TThread.Queue(nil,procedure
   begin
 
     Source:=TFile.ReadAllText(Source,TEncoding.UTF8);
 
     C:=TThread.GetTickCount;
-    try
-    DOM:=HTMLParse(Source);
-    except on E: Exception do
-    begin
-      DOM:=TJSONObject.Create;
-      DOM.AddPair('error',E.Message);
-    end end;
-    C:=TThread.GetTickCount-C;
 
-    TThread.Synchronize(nil,procedure
-    begin
+    DOM:=HTMLParse(Source,
+      procedure(Text: string)
+      begin
+        Memo2.Visible:=True;
+        Memo2.Lines.Add(Text);
+      end);
 
-      Label1.Text:='Parsing time: '+C.ToString+' ms';
+    Label1.Text:=Format('Parsing time: %d ms',[TThread.GetTickCount-C]);
 
-      SetEnabledContent(True);
+    SetEnabledContent(True);
 
-      ListBoxItem1.SetIsSelectedInternal(True,False);
+    ListBoxItem1.SetIsSelectedInternal(True,False);
 
-      Click(ListBoxItem1);
+    Click(ListBoxItem1);
 
-    end);
-
-  end).Start;
+  end);
 
 end;
 
@@ -270,8 +259,9 @@ type
   TEnumProc = reference to procedure(Pair: TJSONPair);
 
 procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
+var Pair: TJSONPair;
 begin
-  for var Pair in DOM do
+  for Pair in DOM do
   begin
     EnumProc(Pair);
     if Pair.JsonValue is TJSONObject then
@@ -313,28 +303,54 @@ end;
 
 procedure TForm1.ListBoxItem8Click(Sender: TObject);
 var S: string; B: Boolean;
+
+  procedure DoEnum(DOM: TJSONObject);
+  var N: string;
+  begin
+
+    N:=DOM.GetValue('__name','');
+
+    if ',svg,img,'.Contains(','+N+',') then
+      S:=S+'['+N+']'
+    else
+    if B then
+    if ',br,ul,li,p,pre,option,dt,td,div,h1,h2,h3,h4,h5,h6,'.Contains(','+N+',') then
+    begin
+      B:=False;
+      S:=S+Memo1.Lines.LineBreak;
+    end;
+
+    for var Pair in DOM do
+    begin
+      if Pair.JsonValue is TJSONObject then
+        DoEnum(TJSONObject(Pair.JsonValue))
+      else
+      if Pair.JsonString.Value.Equals('__text') then
+      begin
+        B:=True;
+        S:=S+HTMLTextDecode(Pair.JsonValue.Value);
+      end
+    end;
+
+    if ',tab,'.Contains(','+N+',') then
+      S:=S+' | '
+    else
+    if B then
+    if ',ul,li,p,pre,option,dt,td,div,h1,h2,h3,h4,h5,h6,'.Contains(','+N+',') then
+    begin
+      B:=False;
+      S:=S+Memo1.Lines.LineBreak;
+    end;
+
+  end;
+
 begin
 
   ShowViews(Layout2,nil);
 
   S:='';
 
-  DOMEnum(DOM,procedure(Pair: TJSONPair)
-  begin
-
-    if Pair.JsonString.Value.Equals('__text') then
-    begin
-      B:=True;
-      S:=S+HTMLTextDecode(Pair.JsonValue.Value);
-    end else
-    if Pair.JsonString.Value.Equals('__name') then
-    if B and ',br,li,p,option,td,div,'.Contains(','+Pair.JsonValue.Value+',') then
-    begin
-      B:=False;
-      S:=S+Memo1.Lines.LineBreak;
-    end;
-
-  end);
+  DoEnum(DOM);
 
   Memo1.Text:=S;
 

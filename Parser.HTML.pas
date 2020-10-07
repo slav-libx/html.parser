@@ -9,7 +9,7 @@ uses
   System.JSON,
   FMX.Utils;
 
-function HTMLParse(const Source: string): TJSONObject;
+function HTMLParse(const Source: string; ErrorProc: TProc<string>): TJSONObject;
 
 implementation
 
@@ -41,7 +41,7 @@ begin
   end;
 end;
 
-function ReadText(const Content: string; var P: Integer): string;
+function ReadEnclosedTextContent(const Content: string; var P: Integer): string;
 var E: Integer;
 begin
   Result:='';
@@ -60,6 +60,15 @@ begin
     while (P<Content.Length) and CHARS_WHITESPACES.Contains(Content.Chars[P]) and
       (Content.Chars[P]<>'<') do Inc(P);
   end;
+end;
+
+function ReadPreEnclosedTextContent(const Content: string; var P: Integer): string;
+var E: Integer;
+begin
+  E:=Content.IndexOf('<',P);
+  if E=-1 then E:=Content.Length;
+  Result:=Content.Substring(P,E-P);
+  P:=E;
 end;
 
 function ReadName(const Content: string; var P: Integer): string;
@@ -220,12 +229,17 @@ end;
 type
   THTMLStack = class(TList<TJSONObject>)
   strict private
+    FNames: array of string;
     function GetXPath(const D: string='/'): string;
+    function GetNames(Index: Integer): string;
   public
     function LastName: string;
-    procedure Push(const T: TTag);
+    procedure Push(O: TJSONObject; const Name: string); overload;
+    procedure Push(const T: TTag); overload;
     procedure Close;
     procedure CloseTo(const T: string);
+    function Exists(const Name: string): Boolean;
+    property Names[Index: Integer]: string read GetNames;
   end;
 
 function TagIn(const Tag,Tags: string): Boolean;
@@ -248,12 +262,23 @@ function THTMLStack.GetXPath(const D: string='/'): string;
 begin
   Result:='';
   for var I:=1 to Count-1 do
-    Result:=Join(D,Result,Items[I].GetValue('__name',''));
+    Result:=Join(D,Result,Names[I]);
+end;
+
+function THTMLStack.GetNames(Index: Integer): string;
+begin
+  Result:=FNames[Index];// Items[Index].GetValue('__name','');
 end;
 
 function THTMLStack.LastName: string;
 begin
-  Result:=Last.GetValue('__name','').ToLower;
+  Result:=Names[Count-1];
+end;
+
+procedure THTMLStack.Push(O: TJSONObject; const Name: string);
+begin
+  Add(O);
+  FNames:=FNames+[Name.ToLower];
 end;
 
 procedure THTMLStack.Push(const T: TTag);
@@ -264,67 +289,78 @@ begin
 
   Last.AddPair('__tag',Tag);
 
-  Add(Tag);
+  Push(Tag,T.Name);
 
 end;
 
 procedure THTMLStack.Close;
 begin
   Count:=Count-1;
+  SetLength(FNames,Count);
 end;
 
 procedure THTMLStack.CloseTo(const T: string);
-var I: Integer; N: string;
+var I: Integer;
 begin
 
   I:=Count-1;
 
   while I>0 do
   begin
-    N:=Items[I].GetValue('__name','').ToLower;
-    if N.Equals(T) then
+    if Names[I].Equals(T) then
     begin
       Count:=I;
+      SetLength(FNames,Count);
       Exit;
     end else
-    if TagIn(N,'form,table,ul,form,section,select,table,div') then // these tags must be explicitly closed
+    if TagIn(Names[I],'form,table,ul,form,section,select,table,div') then // these tags must be explicitly closed
       Exit;
     Dec(I);
   end;
 
 end;
 
-procedure HTMLGet(Result: TJSONObject; const Content: string);
+function THTMLStack.Exists(const Name: string): Boolean;
+var I: Integer;
+begin
+
+  I:=Count-1;
+
+  while I>0 do if Name.Equals(Names[I]) then
+    Exit(True)
+  else
+    Dec(I);
+
+  Result:=False;
+
+end;
+
+procedure HTMLGet(Result: TJSONObject; const Content: string; ErrorProc: TProc<string>);
 var
   Stack: THTMLStack;
   TagName,Text: string;
-  StartIndex,TagIndex: Integer;
+  StartIndex: Integer;
   Tag: TTag;
-  //S: string;
 begin
 
   Stack:=THTMLStack.Create;
   try
 
-    Stack.Add(Result);
+    Stack.Push(Result,'');
 
     StartIndex:=0;
 
     while Stack.Count>0 do
     begin
 
-      TagIndex:=StartIndex;
-
-      Text:=ReadText(Content,StartIndex);
+      if Stack.Exists('pre') then
+        Text:=ReadPreEnclosedTextContent(Content,StartIndex)
+      else
+        Text:=ReadEnclosedTextContent(Content,StartIndex);
 
       if Text<>'' then Stack.Last.AddPair('__text',Text);
 
-//      StartIndex:=GetBeginTag(Content,StartIndex);
-
       if StartIndex>=Content.Length then Break;
-
-//      Text:=Content.Substring(TagIndex,StartIndex-TagIndex).Trim;
-
 
       Tag.Read(Content,StartIndex);
 
@@ -391,7 +427,7 @@ begin
 
     end;
 
-    if Stack.Count<>1 then raise Exception.Create('error document structure');
+    if Stack.Count<>1 then ErrorProc('error document structure');
 
   finally
     Stack.Free;
@@ -399,11 +435,11 @@ begin
 
 end;
 
-function HTMLParse(const Source: string): TJSONObject;
+function HTMLParse(const Source: string; ErrorProc: TProc<string>): TJSONObject;
 begin
   Result:=TJSONObject.Create;
   try
-    HTMLGet(Result,Source);
+    HTMLGet(Result,Source,ErrorProc);
   except
     Result.Free;
     raise;
