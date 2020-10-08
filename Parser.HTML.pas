@@ -9,14 +9,20 @@ uses
   System.JSON,
   FMX.Utils;
 
-function HTMLParse(const Source: string): TJSONObject;
+type
+  TEnumProc = reference to procedure(Pair: TJSONPair);
+
+function DOMCreate(const Source: string): TJSONObject;
 function TagIn(const Tag,Tags: string): Boolean;
+procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
 
 implementation
 
-{ helpful links:
+{
 
-https://css-live.ru/verstka/do-not-close-tags.html
+  helpful links:
+
+  https://css-live.ru/verstka/do-not-close-tags.html
 
 }
 
@@ -119,7 +125,7 @@ begin
   if P<Content.Length then
   if Content.Chars[P]='=' then
   begin
-    Inc(P); // '='
+    Inc(P); // skip '=' symbol
     Result:=Result+'='+ReadToken(Content,P);
   end;
 
@@ -128,6 +134,7 @@ end;
 type
   TTag = record
     Name: string;
+    SourceName: string;
     Attributes: TArray<string>;
     Comment: string;
     Closing: Boolean;
@@ -140,7 +147,7 @@ type
 
 function TTag.AsText: string;
 begin
-  Result:='<'+Name;
+  Result:='<'+SourceName;
   for var S in Attributes do Result:=Result+' '+S;
   if not Comment.IsEmpty then
     Result:=Result+' '+Comment+' -->'
@@ -164,13 +171,14 @@ begin
 
   Inc(P); // skip '<' symbol
 
-  Name:=ReadName(Content,P);
-  Closing:=Name.StartsWith('/');
+  SourceName:=ReadName(Content,P);
+
+  Closing:=SourceName.StartsWith('/');
 
   if Closing then
-    Name:=Name.Substring(1); // truncation "/"
+    SourceName:=SourceName.Substring(1); // truncation "/"
 
-  if Name.Equals('!--') then
+  if SourceName.Equals('!--') then
     Comment:=ReadTextTo(Content,'-->',P).Trim
 
   else begin
@@ -191,6 +199,8 @@ begin
 
   end;
 
+  Name:=SourceName.ToLower;
+
   EndPos:=P;
 
 end;
@@ -209,29 +219,33 @@ begin
 
 end;
 
-function CreateTag(const Tag: TTag; const XPath: string): TJSONObject;
+function CreateTag(const OpeningTag: TTag; const XPath: string): TJSONObject;
 var
+  Source: TJSONObject;
   Attributes: TJSONObject;
   Values: TJSONArray;
 begin
 
   Result:=TJSONObject.Create;
+  Source:=TJSONObject.Create;
 
-  Result.AddPair('__source',Tag.AsText);
-  Result.AddPair('__pos',TJSONNumber.Create(Tag.StartPos));
-  Result.AddPair('__len',TJSONNumber.Create(Tag.EndPos-Tag.StartPos));
-  Result.AddPair('__name',Tag.Name);
+  Result.AddPair('__source',Source);
+  Result.AddPair('__name',OpeningTag.Name);
   Result.AddPair('__xpath',XPath);
 
-  if not Tag.Comment.IsEmpty then
-    Result.AddPair('__value',Tag.Comment);
+  Source.AddPair('text',OpeningTag.AsText);
+  Source.AddPair('pos',TJSONNumber.Create(OpeningTag.StartPos));
+  Source.AddPair('len',TJSONNumber.Create(OpeningTag.EndPos-OpeningTag.StartPos));
 
-  if Tag.Name.ToLower.Equals('!doctype') then
+  if not OpeningTag.Comment.IsEmpty then
+    Result.AddPair('__value',OpeningTag.Comment);
+
+  if OpeningTag.Name.Equals('!doctype') then
   begin
 
     Values:=nil;
 
-    for var A in Tag.Attributes do
+    for var A in OpeningTag.Attributes do
     begin
       if not Assigned(Values) then
       begin
@@ -245,7 +259,7 @@ begin
 
     Attributes:=nil;
 
-    for var A in Tag.Attributes do
+    for var A in OpeningTag.Attributes do
     begin
       if not Assigned(Attributes) then
       begin
@@ -259,6 +273,14 @@ begin
 
 end;
 
+procedure CloseTag(Tag: TJSONObject; const ClosingTag: TTag);
+var Source: TJSONObject;
+begin
+  Source:=Tag.GetValue<TJSONObject>('__source');
+  Source.AddPair('cpos',TJSONNumber.Create(ClosingTag.StartPos));
+  Source.AddPair('clen',TJSONNumber.Create(ClosingTag.EndPos-ClosingTag.StartPos));
+end;
+
 type
   THTMLStack = class(TList<TJSONObject>)
   strict private
@@ -267,10 +289,10 @@ type
     function GetNames(Index: Integer): string;
   public
     function LastName: string;
-    procedure Push(O: TJSONObject; const Name: string); overload;
-    procedure Push(const T: TTag); overload;
+    procedure Push(Tag: TJSONObject); overload;
+    procedure Push(const OpeningTag: TTag); overload;
     procedure Close;
-    procedure CloseTo(const T: string);
+    procedure CloseTo(const ClosingTag: TTag);
     function Exists(const Name: string): Boolean;
     property Names[Index: Integer]: string read GetNames;
   end;
@@ -307,18 +329,18 @@ begin
   Result:=Names[Count-1];
 end;
 
-procedure THTMLStack.Push(O: TJSONObject; const Name: string);
+procedure THTMLStack.Push(Tag: TJSONObject);
 begin
-  Add(O);
-  FNames:=FNames+[Name.ToLower];
+  Add(Tag);
+  FNames:=FNames+[Tag.GetValue('__name','')];
 end;
 
-procedure THTMLStack.Push(const T: TTag);
+procedure THTMLStack.Push(const OpeningTag: TTag);
 var Tag: TJSONObject;
 begin
-  Tag:=CreateTag(T,GetXPath);
+  Tag:=CreateTag(OpeningTag,GetXPath);
   Last.AddPair('__tag',Tag);
-  Push(Tag,T.Name);
+  Push(Tag);
 end;
 
 procedure THTMLStack.Close;
@@ -327,7 +349,7 @@ begin
   SetLength(FNames,Count);
 end;
 
-procedure THTMLStack.CloseTo(const T: string);
+procedure THTMLStack.CloseTo(const ClosingTag: TTag);
 var I: Integer;
 begin
 
@@ -335,8 +357,9 @@ begin
 
   while I>0 do
   begin
-    if Names[I].Equals(T) then
+    if Names[I].Equals(ClosingTag.Name) then
     begin
+      CloseTag(Items[I],ClosingTag);
       Count:=I;
       SetLength(FNames,Count);
       Exit;
@@ -363,7 +386,7 @@ begin
 
 end;
 
-procedure HTMLGet(Result: TJSONObject; const Content: string);
+procedure HTMLParse(Result: TJSONObject; const Content: string);
 var
   Stack: THTMLStack;
   TagName,Text: string;
@@ -374,7 +397,7 @@ begin
   Stack:=THTMLStack.Create;
   try
 
-    Stack.Push(Result,'');
+    Stack.Push(Result);
 
     StartIndex:=0;
 
@@ -392,12 +415,12 @@ begin
 
       Tag.Read(Content,StartIndex);
 
-      TagName:=Tag.Name.ToLower;
-
       if Tag.Closing then // </tag>
-        Stack.CloseTo(TagName)
+        Stack.CloseTo(Tag)
 
       else begin
+
+        TagName:=Tag.Name;
 
         { implicit closing tags }
 
@@ -463,14 +486,25 @@ begin
 
 end;
 
-function HTMLParse(const Source: string): TJSONObject;
+function DOMCreate(const Source: string): TJSONObject;
 begin
   Result:=TJSONObject.Create;
   try
-    HTMLGet(Result,Source);
+    HTMLParse(Result,Source);
   except
     Result.Free;
     raise;
+  end;
+end;
+
+procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
+var Pair: TJSONPair;
+begin
+  for Pair in DOM do
+  begin
+    EnumProc(Pair);
+    if Pair.JsonString.Value.Equals('__tag') then
+      DOMEnum(TJSONObject(Pair.JsonValue),EnumProc);
   end;
 end;
 

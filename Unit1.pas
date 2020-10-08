@@ -89,8 +89,7 @@ begin
   //'html\page_wikipedia.html');
   'html\intuit.lecture_1413.html');
   SetEnabledContent(False);
-  Memo1.Parent:=nil;
-  TreeView1.Parent:=nil;
+  ShowViews(nil,nil);
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -181,7 +180,7 @@ begin
 
     C:=TThread.GetTickCount;
 
-    DOM:=HTMLParse(Source);
+    DOM:=DOMCreate(Source);
 
     Label1.Text:=Format('Parsing time: %d ms',[TThread.GetTickCount-C]);
 
@@ -206,24 +205,28 @@ begin
   Item.TextSettings.FontColor:=Color;
 end;
 
-procedure AddTreeView(Parent: TControl; jsObject: TJSONObject);
-var Item: TTreeViewItem;
+procedure AddTreeView(Parent: TControl; Tag: TJSONObject);
+var
+  Item: TTreeViewItem;
+  Text: string;
 begin
-  for var P in jsObject do
+  for var P in Tag do
   begin
     if P.JsonString.Value.Equals('__tag') then
     begin
       Item:=TTreeViewItem.Create(Parent.Owner);
       Item.Parent:=Parent;
-      Item.Text:=GetDiplayText(P.JsonValue.GetValue('__source',''));
+      Item.Text:=GetDiplayText(P.JsonValue.GetValue('__source.text',''));
       if P.JsonValue.GetValue('__name','').StartsWith('!--') then SetItemColor(Item,claGray);
       AddTreeView(Item,TJSONObject(P.JsonValue));
     end else
     if P.JsonString.Value.Equals('__text') then
     begin
+      Text:=TNetEncoding.HTML.Decode(GetDiplayText(P.JsonValue.Value)).Trim;
+      if Text.IsEmpty then Continue;
       Item:=TTreeViewItem.Create(Parent.Owner);
       Item.Parent:=Parent;
-      Item.Text:=TNetEncoding.HTML.Decode(GetDiplayText(P.JsonValue.Value));
+      Item.Text:=Text;
       SetItemColor(Item,claBlue);
     end;
   end;
@@ -245,20 +248,6 @@ procedure TForm1.ListBoxItem1Click(Sender: TObject);
 begin
   ShowViews(Layout2,nil);
   Memo1.Text:=DOM.Format;
-end;
-
-type
-  TEnumProc = reference to procedure(Pair: TJSONPair);
-
-procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
-var Pair: TJSONPair;
-begin
-  for Pair in DOM do
-  begin
-    EnumProc(Pair);
-    if Pair.JsonString.Value.Equals('__tag') then
-      DOMEnum(TJSONObject(Pair.JsonValue),EnumProc);
-  end;
 end;
 
 function HTMLTextDecode(const Text: string): string;
