@@ -366,13 +366,13 @@ begin
   begin
     if Pair.JsonValue.GetValue('__name','').Equals('a') then
     begin
-      V:=Pair.JsonValue.GetValue('href','');
+      V:=Pair.JsonValue.GetValue('__attr.href','');
       if not V.IsEmpty then
       begin
         S:=S+V;
         V:=Pair.JsonValue.GetValue('__text','');
         if V.IsEmpty then
-          V:=Pair.JsonValue.GetValue('title','');
+          V:=Pair.JsonValue.GetValue('__attr.title','');
         if not V.IsEmpty then
           S:=S+' '+V.QuotedString('"');
         S:=S+Memo1.Lines.LineBreak;
@@ -396,16 +396,16 @@ begin
   begin
     if Pair.JsonValue.GetValue('__name','').Equals('img') then
     begin
-      S:=S+Pair.JsonValue.GetValue('src','');
-      V:=Pair.JsonValue.GetValue('alt','');
+      S:=S+Pair.JsonValue.GetValue('__attr.src','');
+      V:=Pair.JsonValue.GetValue('__attr.alt','');
       if not V.IsEmpty then
         S:=S+' "'+V+'"'
       else begin
-        V:=Pair.JsonValue.GetValue('title','');
+        V:=Pair.JsonValue.GetValue('__attr.title','');
         if not V.IsEmpty then S:=S+' "'+V+'"';
       end;
-      S:=S+' '+Pair.JsonValue.GetValue<string>('width','0')+'x'+
-        Pair.JsonValue.GetValue<string>('height','0')+Memo1.Lines.LineBreak;
+      S:=S+' '+Pair.JsonValue.GetValue<string>('__attr.width','0')+'x'+
+        Pair.JsonValue.GetValue<string>('__attr.height','0')+Memo1.Lines.LineBreak;
     end;
   end);
 
@@ -425,7 +425,7 @@ begin
   begin
     if Pair.JsonValue.GetValue('__name','').Equals('script') then
     begin
-      V:=Pair.JsonValue.GetValue('src','');
+      V:=Pair.JsonValue.GetValue('__attr.src','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
       V:=Pair.JsonValue.GetValue('__value','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
@@ -452,10 +452,10 @@ begin
       V:=Pair.JsonValue.GetValue('__value','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
     end else
-    if Pair.JsonValue.GetValue('__name','')='link' then
-    if Pair.JsonValue.GetValue('rel','')='stylesheet' then
+    if Pair.JsonValue.GetValue('__name','').Equals('link') then
+    if Pair.JsonValue.GetValue('__attr.rel','').Equals('stylesheet') then
     begin
-      V:=Pair.JsonValue.GetValue('href','');
+      V:=Pair.JsonValue.GetValue('__attr.href','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
     end;
   end);

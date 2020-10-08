@@ -162,13 +162,13 @@ begin
 
   StartPos:=P;
 
-  Inc(P); // '<'
+  Inc(P); // skip '<' symbol
 
   Name:=ReadName(Content,P);
   Closing:=Name.StartsWith('/');
 
   if Closing then
-    Name:=Name.Substring(1); // trim "/"
+    Name:=Name.Substring(1); // truncation "/"
 
   if Name.Equals('!--') then
     Comment:=ReadTextTo(Content,'-->',P).Trim
@@ -187,7 +187,7 @@ begin
           Attributes:=Attributes+[A];
     end;
 
-    Inc(P); // '>'
+    Inc(P); // skip '>' symbol
 
   end;
 
@@ -210,27 +210,59 @@ begin
 end;
 
 function CreateTag(const Tag: TTag; const XPath: string): TJSONObject;
+var
+  Attributes: TJSONObject;
+  Values: TJSONArray;
 begin
 
   Result:=TJSONObject.Create;
 
   Result.AddPair('__source',Tag.AsText);
   Result.AddPair('__pos',TJSONNumber.Create(Tag.StartPos));
+  Result.AddPair('__len',TJSONNumber.Create(Tag.EndPos-Tag.StartPos));
   Result.AddPair('__name',Tag.Name);
   Result.AddPair('__xpath',XPath);
 
   if not Tag.Comment.IsEmpty then
     Result.AddPair('__value',Tag.Comment);
 
-  for var A in Tag.Attributes do
-    AddAttribute(Result,A);
+  if Tag.Name.ToLower.Equals('!doctype') then
+  begin
+
+    Values:=nil;
+
+    for var A in Tag.Attributes do
+    begin
+      if not Assigned(Values) then
+      begin
+        Values:=TJSONArray.Create;
+        Result.AddPair('__values',Values);
+      end;
+      Values.Add(A);
+    end;
+
+  end else begin
+
+    Attributes:=nil;
+
+    for var A in Tag.Attributes do
+    begin
+      if not Assigned(Attributes) then
+      begin
+        Attributes:=TJSONObject.Create;
+        Result.AddPair('__attr',Attributes);
+      end;
+      AddAttribute(Attributes,A);
+    end;
+
+  end;
 
 end;
 
 type
   THTMLStack = class(TList<TJSONObject>)
   strict private
-    FNames: array of string;
+    FNames: array of string; // quick search by tag name
     function GetXPath(const D: string='/'): string;
     function GetNames(Index: Integer): string;
   public
@@ -262,13 +294,12 @@ end;
 function THTMLStack.GetXPath(const D: string='/'): string;
 begin
   Result:='';
-  for var I:=1 to Count-1 do
-    Result:=Join(D,Result,Names[I]);
+  for var I:=1 to Count-1 do Result:=Join(D,Result,Names[I]);
 end;
 
 function THTMLStack.GetNames(Index: Integer): string;
 begin
-  Result:=FNames[Index];// Items[Index].GetValue('__name','');
+  Result:=FNames[Index];
 end;
 
 function THTMLStack.LastName: string;
@@ -285,13 +316,9 @@ end;
 procedure THTMLStack.Push(const T: TTag);
 var Tag: TJSONObject;
 begin
-
   Tag:=CreateTag(T,GetXPath);
-
   Last.AddPair('__tag',Tag);
-
   Push(Tag,T.Name);
-
 end;
 
 procedure THTMLStack.Close;
