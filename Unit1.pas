@@ -256,7 +256,7 @@ begin
   for Pair in DOM do
   begin
     EnumProc(Pair);
-    if Pair.JsonValue is TJSONObject then
+    if Pair.JsonString.Value.Equals('__tag') then
       DOMEnum(TJSONObject(Pair.JsonValue),EnumProc);
   end;
 end;
@@ -317,7 +317,7 @@ var S: string; B: Boolean;
 
     for var Pair in Tag do
     begin
-      if Pair.JsonValue is TJSONObject then
+      if Pair.JsonString.Value.Equals('__tag') then
         DoEnum(TJSONObject(Pair.JsonValue))
       else
       if Pair.JsonString.Value.Equals('__text') then
