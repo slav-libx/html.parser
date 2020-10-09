@@ -404,6 +404,7 @@
             <FormType>fmx</FormType>
         </DCCReference>
         <DCCReference Include="Parser.HTML.pas"/>
+        <DCCReference Include="Text.Attributes.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -430,8 +431,8 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="htmlparser.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="Win32\Debug\htmlparser.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
                         <RemoteName>htmlparser.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -451,15 +452,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="htmlparser.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="htmlparser.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>htmlparser.rsm</RemoteName>
+                        <RemoteName>htmlparser.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\htmlparser.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>htmlparser.exe</RemoteName>
+                <DeployFile LocalName="htmlparser.rsm" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win64">
+                        <RemoteName>htmlparser.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -6,8 +6,7 @@ uses
   System.SysUtils,
   System.Character,
   System.Generics.Collections,
-  System.JSON,
-  FMX.Utils;
+  System.JSON;
 
 type
   TEnumProc = reference to procedure(Pair: TJSONPair);
@@ -18,16 +17,65 @@ procedure DOMEnum(DOM: TJSONObject; EnumProc: TEnumProc);
 
 implementation
 
-{
+{-------------------------------------------------------------------------------
 
   helpful links:
 
   https://css-live.ru/verstka/do-not-close-tags.html
 
-}
+    Opening tag            Closing tag
+  +--------------+            +--+
+  <p class="nice">Hello world!</p>
+     +----------+ +----------+
+  An attribute    Enclosed text
+  and its value      content
+
+-------------------------------------------------------------------------------}
 
 const
   CHARS_WHITESPACES = #8#9#10#13' ';
+
+function Join(const D,S1,S2: string): string;
+begin
+  if S1.IsEmpty then
+    Result:=S2
+  else
+  if S2.IsEmpty then
+    Result:=S1
+  else
+    Result:=S1+D+S2;
+end;
+
+function SkipSeparators(var Pos: Integer; const S: string; const Separators: string): Boolean;
+var Len,P: Integer;
+begin
+  Result:=False;
+  P:=Pos;
+  Len:=S.Length;
+  while Pos<=Len do
+  if not Separators.Contains(S.Chars[Pos]) then
+    Break
+  else
+    Inc(Pos);
+  Result:=Pos>P;
+end;
+
+function GetString(var Pos: Integer; const S: string; const Stop: string): string;
+var P: Integer;
+begin
+  Result:=string.Empty;
+  P:=S.IndexOfAny(Stop.ToCharArray,Pos);
+  if P=-1 then P:=S.Length;
+  Result:=S.Substring(Pos,P-Pos);
+  Pos:=P;
+end;
+
+function GetToken(var Pos: Integer; const S: string; const Separators: string; const Stop: string = string.Empty): string;
+begin
+  SkipSeparators(Pos,S,Separators);
+  Result:=GetString(Pos,S,Separators+Stop);
+  SkipSeparators(Pos,S,Separators);
+end;
 
 function GetBeginTag(const Content: string; P: Integer): Integer;
 begin
@@ -35,47 +83,72 @@ begin
   if Result=-1 then Result:=Content.Length;
 end;
 
-function ReadTextTo(const Content,EndText: string; var P: Integer): string;
-var E: Integer;
-begin
-  Result:='';
-  E:=Content.IndexOf(EndText,P);
-  if E=-1 then
-    P:=Content.Length
-  else begin
-    Result:=Content.Substring(P,E-P);
-    P:=E+EndText.Length;
+type
+  TEnclosedText = record
+    Text: string;
+    StartPos: Integer;
+    EndPos: Integer;
+    procedure Read(const Content: string; var P: Integer);
+    procedure ReadFormated(const Content: string; var P: Integer);
+    procedure ReadTo(const Content,EndText: string; var P: Integer);
+    function IsEmpty: Boolean;
   end;
+
+function TEnclosedText.IsEmpty: Boolean;
+begin
+  Result:=Text.IsEmpty;
 end;
 
-function ReadEnclosedTextContent(const Content: string; var P: Integer): string;
-var E: Integer;
+procedure TEnclosedText.Read(const Content: string; var P: Integer);
+var L: Integer;
 begin
-  Result:='';
-  while (P<Content.Length) and (Content.Chars[P]<>'<') do
+
+  L:=-1;
+  Text:=string.Empty;
+  StartPos:=P;
+
+  while L<P do
   begin
-    E:=Content.IndexOfAny(#10#13'<'.ToCharArray,P);
-    if E=-1 then
-    begin
-      P:=Content.Length;
-      Exit;
-    end else if E<>P then
-    begin
-      Result:=Result+Content.Substring(P,E-P);
-      P:=E;
-    end;
-    while (P<Content.Length) and CHARS_WHITESPACES.Contains(Content.Chars[P]) and
-      (Content.Chars[P]<>'<') do Inc(P);
+    if SkipSeparators(P,Content,#8#9' ') then
+      Text:=Text+' ';
+    SkipSeparators(P,Content,CHARS_WHITESPACES);
+    L:=P;
+    Text:=Text+GetString(P,Content,CHARS_WHITESPACES+'<');
   end;
+
+  EndPos:=P;
+
+//  Result:='';
+//  while (P<Content.Length) and (Content.Chars[P]<>'<') do
+//  begin
+//    E:=Content.IndexOfAny(#10#13'<'.ToCharArray,P);
+//    if E=-1 then
+//    begin
+//      P:=Content.Length;
+//      Exit;
+//    end else if E<>P then
+//    begin
+//      Result:=Result+Content.Substring(P,E-P);
+//      P:=E;
+//    end;
+//    while (P<Content.Length) and CHARS_WHITESPACES.Contains(Content.Chars[P]) and
+//      (Content.Chars[P]<>'<') do Inc(P);
+//  end;
+
 end;
 
-function ReadPreEnclosedTextContent(const Content: string; var P: Integer): string;
-var E: Integer;
+procedure TEnclosedText.ReadFormated(const Content: string; var P: Integer);
 begin
-  E:=Content.IndexOf('<',P);
-  if E=-1 then E:=Content.Length;
-  Result:=Content.Substring(P,E-P);
-  P:=E;
+  ReadTo(Content,'<',P);
+end;
+
+procedure TEnclosedText.ReadTo(const Content, EndText: string; var P: Integer);
+begin
+  StartPos:=P;
+  P:=Content.IndexOf(EndText,P);
+  if P=-1 then P:=Content.Length;
+  Text:=Content.Substring(StartPos,P-StartPos);
+  EndPos:=P;
 end;
 
 function ReadName(const Content: string; var P: Integer): string;
@@ -162,7 +235,9 @@ begin
 end;
 
 procedure TTag.Read(const Content: string; var P: Integer);
-var A: string;
+var
+  A: string;
+  Text: TEnclosedText;
 begin
 
   Self:=Default(TTag);
@@ -179,9 +254,11 @@ begin
     SourceName:=SourceName.Substring(1); // truncation "/"
 
   if SourceName.Equals('!--') then
-    Comment:=ReadTextTo(Content,'-->',P).Trim
-
-  else begin
+  begin
+    Text.ReadTo(Content,'-->',P);
+    Comment:=Text.Text.Trim;
+    Inc(P,3); // skip '-->' string
+  end else begin
 
     while True do
     begin
@@ -291,6 +368,8 @@ type
     function LastName: string;
     procedure Push(Tag: TJSONObject); overload;
     procedure Push(const OpeningTag: TTag); overload;
+    procedure AddText(const Text: TEnclosedText);
+    procedure AddValue(const Text: TEnclosedText);
     procedure Close;
     procedure CloseTo(const ClosingTag: TTag);
     function Exists(const Name: string): Boolean;
@@ -300,17 +379,6 @@ type
 function TagIn(const Tag,Tags: string): Boolean;
 begin
   Result:=(','+Tags+',').Contains(','+Tag+',');
-end;
-
-function Join(const D,S1,S2: string): string;
-begin
-  if S1.IsEmpty then
-    Result:=S2
-  else
-  if S2.IsEmpty then
-    Result:=S1
-  else
-    Result:=S1+D+S2;
 end;
 
 function THTMLStack.GetXPath(const D: string='/'): string;
@@ -341,6 +409,32 @@ begin
   Tag:=CreateTag(OpeningTag,GetXPath);
   Last.AddPair('__tag',Tag);
   Push(Tag);
+end;
+
+procedure THTMLStack.AddText(const Text: TEnclosedText);
+var T: TJSONObject;
+begin
+  if not Text.IsEmpty then
+  begin
+    T:=TJSONObject.Create;
+    T.AddPair('text',Text.Text);
+    T.AddPair('pos',TJSONNumber.Create(Text.StartPos));
+    T.AddPair('len',TJSONNumber.Create(Text.EndPos-Text.StartPos));
+    Last.AddPair('__text',T);
+  end;
+end;
+
+procedure THTMLStack.AddValue(const Text: TEnclosedText);
+var V: TJSONObject;
+begin
+  if not Text.IsEmpty then
+  begin
+    V:=TJSONObject.Create;
+    V.AddPair('text',Text.Text);
+    V.AddPair('pos',TJSONNumber.Create(Text.StartPos));
+    V.AddPair('len',TJSONNumber.Create(Text.EndPos-Text.StartPos));
+    Last.AddPair('__value',V);
+  end;
 end;
 
 procedure THTMLStack.Close;
@@ -389,9 +483,10 @@ end;
 procedure HTMLParse(Result: TJSONObject; const Content: string);
 var
   Stack: THTMLStack;
-  TagName,Text: string;
+  TagName: string;
   StartIndex: Integer;
   Tag: TTag;
+  Text: TEnclosedText;
 begin
 
   Stack:=THTMLStack.Create;
@@ -405,11 +500,11 @@ begin
     begin
 
       if Stack.Exists('pre') then
-        Text:=ReadPreEnclosedTextContent(Content,StartIndex)
+        Text.ReadFormated(Content,StartIndex)
       else
-        Text:=ReadEnclosedTextContent(Content,StartIndex);
+        Text.Read(Content,StartIndex);
 
-      if Text<>'' then Stack.Last.AddPair('__text',Text);
+      Stack.AddText(Text);
 
       if StartIndex>=Content.Length then Break;
 
@@ -462,15 +557,19 @@ begin
         if TagIn(TagName,'script,style,textarea') then
         begin
 
-          Text:=ReadTextTo(Content,'</'+TagName+'>',StartIndex).Trim;
+          Text.ReadTo(Content,'</'+TagName,StartIndex);
 
-          if not Text.IsEmpty then
-          if TagName='textarea' then
-            Stack.Last.AddPair('__text',Text)
+          if TagName.Equals('textarea') then
+            Stack.AddText(Text)
           else
-            Stack.Last.AddPair('__value',Text);
+            Stack.AddValue(Text);
 
-          Stack.Close;
+          Tag.Read(Content,StartIndex);
+
+          if Tag.Closing then
+            Stack.CloseTo(Tag)
+          else
+            raise Exception.Create('error tag closing');
 
         end;
 

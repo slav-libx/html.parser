@@ -142,6 +142,26 @@ object Form1: TForm1
       Viewport.Width = 760.000000000000000000
       Viewport.Height = 537.000000000000000000
     end
+    object ScrollBox1: TScrollBox
+      Align = Client
+      Size.Width = 764.000000000000000000
+      Size.Height = 541.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'framedscrollboxstyle'
+      TabOrder = 2
+      Viewport.Width = 760.000000000000000000
+      Viewport.Height = 537.000000000000000000
+      object Text1: TText
+        Size.Width = 713.000000000000000000
+        Size.Height = 505.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Family = 'Consolas'
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.WordWrap = False
+        TextSettings.HorzAlign = Leading
+        TextSettings.VertAlign = Leading
+      end
+    end
   end
   object ComboEdit1: TComboEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]

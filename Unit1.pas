@@ -8,7 +8,8 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Layouts,
   Parser.HTML, System.NetEncoding, FMX.Edit, FMX.Objects, FMX.ListBox,
-  FMX.TreeView, System.ImageList, FMX.ImgList, FMX.ComboEdit, FMX.Styles.Objects;
+  FMX.TreeView, System.ImageList, FMX.ImgList, FMX.ComboEdit, FMX.Styles.Objects,
+  Text.Attributes;
 
 type
   TForm1 = class(TForm)
@@ -33,6 +34,8 @@ type
     Layout3: TLayout;
     StatusBar1: TStatusBar;
     ListBoxItem8: TListBoxItem;
+    Text1: TText;
+    ScrollBox1: TScrollBox;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -56,7 +59,7 @@ type
     Source: string;
     DOM: TJSONObject;
     procedure SetEnabledContent(Value: Boolean);
-    procedure ShowViews(MemoParent,TreeParent: TControl);
+    procedure ShowView(Control: TControl);
   public
     { Public declarations }
   end;
@@ -89,7 +92,7 @@ begin
   //'html\page_wikipedia.html');
   'html\intuit.lecture_1413.html');
   SetEnabledContent(False);
-  ShowViews(nil,nil);
+  ShowView(nil);
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
@@ -125,10 +128,11 @@ begin
   TreeView1.Enabled:=Value;
 end;
 
-procedure TForm1.ShowViews(MemoParent,TreeParent: TControl);
+procedure TForm1.ShowView(Control: TControl);
 begin
-  Memo1.Parent:=MemoParent;
-  TreeView1.Parent:=TreeParent;
+  for var C in Layout2.Children.ToArray do
+  if C<>Control then C.Parent:=nil;
+  if Assigned(Control) then Control.Parent:=Layout2;
 end;
 
 procedure TForm1.ComboBox1Change(Sender: TObject);
@@ -137,7 +141,7 @@ begin
   Memo1.Text:='';
   DOM.Free;
   Dom:=nil;
-  ShowViews(nil,nil);
+  ShowView(nil);
 end;
 
 procedure TForm1.ComboEdit1ApplyStyleLookup(Sender: TObject);
@@ -159,7 +163,7 @@ procedure TForm1.Button1Click(Sender: TObject);
 var C: Cardinal;
 begin
 
-  ShowViews(nil,nil);
+  ShowView(nil);
 
   SetEnabledContent(False);
 
@@ -222,8 +226,9 @@ begin
     end else
     if P.JsonString.Value.Equals('__text') then
     begin
-      Text:=TNetEncoding.HTML.Decode(GetDiplayText(P.JsonValue.Value)).Trim;
+      Text:=P.JsonValue.GetValue('text','');
       if Text.IsEmpty then Continue;
+      Text:=TNetEncoding.HTML.Decode(GetDiplayText(Text)).Trim;
       Item:=TTreeViewItem.Create(Parent.Owner);
       Item.Parent:=Parent;
       Item.Text:=Text;
@@ -234,19 +239,85 @@ end;
 
 procedure TForm1.ListBoxItem0Click(Sender: TObject);
 begin
-  ShowViews(Layout2,nil);
-  Memo1.Text:=Source;
+  ScrollBox1.ViewportPosition:=TPointF.Zero;
+  GetTextLayout(Text1).BeginUpdate;
+  GetTextLayout(Text1).MaxSize:=PointF(MaxInt,MaxInt);
+  GetTextLayout(Text1).Text:=Source;
+  ClearTextAttribute(Text1);
+  DOMEnum(DOM,procedure(Pair: TJSONPair)
+  var Source: TJSONObject;
+  begin
+
+    //  highlight text
+
+    if Pair.JsonString.Value.Equals('__text') then
+      AddTextAttribute(Text1,
+        Pair.JsonValue.GetValue<Integer>('pos'),
+        Pair.JsonValue.GetValue<Integer>('len'),
+        Text1.Font,claGreen);
+
+    if Pair.JsonString.Value.Equals('__tag') then
+    begin
+
+      //  highlight scripts
+
+      if Pair.JsonValue.GetValue('__name','').Equals('script') then
+      if Pair.JsonValue.TryGetValue('__value',Source) then
+        AddTextAttribute(Text1,
+          Source.GetValue<Integer>('pos'),
+          Source.GetValue<Integer>('len'),
+          Text1.Font,claRed);
+
+      //  highlight styles
+
+      if Pair.JsonValue.GetValue('__name','').Equals('style') then
+      if Pair.JsonValue.TryGetValue('__value',Source) then
+        AddTextAttribute(Text1,
+          Source.GetValue<Integer>('pos'),
+          Source.GetValue<Integer>('len'),
+          Text1.Font,claBlue);
+
+      //  highlight comments
+
+      if Pair.JsonValue.GetValue('__name','').Equals('!--') then
+      if Pair.JsonValue.TryGetValue('__source',Source) then
+        AddTextAttribute(Text1,
+          Source.GetValue<Integer>('pos'),
+          Source.GetValue<Integer>('len'),
+          Text1.Font,claGray);
+
+      //  highlight tags
+
+//      if Pair.JsonValue.TryGetValue('__source',Source) then
+//      begin
+//        AddTextAttribute(Text1, // opening tag
+//          Source.GetValue<Integer>('pos'),
+//          Source.GetValue<Integer>('len'),
+//          Text1.Font,claRed);
+//        if Source.GetValue<Integer>('cpos',0)>0 then
+//        AddTextAttribute(Text1, // closing tag
+//          Source.GetValue<Integer>('cpos'),
+//          Source.GetValue<Integer>('clen'),
+//          Text1.Font,claRed);
+//      end;
+
+    end;
+
+  end);
+  GetTextLayout(Text1).EndUpdate;
+  Text1.SetBounds(0,0,GetTextLayout(Text1).TextWidth,GetTextLayout(Text1).TextHeight);
+  ShowView(ScrollBox1);
 end;
 
 procedure TForm1.ListBoxItem7Click(Sender: TObject);
 begin
-  ShowViews(nil,Layout2);
+  ShowView(TreeView1);
   if TreeView1.Count=0 then AddTreeView(TreeView1,DOM);
 end;
 
 procedure TForm1.ListBoxItem1Click(Sender: TObject);
 begin
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
   Memo1.Text:=DOM.Format;
 end;
 
@@ -268,14 +339,14 @@ procedure TForm1.ListBoxItem2Click(Sender: TObject);
 var S: string;
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
   DOMEnum(DOM,procedure(Pair: TJSONPair)
   begin
     if Pair.JsonString.Value.Equals('__text') then
-      S:=S+HTMLTextDecode(Pair.JsonValue.Value)+Memo1.Lines.LineBreak;
+      S:=S+HTMLTextDecode(Pair.JsonValue.GetValue('text',''))+Memo1.Lines.LineBreak;
   end);
 
   Memo1.Text:=S;
@@ -312,7 +383,7 @@ var S: string; B: Boolean;
       if Pair.JsonString.Value.Equals('__text') then
       begin
         B:=True;
-        S:=S+HTMLTextDecode(Pair.JsonValue.Value);
+        S:=S+HTMLTextDecode(Pair.JsonValue.GetValue('text',''));
       end
     end;
 
@@ -333,7 +404,7 @@ var S: string; B: Boolean;
 
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
@@ -347,7 +418,7 @@ procedure TForm1.ListBoxItem3Click(Sender: TObject);
 var S,V: string;
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
@@ -359,7 +430,7 @@ begin
       if not V.IsEmpty then
       begin
         S:=S+V;
-        V:=Pair.JsonValue.GetValue('__text','');
+        V:=Pair.JsonValue.GetValue('__text.text','');
         if V.IsEmpty then
           V:=Pair.JsonValue.GetValue('__attr.title','');
         if not V.IsEmpty then
@@ -377,7 +448,7 @@ procedure TForm1.ListBoxItem4Click(Sender: TObject);
 var S,V: string;
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
@@ -406,7 +477,7 @@ procedure TForm1.ListBoxItem5Click(Sender: TObject);
 var S,V: string;
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
@@ -416,7 +487,7 @@ begin
     begin
       V:=Pair.JsonValue.GetValue('__attr.src','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
-      V:=Pair.JsonValue.GetValue('__value','');
+      V:=Pair.JsonValue.GetValue('__value.text','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak;
       S:=S+Memo1.Lines.LineBreak;
     end;
@@ -430,7 +501,7 @@ procedure TForm1.ListBoxItem6Click(Sender: TObject);
 var S,V: string;
 begin
 
-  ShowViews(Layout2,nil);
+  ShowView(Memo1);
 
   S:='';
 
@@ -438,7 +509,7 @@ begin
   begin
     if Pair.JsonValue.GetValue('__name','').Equals('style') then
     begin
-      V:=Pair.JsonValue.GetValue('__value','');
+      V:=Pair.JsonValue.GetValue('__value.text','');
       if not V.IsEmpty then S:=S+V+Memo1.Lines.LineBreak+Memo1.Lines.LineBreak;
     end else
     if Pair.JsonValue.GetValue('__name','').Equals('link') then

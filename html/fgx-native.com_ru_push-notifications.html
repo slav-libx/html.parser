@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ru-ru" dir="ltr">
+<head>
+<link href="https://fgx-native.com/ru/push-notifications.html" rel="canonical" />
+  
+    <!-- Required meta tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    
+	<meta charset="utf-8" />
+	<base href="https://fgx-native.com/ru/push-notifications.html" />
+	<meta name="keywords" content="FGX Native" />
+	<meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+	<meta name="description" content="{extra_toc} Push-уведомления - это механизм отправки данных с облачного сервера на устройства клиентов, на которые установлено ваше приложение. Обычно прием push-уведомления сопровождается отображением локального уведомления с заголовком в центре уве..." />
+	
+	<title>FGX Native | Push-уведомления</title>
+	<link href="https://fgx-native.com/8y" rel="shortlink" />
+	<link href="/templates/fgx/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+	<link href="/index.php?option=com_ajax&plugin=arktypography&format=json" rel="stylesheet" />
+	<link href="https://fgx-native.com/plugins/content/extra_toc/assets/jquery.extra_toc.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/fonts/Feather/feather.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/flickity/dist/flickity.min.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/flickity-fade/flickity-fade.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/aos/dist/aos.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/jarallax/dist/jarallax.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/highlightjs/styles/vs2015.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.css" rel="stylesheet" />
+	<link href="/templates/fgx/assets/css/theme.min.css" rel="stylesheet" />
+	<link href="https://fgx-native.com/media/editors/arkeditor/css/squeezebox.css" rel="stylesheet" />
+	<link href="/media/mod_languages/css/template.css?ff9bded37325213666f90700f0f8f114" rel="stylesheet" />
+	<style>
+
+	</style>
+	<script src="/media/jui/js/jquery.min.js?ff9bded37325213666f90700f0f8f114"></script>
+	<script src="/media/jui/js/jquery-noconflict.js?ff9bded37325213666f90700f0f8f114"></script>
+	<script src="/media/jui/js/jquery-migrate.min.js?ff9bded37325213666f90700f0f8f114"></script>
+	<script src="https://fgx-native.com/plugins/content/extra_toc/assets/jquery.extra_toc.js"></script>
+	<script src="/media/system/js/caption.js?ff9bded37325213666f90700f0f8f114"></script>
+	<script src="https://fgx-native.com/media/editors/arkeditor/js/jquery.easing.min.js"></script>
+	<script src="https://fgx-native.com/media/editors/arkeditor/js/squeezebox.min.js"></script>
+	<script>
+jQuery(window).on('load',  function() {
+				new JCaption('img.caption');
+			});(function()
+				{
+					if(typeof jQuery == 'undefined')
+						return;
+					
+					jQuery(function($)
+					{
+						if($.fn.squeezeBox)
+						{
+							$( 'a.modal' ).squeezeBox({ parse: 'rel' });
+				
+							$( 'img.modal' ).each( function( i, el )
+							{
+								$(el).squeezeBox({
+									handler: 'image',
+									url: $( el ).attr( 'src' )
+								});
+							})
+						}
+						else if(typeof(SqueezeBox) !== 'undefined')
+						{
+							$( 'img.modal' ).each( function( i, el )
+							{
+								SqueezeBox.assign( el, 
+								{
+									handler: 'image',
+									url: $( el ).attr( 'src' )
+								});
+							});
+						}
+						
+						function jModalClose() 
+						{
+							if(typeof(SqueezeBox) == 'object')
+								SqueezeBox.close();
+							else
+								ARK.squeezeBox.close();
+						}
+					
+					});
+				})();
+	</script>
+
+      
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Roboto|Pt+Sans&display=swap" rel="stylesheet">
+      
+          <style>
+        body {
+      
+      		font-family: "PT Sans", sans-serif !important;
+        }
+      </style>
+          
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(56030611, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/56030611" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-18305356-16"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-18305356-16');
+</script>
+
+<!-- Google Analytics Universal snippet -->
+<script type='text/javascript'>
+	var sh404SEFAnalyticsType = sh404SEFAnalyticsType || [];
+	sh404SEFAnalyticsType.universal = true;
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+	ga('create', 'UA-18305356-16','auto');
+	ga('send', 'pageview');
+</script>
+<!-- End of Google Analytics Universal snippet -->
+
+
+
+
+
+
+
+</head>
+<body class="site com_content view-article no-layout no-task itemid-237" style="padding-top: 84px;">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+          
+        <!-- Brand -->
+        <a class="navbar-brand" href="/">
+          <img src="/templates/fgx/assets/img/logo.png" srcset="/templates/fgx/assets/img/logo@2.png 2x" class="navbar-brand-img" alt="...">
+        </a>
+
+        <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+          <!-- Toggler -->
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fe fe-x"></i>
+          </button>
+          
+          <!-- Navigation -->
+          <ul class="navbar-nav ml-auto menu mod-list">
+<li class="nav-item item-135 default"><a href="/ru/" class="nav-link">Главная</a></li><li class="nav-item item-136"><a href="/ru/features.html" class="nav-link">Возможности</a></li><li class="nav-item item-137 deeper dropdown parent"><a href="/ru/introduction.html" class="nav-link dropdown-toggle">Изучение</a><div class="dropdown-menu dropdown-menu-md"><div class="list-group list-group-flush"><a class="list-group-item" href="/ru/introduction.html">  <!-- Icon -->  <div class="icon icon-sm text-primary">    <image class="svg" src="/images/icons/duotone-icons/General/Clipboard.svg" height="36px" width="36x"/>  </div>  <!-- Content -->  <div class="ml-4">    <!-- Heading -->    <h6 class="font-weight-bold text-uppercase text-primary mb-0">Документация    </h6>    <!-- Text -->    <p class="font-size-sm text-gray-700 mb-0">Настройка и сборка    </p>  </div></a><a class="list-group-item" href="/ru/vkladki.html">  <!-- Icon -->  <div class="icon icon-sm text-primary">    <image class="svg" src="/images/icons/duotone-icons/Files/File.svg" height="36px" width="36x"/>  </div>  <!-- Content -->  <div class="ml-4">    <!-- Heading -->    <h6 class="font-weight-bold text-uppercase text-primary mb-0">Компоненты    </h6>    <!-- Text -->    <p class="font-size-sm text-gray-700 mb-0">Полный список всех компонентов    </p>  </div></a><a class="list-group-item" href="https://www.youtube.com/channel/UCd818Et5Fi0Iy53YouBce3w">  <!-- Icon -->  <div class="icon icon-sm text-primary">    <image class="svg" src="/images/icons/duotone-icons/Media/Youtube.svg" height="36px" width="36x"/>  </div>  <!-- Content -->  <div class="ml-4">    <!-- Heading -->    <h6 class="font-weight-bold text-uppercase text-primary mb-0">Видео уроки    </h6>    <!-- Text -->    <p class="font-size-sm text-gray-700 mb-0">Бесплатные уроки    </p>  </div></a><a class="list-group-item" href="https://forum.fgx-native.com/">  <!-- Icon -->  <div class="icon icon-sm text-primary">    <image class="svg" src="/images/icons/duotone-icons/Home/Earth.svg" height="36px" width="36x"/>  </div>  <!-- Content -->  <div class="ml-4">    <!-- Heading -->    <h6 class="font-weight-bold text-uppercase text-primary mb-0">Форум    </h6>    <!-- Text -->    <p class="font-size-sm text-gray-700 mb-0">Сообщество и поддержка    </p>  </div></a></div></div></li><li class="nav-item item-175"><a href="/ru/download.html" class="nav-link">Скачать</a></li></ul>
+<div class="mod-languages">
+
+	<ul class="lang-inline" dir="ltr">
+						<li>
+			<a href="/en/">
+												<img src="/media/mod_languages/images/en_gb.gif" alt="English (United Kingdom)" title="English (United Kingdom)" />										</a>
+			</li>
+											<li class="lang-active">
+			<a href="https://fgx-native.com/ru/push-notifications.html">
+												<img src="/media/mod_languages/images/ru_ru.gif" alt="Russian (Russia)" title="Russian (Russia)" />										</a>
+			</li>
+				</ul>
+
+</div>
+
+          
+          <!-- Button -->
+                 <a class="navbar-btn btn btn-sm btn-primary lift ml-auto" href="/buy.html">
+            Купить
+          </a>
+               </div>  
+        </nav>
+
+        
+    
+	  <!-- Body -->
+	
+    <!-- Begin Content -->
+    
+      <!-- BREADCRUMB
+    ================================================== -->
+    <nav class="d-lg-none bg-gray-800">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col">
+            
+<ol class="breadcrumb">
+<li class="breadcrumb-item"><a href="/ru/" class="pathway">Главная</a> </li><li class="breadcrumb-item"><span class="text-white">Базовое</span> </li><li class="breadcrumb-item"><span class="text-white">Push-уведомления</span> </li></ol>
+
+          </div>
+          <div class="col-auto">
+            
+            <!-- Toggler -->
+            <div class="navbar-dark">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenavCollapse" aria-controls="sidenavCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </div>
+
+          </div>
+        </div> <!-- / .row -->
+      </div> <!-- / .container -->
+    </nav>
+  
+    <section class="bg-light">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Left -->
+          <div class="col-12 col-lg-3 col-xl-2 px-lg-0 border-bottom border-bottom-lg-0 border-right-lg border-gray-300 sidenav sidenav-left">
+          <div class="collapse d-lg-block" id="sidenavCollapse">
+              <div class="py-7 py-lg-9 px-lg-7">
+
+<div class="menu mod-list">
+<h6 class="text-uppercase font-weight-bold ">
+   Начало работы</h6><ul class="list mb-6"><li class="list-item item-142"><a href="/ru/introduction.html" class="list-link">Введение</a></li><li class="list-item item-177"><a href="/ru/ustanovka.html" class="list-link">Установка</a></li><li class="list-item item-178"><a href="/ru/nastrojka.html" class="list-link">Настройка окружения</a></li><li class="list-item item-176"><a href="/ru/hello-world.html" class="list-link">Hello World</a></li><li class="list-item item-179"><a href="/ru/demo-proekty.html" class="list-link">Демо проекты</a></li></li></ul><h6 class="text-uppercase font-weight-bold ">
+   Базовое</h6><ul class="list mb-6"><li class="list-item item-164"><a href="/ru/vyravnivanie.html" class="list-link">Выравнивание</a></li><li class="list-item item-165"><a href="/ru/assets.html" class="list-link">Ресурсы</a></li><li class="list-item item-172"><a href="/ru/animations.html" class="list-link">Анимация</a></li><li class="list-item item-171"><a href="/ru/sobytiya-kasanij.html" class="list-link">События касаний</a></li><li class="list-item item-170"><a href="/ru/o-net.html" class="list-link">Жесты</a></li><li class="list-item item-166"><a href="/ru/temy.html" class="list-link">Темы</a></li><li class="list-item item-169"><a href="/ru/virtualnaya-klaviatura.html" class="list-link">Виртуальная клавиатура</a></li><li class="list-item item-174"><a href="/ru/sistemnye-razresheniya.html" class="list-link">Системные разрешения</a></li><li class="list-item item-237 current active"><a href="/ru/push-notifications.html" class="list-link">Push-уведомления</a></li><li class="list-item item-257"><a href="/ru/admob.html" class="list-link">Реклама AdMob</a></li></li></ul><h6 class="text-uppercase font-weight-bold ">
+   Компоненты</h6><ul class="list mb-6"><li class="list-item item-173"><a href="/ru/o-net.html" class="list-link">Текстовые метки</a></li><li class="list-item item-145"><a href="/ru/o-net.html" class="list-link">Кнопки</a></li><li class="list-item item-146"><a href="/ru/kartochki.html" class="list-link">Карточки</a></li><li class="list-item item-148"><a href="/ru/o-net.html" class="list-link">Изображения</a></li><li class="list-item item-149"><a href="/ru/o-net.html" class="list-link">Списки</a></li><li class="list-item item-150"><a href="/ru/o-net.html" class="list-link">Карты</a></li><li class="list-item item-151"><a href="/ru/o-net.html" class="list-link">Меню</a></li><li class="list-item item-152"><a href="/ru/panel-navigatsii.html" class="list-link">Панель навигации</a></li><li class="list-item item-153"><a href="/ru/vydvizhnaya-panel.html" class="list-link">Выдвижная панель</a></li><li class="list-item item-189"><a href="/ru/o-net.html" class="list-link">Камера</a></li><li class="list-item item-190"><a href="/ru/o-net.html" class="list-link">Сканер штрихкодов</a></li><li class="list-item item-154"><a href="/ru/pikery.html" class="list-link">Пикеры</a></li><li class="list-item item-155"><a href="/ru/indikatory-progressa.html" class="list-link">Индикаторы прогресса</a></li><li class="list-item item-156"><a href="/ru/slajdery.html" class="list-link">Слайдеры</a></li><li class="list-item item-157"><a href="/ru/pereklyuchateli.html" class="list-link">Переключатель</a></li><li class="list-item item-158"><a href="/ru/vkladki.html" class="list-link">Вкладки</a></li><li class="list-item item-159"><a href="/ru/o-net.html" class="list-link">Текстовые поля</a></li><li class="list-item item-160"><a href="/ru/video-plejer.html" class="list-link">Видео плеер</a></li><li class="list-item item-161"><a href="/ru/veb-brauzer.html" class="list-link">Веб браузер</a></li><li class="list-item item-147"><a href="/ru/o-net.html" class="list-link">Форма</a></li></li></ul><h6 class="text-uppercase font-weight-bold ">
+   Утилиты</h6><ul class="list mb-6"><li class="list-item item-167"><a href="/ru/logirovanie.html" class="list-link">Логирование</a></li><li class="list-item item-168"><a href="/ru/tajmery.html" class="list-link">Таймеры</a></li><li class="list-item item-144"><a href="/ru/uvedomleniya.html" class="list-link">Уведомления</a></li></li></ul></div>
+
+</div>
+</div>
+          </div>
+          
+          <!-- Content -->
+		  
+		              
+		  
+          <div class="col-12 col-lg-6 col-xl-8 offset-lg-3 offset-xl-2 py-7 py-lg-9 px-lg-7">
+            <div id="system-message-container">
+	</div>
+
+            <div class='extra_toc_params' style='display:none' data-fireOnTag = '1' data-srcCnt = '.item-page' data-tags = 'h2' data-skipClass = 'not_toc' data-minLim = '2' data-intro = '' data-pbClass = 'article-index' data-exClass = 'etc-index' data-usePB = '1' data-moveTo = '1' data-makeIt = '1' data-makeAfterThis = 'div.toc-menu' data-pos = '0' data-minW = '1300' ></div><div class="item-page" itemscope itemtype="https://schema.org/Article">
+	<meta itemprop="inLanguage" content="ru-RU" />
+	
+		
+			<div class="page-header">
+		<h2 itemprop="headline">
+			Push-уведомления		</h2>
+							</div>
+					
+		
+	
+	
+		
+							<div class="article-index pull-right">extra_toc</div>	<div itemprop="articleBody">
+		<p></p>
+
+<p style="text-align: justify;"><strong>Push-уведомления</strong> - это&nbsp;механизм отправки данных с облачного сервера на устройства клиентов, на которые установлено ваше приложение. Обычно прием push-уведомления сопровождается&nbsp;отображением локального уведомления с заголовком в центре уведомлений устройства. Облачная система push-уведомлений предназначена для передачи данных даже, когда приложение не запущено на устройстве клиента. Это главное отличие от классического подхода построения клиент-серверного приложения на одном из сетевых протоколов.</p>
+
+<hr />
+<p>Перед тем, как приступить к работе с уведомлениями, необходимо выполнить <a href="https://accounts.google.com/signup" target="_blank">регистрацию аккаунта</a> Google.</p>
+
+<h2>Регистрация приложения в Firebase</h2>
+
+<p>1. Откройте <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a>&nbsp;и выполните вход в учетную запись Google.&nbsp;</p>
+
+<p>2. Нажмите кнопку "<strong>Создать проект</strong>"</p>
+
+<p><img alt="" class="img-fluid screenshot" src="/images/documentation/push_notification/01_firebase.png" /></p>
+
+<p>2. Укажите название вашего проекта и нажмите кнопку "Продолжить". Вы можете использовать любое название. Например: "<strong>FGX Native project</strong>".</p>
+
+<p>3. Нажмите кнопку "Далее".</p>
+
+<p>4. Когда проект будет создан, вы увидите главную&nbsp;страницу:</p>
+
+<p><img alt="" class="img-fluid screenshot" src="/images/documentation/push_notification/03_firebase.png" /></p>
+
+<p>5. Теперь необходимо зарегистрировать ваше FGX Native Android приложение для этого нажимаете на кнопку с логотипом Андроида.</p>
+
+<p>6. Указываете имя пакета вашего Андроид приложения, такое же, как у вашего приложения (если оно есть), или такое, какое оно будет (его можно будет указать)</p>
+
+<ul>
+	<li>Если у вас уже есть приложение,&nbsp;то узнать название пакета можно в настройках проекта: "Project&nbsp;&gt; Options...&nbsp;&gt; Version Info&nbsp;&gt; package".</li>
+	<li>Если у вас еще нет приложения, то придумайте название пакета. Например: "<strong>ru.fgx.pushnotificationdemo</strong>".</li>
+</ul>
+
+<p>7. Нажмите кнопку "Зарегистрировать приложение".</p>
+
+<p>8. Мастер предложит скачать вам конфигурационный файл с настройками вашего приложения. Скачайте файл "<strong>google-services.json</strong>"&nbsp;и сохраните его рядом с проектом.</p>
+
+<p>9. Затем "Далее", "Далее" и "Открыть консоль". Теперь вы успешно зарегистрировали ваше приложение.</p>
+
+<p>Теперь необходимо выполнить настройку FGX Native приложения в IDE.</p>
+
+<h2>Настройка&nbsp;приложения</h2>
+
+<p>1. Откройте существующий проет или создайте новый. Если вы создаете новый проект, то в мастере создания проекта обязательно укажите (на основании шага 6 регистрации приложения в Firebase):</p>
+
+<ul>
+	<li>Идентификатор организации.&nbsp;Например:&nbsp;"<strong>ru.fgx</strong>".</li>
+	<li>Имя проекта. Например:&nbsp;"<strong>pushnotificationdemo</strong>".</li>
+</ul>
+
+<p>2. Откройте настройки проекта:&nbsp;"<strong>Project&nbsp;&gt; Options...&nbsp;&gt; Application &gt; Services</strong>".</p>
+
+<p>2.1. Импортируйте ранее скаченный (шаг 8) конфигурационный файл, нажав на кнопку "<strong>Import...</strong>". Импорт должен успешно загрузить требуемые значения в выше стоящие поля "<strong>Google application Id</strong>" и "<strong>Default sender id</strong>".</p>
+
+<p>2.2 Перейдите к странице "<strong>Application &gt; Entitlment list</strong>". И поставьте галку напротив: "<strong>Receive push notification</strong>".&nbsp;</p>
+
+<p>3. Сохраните изменения.</p>
+
+<p>4. Откройте главную форму вашего приложения и подключите модули <code>System.PushNotification</code> и <code>FGX.PushNotification</code>.</p>
+
+<p>Минимально необходимая настройка вашего приложения для получения пуш уведомлений выполнена. Если приложение будет свернуто или выгружено из памяти, то при отправке push-уведомление отобразиться в центре уведомлений устройства. Если же приложение активно, то пуш уведомление не будет попадать в центр уведомления устройства.</p>
+
+<h2>Получение Push-уведомления</h2>
+
+<p>Чтобы получить уведомление программным способом, нужно выполнить программное соединение с локальным Firebase сервисом. Для этого в конструкторе класса формы:</p>
+
+<pre class="bg-black card-footer" style="text-align: justify;">
+<code class="highlight delphi">constructor TFormMain.Create(AOwner: TComponent);
+var
+  Notifications: TArray&lt;TPushServiceNotification&gt;;
+begin
+  inherited;
+&nbsp; // Получение локального сервиса Firebase Push-уведомлений
+  FPushService := TPushServiceManager.Instance.GetServiceByName('fcm');
+
+&nbsp; // Создаем соединение с локального сервиса Firebase Push-уведомлений 
+&nbsp; // Сервис может иметь множество клиентов, поэтому работа с ним осуществляется через соединение
+  FServiceConnection := TPushServiceConnection.Create(FPushService);
+  FServiceConnection.Active := True;
+  // Создаем локальные обработчик событий, для получения информации о сервисе и получении уведомлений
+  FServiceConnection.OnChange := OnServiceConnectionChange;
+  FServiceConnection.OnReceiveNotification := OnReceiveNotificationEvent;
+end;</code></pre>
+
+<p>Заведите поля <code>FPushService</code> и <code>FServiceConnection</code> и обработчики <code>OnServiceConnectionChange</code> и <code>OnReceiveNotificationEvent</code> в классе формы:</p>
+
+<pre class="bg-black card-footer" style="text-align: justify;">
+<code class="highlight delphi">  private
+    FPushService: TPushService;
+    FServiceConnection: TPushServiceConnection;
+    procedure OnServiceConnectionChange(Sender: TObject; PushChanges: TPushService.TChanges);
+    procedure OnReceiveNotificationEvent(Sender: TObject; const ANotification: TPushServiceNotification);</code></pre>
+
+<p>Когда устройство примет&nbsp;push-уведомление, сработает событие <code>OnReceiveNotificationEvent</code> при этом параметр <code>ANotification</code> будет содержать объект уведомления.&nbsp;</p>
+
+<div class="alert alert-warning" role="alert" style="text-align: justify;">Срабатывание события&nbsp;OnReceiveNotificationEvent зависит от разных условий. Подробнее с ними можно ознакомиться <a href="https://firebase.google.com/docs/cloud-messaging/android/receive?hl=ru#handling_messages" target="_blank">здесь</a>.</div>
+
+<p>Все изменения в локальном&nbsp;Firebase сервисе сопровождаются уведомлением через событие <code>OnChange</code>.</p>
+
+<p>Например таким способом можно вывести в TfgMemo токен устройства и ошибку.</p>
+
+<pre class="bg-black card-footer" style="text-align: justify;">
+<code class="highlight delphi">procedure TFormMain.OnServiceConnectionChange(Sender: TObject; PushChanges: TPushService.TChanges);
+var
+&nbsp; LDeviceToken: string;
+begin
+  if TPushService.TChange.DeviceToken in PushChanges then
+  begin
+    LDeviceToken := FPushService.DeviceTokenValue[TPushService.TDeviceTokenNames.DeviceToken];
+    mLog.Lines.Add('Device token: ' + FDeviceToken);
+    TfgLog.Debug('Firebase device token: token=' + FDeviceToken);
+  end;
+  if (TPushService.TChange.Status in PushChanges) and (FPushService.Status = TPushService.TStatus.StartupError) then
+    mLog.Lines.Add('Error: ' + FPushService.StartupError);
+end;</code></pre>
+
+<h2>Отправка тестового сообщения</h2>
+
+<p>При первом старте приложения, оно выполняет свою регистрацию в облаке Firebase. При этом облако выдает устройству уникальный токен DeviceToken. Перед тем, как отправить тестовое уведомление, необходимо узнать токен устройства (например, в примере выше, токен выводится в поле ввода мемо и в лог устройства).</p>
+
+<p>Чтобы отправить тестовое сообщение на конкретное устройство, можно воспользоваться Firebase консолью.&nbsp;&nbsp;</p>
+
+<p>1. Откройте консоль:&nbsp;<a href="https://console.firebase.google.com/">https://console.firebase.google.com/</a></p>
+
+<p>2. Перейдите в&nbsp;меню навигации к разделу: "<strong>Grow &gt; Cloud messaging</strong>"</p>
+
+<p>3. Нажмите кнопку "<strong>Send your first message</strong>".</p>
+
+<p>4. Заполните данные уведомления:</p>
+
+<ul>
+	<li>Заголовок</li>
+	<li>Описание</li>
+</ul>
+
+<p><img alt="" class="img-fluid screenshot" src="/images/documentation/push_notification/04_firebase.png" /></p>
+
+<p>5. Нажмите кнопку "<strong>Отправить тестовое сообщение</strong>". Консоль предложит указать на какие устройства необходимо отправить данное уведомление.</p>
+
+<p>6. Укажите в поле токен устройства (раздел "Получение Push-уведомления" событие <code>OnServiceConnectionChange</code>) и нажмите кнопку "+".</p>
+
+<p>7. Выполните отправку уведомления, путем нажатия на кнопку "Протестировать".</p>
+
+<p>В зависимости от производителя и модификации ОС Андроид может наблюдаться разное поведение при отображении уведомления. На MIUI версии уведомление падает в шторку цветра уведомления:</p>
+
+<p><img alt="" class="img-fluid screenshot" src="/images/documentation/push_notification/05_firebase.jpg" /></p>
+
+<h2>Получение данных уведомления при старте приложения</h2>
+
+<p>Если пользователь нажимает на push-уведомление в центре уведомлений, то система запустит ваше приложение. В любой момент времени можно получить данные стартового уведомления напрямую из локального Firebase сервиса (Раздел "Получение Push-уведомлений").</p>
+
+<pre class="bg-black card-footer" style="text-align: justify;">
+<code class="highlight delphi">var
+  Notifications: TArray<tpushservicenotification>;
+begin
+  FPushService := TPushServiceManager.Instance.GetServiceByName('fcm');
+  Notifications := FPushService.StartupNotifications;</tpushservicenotification></code></pre>
+ 	</div>
+
+	
+							</div>
+
+          </div>
+		  
+		  
+		  <div class="col-12 col-lg-3 col-xl-2 d-none d-lg-block px-lg-0 sidenav sidenav-right">
+            <div class="my-7 my-lg-9 px-lg-7 border-left-lg border-gray-300">
+                <!-- Links -->
+				<div class="toc-menu">
+				</div> 
+            </div>
+          </div>		  
+        </div>
+      </div>
+    </section>
+    <div class="clearfix"></div>
+      <!-- End Content -->
+
+        
+	
+    
+    
+        <!-- JAVASCRIPT
+    ================================================== -->
+    <!-- Libs JS -->
+    <script src="/templates/fgx/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/templates/fgx/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/templates/fgx/assets/libs/flickity/dist/flickity.pkgd.min.js"></script>
+    <script src="/templates/fgx/assets/libs/flickity-fade/flickity-fade.js"></script>
+    <script src="/templates/fgx/assets/libs/aos/dist/aos.js"></script>
+    <script src="/templates/fgx/assets/libs/smooth-scroll/dist/smooth-scroll.min.js"></script>
+    <script src="/templates/fgx/assets/libs/jarallax/dist/jarallax.min.js"></script>
+    <script src="/templates/fgx/assets/libs/jarallax/dist/jarallax-video.min.js"></script>
+    <script src="/templates/fgx/assets/libs/jarallax/dist/jarallax-element.min.js"></script>
+    <script src="/templates/fgx/assets/libs/typed.js/lib/typed.min.js"></script>
+    <script src="/templates/fgx/assets/libs/countup.js/dist/countUp.min.js"></script>
+    <script src="/templates/fgx/assets/libs/highlightjs/highlight.pack.min.js"></script>
+    <script src="/templates/fgx/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.min.js"></script>
+
+    <!-- Map -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+
+    <!-- Theme JS -->
+    <script src="/templates/fgx/assets/js/theme.min.js"></script>
+      
+    <script>
+      /*
+ * Replace all SVG images with inline SVG
+ */
+jQuery('img.svg').each(function(){
+    var $img = jQuery(this);
+    var imgID = $img.attr('id');
+    var imgClass = $img.attr('class');
+    var imgURL = $img.attr('src');
+
+    jQuery.get(imgURL, function(data) {
+        // Get the SVG tag, ignore the rest
+        var $svg = jQuery(data).find('svg');
+
+        // Add replaced image's ID to the new SVG
+        if(typeof imgID !== 'undefined') {
+            $svg = $svg.attr('id', imgID);
+        }
+        // Add replaced image's classes to the new SVG
+        if(typeof imgClass !== 'undefined') {
+            $svg = $svg.attr('class', imgClass+' replaced-svg');
+        }
+
+        // Remove any invalid XML tags as per http://validator.w3.org
+        $svg = $svg.removeAttr('xmlns:a');
+
+        // Check if the viewport is set, if the viewport is not set the SVG wont't scale.
+        if(!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
+            $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'))
+        }
+
+        // Replace image with new SVG
+        $img.replaceWith($svg);
+
+    }, 'xml');
+
+});
+    </script>  
+</body>
+</html>
