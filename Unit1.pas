@@ -4,12 +4,12 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.UIConsts, System.Classes,
-  System.Variants, System.IOUtils, System.JSON,
+  System.Variants, System.IOUtils, System.JSON, System.Math,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
   FMX.Controls.Presentation, FMX.ScrollBox, FMX.Memo, FMX.Layouts,
   Parser.HTML, System.NetEncoding, FMX.Edit, FMX.Objects, FMX.ListBox,
   FMX.TreeView, System.ImageList, FMX.ImgList, FMX.ComboEdit, FMX.Styles.Objects,
-  Text.Attributes;
+  Text.Attributes, FMX.TextLayout, FMX.Platform;
 
 type
   TForm1 = class(TForm)
@@ -36,6 +36,8 @@ type
     ListBoxItem8: TListBoxItem;
     Text1: TText;
     ScrollBox1: TScrollBox;
+    Label2: TLabel;
+    Button2: TButton;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure SearchEditButton1Click(Sender: TObject);
@@ -55,11 +57,32 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure ListBoxItem8Click(Sender: TObject);
+    procedure Text1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure Text1MouseMove(Sender: TObject; Shift: TShiftState; X, Y: Single);
+    procedure Text1Painting(Sender: TObject; Canvas: TCanvas;
+      const ARect: TRectF);
+    procedure ComboEdit1ChangeTracking(Sender: TObject);
   private
     Source: string;
+    SourceLower: string;
     DOM: TJSONObject;
     procedure SetEnabledContent(Value: Boolean);
     procedure ShowView(Control: TControl);
+  private
+    Selected: TRegion;
+    SelectedRange: TTextRange;
+    SearchRanges: array of TTextRange;
+    Search: TRegion;
+    SearchIndex: Integer;
+    SearchText: string;
+    SearchMatchCase: Boolean;
+    function SelectedText: string;
+    function TextLayout: TTextLayout;
+    function NeedDoSearchText(const Text: string; MatchCase: Boolean): Boolean;
+    procedure DoSearchText(const Text: string; MatchCase: Boolean);
+    procedure ScrollToRect(const R: TRectF);
+    procedure ScrollToSearch;
   public
     { Public declarations }
   end;
@@ -79,18 +102,27 @@ begin
   TControlAccess(Control).Click;
 end;
 
+procedure CopyToClipboard(const Text: string);
+var ClipService: IFMXClipboardService;
+begin
+  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService,ClipService) then
+    ClipService.SetClipboard(Text);
+end;
+
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   for var S in TDirectory.GetFiles('html','*.*') do
     ComboBox1.Items.Add(S);
+  Text1.AutoCapture:=True;
   ComboBox1.ItemIndex:=0;
   ComboBox1.ItemIndex:=ComboBox1.Items.IndexOf(
   //'html\banketservice.ru.html');
   //'html\scr.html');
   //'html\page_wikipedia.html');
   'html\intuit.lecture_1413.html');
+  ScrollBox1.CanFocus:=True;
   SetEnabledContent(False);
   ShowView(nil);
 end;
@@ -112,6 +144,10 @@ begin
       KeyChar:=#0;
       ComboEdit1.SetFocus;
     end;
+  vkC,vkInsert:
+    if ssCtrl in Shift then
+    if SelectedRange.Length>0 then
+      CopyToClipboard(SelectedText);
   vkF3:
     begin
       Key:=0;
@@ -119,6 +155,157 @@ begin
       Click(SearchEditButton2);
     end;
   end;
+end;
+
+procedure TForm1.Text1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+  if ssLeft in Shift then
+  begin
+    Selected:=nil;
+    SelectedRange.Pos:=TextLayout.PositionAtPoint(PointF(X,Y));
+    SelectedRange.Length:=0;
+    SearchIndex:=-1;
+    Text1.Repaint;
+  end;
+end;
+
+procedure TForm1.Text1MouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Single);
+begin
+  if Text1.Pressed then
+  begin
+    SelectedRange.Length:=TextLayout.PositionAtPoint(PointF(X,Y))-SelectedRange.Pos;
+    Selected:=TextLayout.RegionForRange(SelectedRange,False);
+    Text1.Repaint;
+  end;
+end;
+
+procedure TForm1.Text1Painting(Sender: TObject; Canvas: TCanvas;
+  const ARect: TRectF);
+begin
+
+  Canvas.Fill.Kind:=TBrushKind.Solid;
+
+  Canvas.Fill.Color:=claLightskyblue;
+
+  for var R in Selected do
+    Canvas.FillRect(R,0,0,AllCorners,1);
+
+  Canvas.Fill.Color:=MakeColor(claWheat,0.4);
+
+  for var I:=0 to High(Search) do
+  if SearchIndex<>I then
+    Canvas.FillRect(Search[I],0,0,AllCorners,1);
+
+end;
+
+function TForm1.SelectedText: string;
+begin
+  Result:=Source.Substring(SelectedRange.Pos,SelectedRange.Length);
+end;
+
+function TForm1.NeedDoSearchText(const Text: string; MatchCase: Boolean): Boolean;
+begin
+  Result:=not SearchText.Equals(Text) or (SearchMatchCase<>MatchCase);
+  SearchText:=Text;
+  SearchMatchCase:=MatchCase;
+end;
+
+procedure TForm1.DoSearchText(const Text: string; MatchCase: Boolean);
+var
+  R: TTextRange;
+  P: Integer;
+  SearchSource: string;
+  SearchText: string;
+begin
+
+  SelectedRange.Length:=0;
+
+  if NeedDoSearchText(Text,MatchCase) then
+  begin
+
+    if MatchCase then
+    begin
+      SearchSource:=Source;
+      SearchText:=Text;
+    end else begin
+      SearchSource:=SourceLower;
+      SearchText:=Text.ToLower;
+    end;
+
+    Search:=nil;
+    SearchRanges:=nil;
+
+    P:=0;
+
+    R.Length:=SearchText.Length;
+
+    while R.Length>0 do
+    begin
+      R.Pos:=SearchSource.IndexOf(SearchText,P);
+      if R.Pos=-1 then Break;
+      SearchRanges:=SearchRanges+[R];
+      Search:=Search+TextLayout.RegionForRange(R,False);
+      P:=R.Pos+R.Length;
+    end;
+
+    SearchIndex:=0;
+
+  end else
+
+    if InRange(SearchIndex,0,High(Search)) then
+      Inc(SearchIndex)
+    else
+      SearchIndex:=0;
+
+  if InRange(SearchIndex,0,High(Search)) then
+  begin
+    SelectedRange:=SearchRanges[SearchIndex];
+    Selected:=[Search[SearchIndex]];
+  end else begin
+    SelectedRange:=Default(TTextRange);
+    Selected:=nil;
+  end;
+
+  Label2.Text:=Format('Search: %d of %d',[Min(SearchIndex+1,Length(Search)),Length(Search)]);
+
+  ScrollToSearch;
+
+  Text1.Repaint;
+
+end;
+
+function ViewToRect(const View,R: TRectF): TRectF;
+begin
+  Result:=View;
+  if R.Top<Result.Top then Result.SetLocation(Result.Left,R.Top);
+  if R.Bottom>Result.Bottom then Result.SetLocation(Result.Left,R.Top);
+  if R.Left<Result.Left then Result.SetLocation(0,Result.Top);
+  if R.Right>Result.Right then Result.SetLocation(R.Right-Result.Width,Result.Top);
+end;
+
+procedure TForm1.ScrollToRect(const R: TRectF);
+var ContentRect,ViewRect: TRectF;
+begin
+  ContentRect:=ScrollBox1.Content.LocalRect;
+  ContentRect.Offset(ScrollBox1.ViewportPosition);
+  ViewRect:=R;
+  ViewRect.Inflate(R.Height,R.Height);
+  ViewRect:=ViewToRect(ContentRect,ViewRect);
+  if not ContentRect.EqualsTo(ViewRect) then
+    ScrollBox1.ViewportPosition:=ViewRect.TopLeft;
+end;
+
+procedure TForm1.ScrollToSearch;
+begin
+  if InRange(SearchIndex,0,High(Search)) then
+    ScrollToRect(Search[SearchIndex]);
+end;
+
+function TForm1.TextLayout: TTextLayout;
+begin
+  Result:=GetTextLayout(Text1);
 end;
 
 procedure TForm1.SetEnabledContent(Value: Boolean);
@@ -142,6 +329,7 @@ begin
   DOM.Free;
   Dom:=nil;
   ShowView(nil);
+  DoSearchText('',Button2.IsPressed);
 end;
 
 procedure TForm1.ComboEdit1ApplyStyleLookup(Sender: TObject);
@@ -181,6 +369,7 @@ begin
   begin
 
     Source:=TFile.ReadAllText(Source,TEncoding.UTF8);
+    SourceLower:=Source.ToLower;
 
     C:=TThread.GetTickCount;
 
@@ -551,6 +740,13 @@ begin
     Beep;
   end;
 
+  DoSearchText(ComboEdit1.Text,Button2.IsPressed);
+
+end;
+
+procedure TForm1.ComboEdit1ChangeTracking(Sender: TObject);
+begin
+  DoSearchText(ComboEdit1.Text,Button2.IsPressed);
 end;
 
 end.
